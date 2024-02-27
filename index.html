@@ -4,29 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MIPS Translator</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-  }
-  textarea {
-    width: 100%;
-    height: 200px;
-    margin-bottom: 10px;
-  }
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
-  }
-  #output {
-    white-space: pre-line;
-  }
-</style>
+<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 
@@ -39,24 +17,137 @@
 <textarea id="inputHex" placeholder="Enter hexadecimal instructions here..."></textarea>
 <button onclick="translateHextoMIPS()">Translate Hex to MIPS</button>
 <p></p>
-<button onclick="saveHexToFile()">Save MIPS to Hex</button>
+<button onclick="saveHexToFile()">Save to RAM</button>
+<p></p>
+
+<div id="dropArea">
+  <p>Drag and drop a RAM file here, or click to select one.</p>
+  <input type="file" id="fileInput" style="display: none;">
+  <button onclick="processFile()">Process File</button>
+</div>
 
 <div id="output"></div>
 
 <script>
 
+// Get references to the drop area and the file input
+const dropArea = document.getElementById('dropArea');
+const fileInput = document.getElementById('fileInput');
+const outputDiv = document.getElementById('output');
+
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, preventDefaults, false);
+  document.body.addEventListener(eventName, preventDefaults, false);
+});
+
+// Highlight drop area when a file is dragged over
+['dragenter', 'dragover'].forEach(eventName => {
+  dropArea.addEventListener(eventName, highlight, false);
+});
+
+// Unhighlight drop area when a file is dragged away
+['dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, unhighlight, false);
+});
+
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false);
+
+// Function to prevent default drag behaviors
+function preventDefaults(e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+// Function to highlight the drop area when a file is dragged over
+function highlight() {
+  dropArea.classList.add('highlight');
+}
+
+// Function to unhighlight the drop area when a file is dragged away
+function unhighlight() {
+  dropArea.classList.remove('highlight');
+}
+
+// Function to handle dropped files
+function handleDrop(e) {
+  const dt = e.dataTransfer;
+  const files = dt.files;
+
+  processFiles(files);
+}
+
+
+
+// Optional: You can add hover effect to the drop area
+dropArea.addEventListener('mouseenter', () => {
+  dropArea.style.backgroundColor = '#f0f0f0';
+});
+
+dropArea.addEventListener('mouseleave', () => {
+  dropArea.style.backgroundColor = '';
+});
+
+function processFiles(files) {
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    const fileContent = event.target.result;
+    const lines = fileContent.trim().split('\n');
+
+    // If there are less than two lines, return because the file is not formatted as expected
+    if (lines.length < 2) {
+      console.error("Invalid file format. Expected at least two lines.");
+      return;
+    }
+
+    // Split the second line by spaces to get individual instructions
+    const instructionsArray = lines[1].trim().split(/\s+/);
+
+    // Translate each instruction and build the translated instructions for input textarea
+    let translatedInstructions = '';
+    let originalInstructions = '';
+    instructionsArray.forEach(instruction => {
+      const translated = translateInstructionToMIPS(instruction.trim());
+      translatedInstructions += `${translated}\n`;
+      originalInstructions += `${instruction.trim()}\n`;
+    });
+
+    // Set the value of input textarea with translated instructions
+    const inputTextarea = document.getElementById('input');
+    inputTextarea.value = translatedInstructions.trim();
+
+    // Set the value of inputHex textarea with the original instructions
+    const inputHexTextarea = document.getElementById('inputHex');
+    inputHexTextarea.value = originalInstructions.trim();
+  };
+
+  reader.readAsText(files[0]);
+}
+
+
+
 function saveHexToFile() {
-    const outputDiv = document.getElementById('output');
-    const hexInstructions = outputDiv.textContent.trim(); // Assuming output is in hexadecimal format
+    const inputHexTextarea = document.getElementById('inputHex');
+
+    // Get the value of the inputHex textarea
+    const hexInstructions = inputHexTextarea.value.trim();
+
+    // Check if hexInstructions is empty
+    if (!hexInstructions) {
+        console.error("No instructions found in inputHex textarea.");
+        return;
+    }
 
     // Split the hexInstructions by newline characters to get individual instructions
     const instructionsArray = hexInstructions.split('\n');
 
-    // Join the instructions with a space to format them according to the specified format
-    const formattedInstructions = instructionsArray.join(' ');
+    // Join the instructions with a space to format them on the second line
+    const instructionsLine = instructionsArray.join(' ');
 
-    // Create a Blob with the formatted instructions
-    const blob = new Blob(['v2.0 raw\n' + formattedInstructions], { type: 'text/plain' });
+    // Create a Blob with the hex instructions and instructions line
+    const blob = new Blob(['v2.0 raw\n' + instructionsLine], { type: 'text/plain' });
 
     // Create a temporary anchor element to trigger the download
     const anchor = document.createElement('a');
@@ -68,18 +159,21 @@ function saveHexToFile() {
 
 
 function translateHextoMIPS() {
-  const inputTextArea = document.getElementById('inputHex');
-  const outputDiv = document.getElementById('output');
-  
-  const instructions = inputTextArea.value.trim().split('\n');
-  let output = '';
-  
-  instructions.forEach(instruction => {
-    const translated = translateInstructionToMIPS(instruction.trim());
-    output += `${instruction} --> ${translated}\n\n`;
-  });
-  
-  outputDiv.textContent = output;
+    const inputHexTextarea = document.getElementById('inputHex');
+    const inputTextarea = document.getElementById('input');
+
+    const instructions = inputHexTextarea.value.trim().split('\n');
+
+    // Translate each hexadecimal instruction to MIPS
+    const translatedInstructions = instructions.map(instruction => {
+        return translateInstructionToMIPS(instruction.trim());
+    });
+
+    // Join the translated instructions with a newline character
+    const formattedInstructions = translatedInstructions.join('\n');
+
+    // Set the value of the input textarea to the formatted instructions
+    inputTextarea.value = formattedInstructions;
 }
 
 function translateInstructionToMIPS(hexInstruction) {
@@ -98,13 +192,13 @@ function translateInstructionToMIPS(hexInstruction) {
 
     const regMap = {
         "00000": "zero", "00001": "at", "00010": "v0", "00011": "v1",
-        "00100": " a0", "00101": " a1", "00110": " a2", "00111": "a3",
-        "01000": " t0", "01001": " t1", "01010": " t2", "01011": "t3",
-        "01100": " t4", "01101": " t5", "01110": " t6", "01111": "t7",
-        "10000": " s0", "10001": " s1", "10010": " s2", "10011": "s3",
-        "10100": " s4", "10101": " s5", "10110": " s6", "10111": "s7",
-        "11000": " t8", "11001": " t9", "11010": " k0", "11011": "k1",
-        "11100": " gp", "11101": " sp", "11110": " fp", "11111": "ra"
+        "00100": "a0", "00101": "a1", "00110": "a2", "00111": "a3",
+        "01000": "t0", "01001": "t1", "01010": "t2", "01011": "t3",
+        "01100": "t4", "01101": "t5", "01110": "t6", "01111": "t7",
+        "10000": "s0", "10001": "s1", "10010": "s2", "10011": "s3",
+        "10100": "s4", "10101": "s5", "10110": "s6", "10111": "s7",
+        "11000": "t8", "11001": "t9", "11010": "k0", "11011": "k1",
+        "11100": "gp", "11101": "sp", "11110": "fp", "11111": "ra"
     };
     const binaryInstruction = hexToBinary(hexInstruction);
     const opcode = binaryInstruction.slice(0, 6);
@@ -116,7 +210,6 @@ function translateInstructionToMIPS(hexInstruction) {
 
     if (["add", "sub", "slt"].includes(opcodeMIPS)) {
         // R-type instruction
-        console.log("R-type instruction ",binaryInstruction);
         const func = binaryInstruction.slice(26, 32);;
         console.log("Instruction func ",func);
         const funcMIPS = funcMap[func];
@@ -127,14 +220,14 @@ function translateInstructionToMIPS(hexInstruction) {
         const rt = regMap[binaryInstruction.slice(11, 16)];
         const rd = regMap[binaryInstruction.slice(16, 21)];
         if (!rs || !rt || !rd) return "Invalid Registers";
-        mipsInstruction += rd + " " + rs + " " + rt;
+        mipsInstruction += rd + " " + rs + rt;
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
         // I-type instruction
         const rt = regMap[binaryInstruction.slice(6, 11)];
         const rs = regMap[binaryInstruction.slice(11, 16)];
         const offset = parseInt(binaryInstruction.slice(16, 32), 16);
         if (!rt || !rs || isNaN(offset)) return "Invalid Syntax";
-        mipsInstruction += rt + ", " + offset + "(" + rs + ")";
+        mipsInstruction += rs +" " +rt + " " + binaryToHex(offset) ;
     } else if (["addi"].includes(opcodeMIPS)) {
         // I-type instruction
         console.log("I-type instruction, addi");
@@ -145,7 +238,7 @@ function translateInstructionToMIPS(hexInstruction) {
         console.log('immediate formated ',binaryToHex(binaryInstruction.slice(16, 32)));
         const immediate = binaryToHex(binaryInstruction.slice(16, 32));
         if (!rt || !rs || !immediate) return "Invalid Syntax";
-        mipsInstruction += rt + " " + rs + " " + immediate;
+        mipsInstruction += rt + " "+ rs  +" "+ immediate;
     } else if (["beq", "bne"].includes(opcodeMIPS)) {
         // I-type instruction
         const rs = regMap[binaryInstruction.slice(6, 11)];
@@ -153,7 +246,7 @@ function translateInstructionToMIPS(hexInstruction) {
         const offset = parseInt(binaryInstruction.slice(16, 32), 16);
         if (!rs || !rt || isNaN(offset)) return "Invalid Syntax";
         // For simplicity, assuming label is an immediate value (offset)
-        mipsInstruction += rs + ", " + rt + ", " + offset;
+        mipsInstruction += rs +" "+ rt + " " + offset;
     } else if (["j"].includes(opcodeMIPS)) {
         // J-type instruction
         const address = binaryToHex(binaryInstruction.slice(6, 32));
@@ -196,20 +289,23 @@ function hexToBinary(hex) {
 }
 
 function translateMIPS() {
-  const inputTextArea = document.getElementById('input');
-  const outputDiv = document.getElementById('output');
-  
-  const instructions = inputTextArea.value.trim().split('\n');
-  let output = '';
-  
-  instructions.forEach(instruction => {
-    const translated = translateInstructionToHex(instruction.trim());
-    //output += `${instruction} --> ${translated}\n\n`;
-    output += `${translated}\n`;
-  });
-  
-  outputDiv.textContent = output;
+    const inputTextArea = document.getElementById('input');
+    const inputHexTextarea = document.getElementById('inputHex');
+
+    const instructions = inputTextArea.value.trim().split('\n');
+
+    // Translate each MIPS instruction to hexadecimal
+    const translatedInstructions = instructions.map(instruction => {
+        return translateInstructionToHex(instruction.trim());
+    });
+
+    // Join the translated instructions with a newline character
+    const formattedInstructions = translatedInstructions.join('\n');
+
+    // Set the value of the inputHex textarea to the formatted instructions
+    inputHexTextarea.value = formattedInstructions;
 }
+
 
 function translateInstructionToHex(instruction) {
     const opcodeMap = {

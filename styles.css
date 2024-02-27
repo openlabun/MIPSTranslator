@@ -1,0 +1,58 @@
+.output {
+    display: flex;
+    flex-direction: column;
+}
+
+.instruction {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.source {
+    font-weight: bold;
+}
+
+.translated {
+    margin-left: 20px;
+    /* Adjust as needed */
+    color: #777;
+    /* Adjust color as needed */
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#output {
+    white-space: pre-line;
+}
+
+#dropArea {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Highlight style for the drop area */
+  #dropArea.highlight {
+    background-color: #f0f0f0;
+  }
