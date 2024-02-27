@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MIPS to Hexadecimal Translator</title>
+<title>MIPS Translator</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -30,14 +30,122 @@
 </head>
 <body>
 
-<h1>MIPS to Hexadecimal Translator</h1>
+<h1>MIPS Translator</h1>
 
 <textarea id="input" placeholder="Enter MIPS instructions here..."></textarea>
-<button onclick="translateMIPS()">Translate</button>
+<button onclick="translateMIPS()">Translate MIPS to Hex</button>
+
+<p></p>
+<textarea id="inputHex" placeholder="Enter hexadecimal instructions here..."></textarea>
+<button onclick="translateHextoMIPS()">Translate Hex to MIPS</button>
 
 <div id="output"></div>
 
 <script>
+
+function translateHextoMIPS() {
+  const inputTextArea = document.getElementById('inputHex');
+  const outputDiv = document.getElementById('output');
+  
+  const instructions = inputTextArea.value.trim().split('\n');
+  let output = '';
+  
+  instructions.forEach(instruction => {
+    const translated = translateInstructionToMIPS(instruction.trim());
+    output += `${instruction} --> ${translated}\n\n`;
+  });
+  
+  outputDiv.textContent = output;
+}
+
+function translateInstructionToMIPS(hexInstruction) {
+    console.log("hexInstruction",hexInstruction);
+    const opcodeMap = {
+        // "add": "000000", "addi": "001000", "sub": "000000", "lw": "100011",
+        // "sw": "101011", "beq": "000100", "bne": "000101", "slt": "000000",
+        // "j": "000010"
+
+        "000000": "add", "001000": "addi", "000000": "sub", "100011": "lw",
+        "101011": "sw", "000100": "beq", "000101": "bne", "000000": "slt",
+        "000010": "j"
+    };
+
+    const funcMap = {
+        "100000": "add",
+        "100010": "sub",
+        "101010": "slt"
+    };
+
+    const regMap = {
+        "00000": "zero", "00001": "$at", "00010": "$v0", "00011": "$v1",
+        "00100": "$a0", "00101": "$a1", "00110": "$a2", "00111": "$a3",
+        "01000": "$t0", "01001": "$t1", "01010": "$t2", "01011": "$t3",
+        "01100": "$t4", "01101": "$t5", "01110": "$t6", "01111": "$t7",
+        "10000": "$s0", "10001": "$s1", "10010": "$s2", "10011": "$s3",
+        "10100": "$s4", "10101": "$s5", "10110": "$s6", "10111": "$s7",
+        "11000": "$t8", "11001": "$t9", "11010": "$k0", "11011": "$k1",
+        "11100": "$gp", "11101": "$sp", "11110": "$fp", "11111": "$ra"
+    };
+    const binaryInstruction = hexToBinary(hexInstruction);
+    const opcode = binaryInstruction.slice(0, 6);
+    console.log(opcode);
+    const opcodeMIPS = opcodeMap[opcode];
+    if (!opcodeMIPS) return "Unknown Instruction";
+
+    let mipsInstruction = opcodeMIPS + " ";
+
+    if (["add", "sub", "slt"].includes(opcodeMIPS)) {
+        // R-type instruction
+        console.log("R-type instruction ",binaryInstruction);
+        const func = binaryInstruction.slice(26, 32);;
+        console.log("Instruction func ",func);
+        const funcMIPS = funcMap[func];
+        console.log("Instruction ",funcMIPS);
+        if (!funcMIPS) return "Unknown Instruction (function)";
+        mipsInstruction = funcMIPS + " ";
+        const rs = regMap[binaryInstruction.slice(6, 11)];
+        const rt = regMap[binaryInstruction.slice(11, 16)];
+        const rd = regMap[binaryInstruction.slice(16, 21)];
+        if (!rs || !rt || !rd) return "Invalid Registers";
+        mipsInstruction += rd + " " + rs + " " + rt;
+    } else if (["lw", "sw"].includes(opcodeMIPS)) {
+        // I-type instruction
+        const rt = regMap[binaryInstruction.slice(6, 11)];
+        const rs = regMap[binaryInstruction.slice(11, 16)];
+        const offset = parseInt(binaryInstruction.slice(16, 32), 16);
+        if (!rt || !rs || isNaN(offset)) return "Invalid Syntax";
+        mipsInstruction += rt + ", " + offset + "(" + rs + ")";
+    } else if (["addi"].includes(opcodeMIPS)) {
+        // I-type instruction
+        const rt = regMap[binaryInstruction.slice(6, 11)];
+        const rs = regMap[binaryInstruction.slice(11, 16)];
+        const immediate = parseInt(binaryInstruction.slice(16, 32), 16);
+        if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
+        mipsInstruction += rt + ", " + rs + ", " + immediate;
+    } else if (["beq", "bne"].includes(opcodeMIPS)) {
+        // I-type instruction
+        const rs = regMap[binaryInstruction.slice(6, 11)];
+        const rt = regMap[binaryInstruction.slice(11, 16)];
+        const offset = parseInt(binaryInstruction.slice(16, 32), 16);
+        if (!rs || !rt || isNaN(offset)) return "Invalid Syntax";
+        // For simplicity, assuming label is an immediate value (offset)
+        mipsInstruction += rs + ", " + rt + ", " + offset;
+    } else {
+        return "Unsupported Instruction";
+    }
+
+    return mipsInstruction;
+}
+
+function hexToBinary(hex) {
+    let binary = '';
+    for(let i = 0; i < hex.length; i++) {
+        let bin = parseInt(hex[i], 16).toString(2);
+        binary += bin.padStart(4, '0');
+    }
+    return binary;
+}
+
 function translateMIPS() {
   const inputTextArea = document.getElementById('input');
   const outputDiv = document.getElementById('output');
@@ -46,45 +154,50 @@ function translateMIPS() {
   let output = '';
   
   instructions.forEach(instruction => {
-    const translated = translateInstruction(instruction.trim());
+    const translated = translateInstructionToHex(instruction.trim());
     output += `${instruction} --> ${translated}\n\n`;
   });
   
   outputDiv.textContent = output;
 }
 
-function translateInstruction(instruction) {
+function translateInstructionToHex(instruction) {
     const opcodeMap = {
         "add": "000000", "addi": "001000", "sub": "000000", "lw": "100011",
-        "sw": "101011", "beq": "000100", "bne": "000101", "slt": "000000"
-        // Add more MIPS instructions and their opcodes as needed
+        "sw": "101011", "beq": "000100", "bne": "000101", "slt": "000000",
+        "j": "000010"
+    };
+
+    const funcMap = {
+        "add": "100000", "sub": "100010", "slt": "101010"
+        // Add more func codes if necessary
     };
 
     const regMap = {
-        "$zero": "00000", "$at": "00001", "$v0": "00010", "$v1": "00011",
-        "$a0": "00100", "$a1": "00101", "$a2": "00110", "$a3": "00111",
-        "$t0": "01000", "$t1": "01001", "$t2": "01010", "$t3": "01011",
-        "$t4": "01100", "$t5": "01101", "$t6": "01110", "$t7": "01111",
-        "$s0": "10000", "$s1": "10001", "$s2": "10010", "$s3": "10011",
-        "$s4": "10100", "$s5": "10101", "$s6": "10110", "$s7": "10111",
-        "$t8": "11000", "$t9": "11001", "$k0": "11010", "$k1": "11011",
-        "$gp": "11100", "$sp": "11101", "$fp": "11110", "$ra": "11111"
+        "zero": "00000", "at": "00001", "v0": "00010", "v1": "00011",
+        "a0": "00100", "a1": "00101", "a2": "00110", "a3": "00111",
+        "t0": "01000", "t1": "01001", "t2": "01010", "t3": "01011",
+        "t4": "01100", "t5": "01101", "t6": "01110", "t7": "01111",
+        "s0": "10000", "s1": "10001", "s2": "10010", "s3": "10011",
+        "s4": "10100", "s5": "10101", "s6": "10110", "s7": "10111",
+        "t8": "11000", "t9": "11001", "k0": "11010", "k1": "11011",
+        "gp": "11100", "sp": "11101", "fp": "11110", "ra": "11111"
     };
 
     const parts = instruction.split(' ');
-    print(parts);
+
     const opcode = opcodeMap[parts[0]];
     if (!opcode) return "Unknown Instruction";
 
     let binaryInstruction = opcode;
-
+    console.log(parts[0]);
     if (["add", "sub", "slt"].includes(parts[0])) {
         // R-type instruction
         const rd = regMap[parts[1]];
         const rs = regMap[parts[2]];
         const rt = regMap[parts[3]];
         if (!rd || !rs || !rt) return "Invalid Registers";
-        binaryInstruction += rs + rt + rd + "00000" + "000000";
+        binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
     } else if (["lw", "sw"].includes(parts[0])) {
         // I-type instruction
         const rt = regMap[parts[1]];
@@ -109,13 +222,19 @@ function translateInstruction(instruction) {
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (offset >>> 0).toString(2).padStart(16, '0');
+    } else if (["j"].includes(parts[0])) {
+        // J-type instruction
+        const address = parseInt(parts[1]);
+        if (isNaN(address)) return "Invalid Syntax";
+        binaryInstruction += (address >>> 0).toString(2).padStart(26, '0');
     } else {
         return "Unsupported Instruction";
     }
 
     // Convert binary instruction to hexadecimal
     const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
-    return "0x" + hexInstruction;
+    //return "0x" + hexInstruction;
+    return hexInstruction;
 }
 
 </script>

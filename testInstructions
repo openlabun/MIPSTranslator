@@ -1,0 +1,7 @@
+add t1 t2 t3
+addi t1 t2 0xffff
+j 0x02fffff
+
+014B4820
+2149FFFF
+082FFFFF
