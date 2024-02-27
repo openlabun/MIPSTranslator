@@ -11,3 +11,9 @@ List of supported instructions:
 3. Store
 4. Branch (beq, bne)
 5. Jump
+
+sudo docker build -t mipstranslatori .
+sudo docker run -d -it -p 5008:80 --restart unless-stopped --name mipstranslator-app mipstranslatori
+
+Author:
+Augusto Salazar.
