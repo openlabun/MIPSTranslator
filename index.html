@@ -38,10 +38,34 @@
 <p></p>
 <textarea id="inputHex" placeholder="Enter hexadecimal instructions here..."></textarea>
 <button onclick="translateHextoMIPS()">Translate Hex to MIPS</button>
+<p></p>
+<button onclick="saveHexToFile()">Save MIPS to Hex</button>
 
 <div id="output"></div>
 
 <script>
+
+function saveHexToFile() {
+    const outputDiv = document.getElementById('output');
+    const hexInstructions = outputDiv.textContent.trim(); // Assuming output is in hexadecimal format
+
+    // Split the hexInstructions by newline characters to get individual instructions
+    const instructionsArray = hexInstructions.split('\n');
+
+    // Join the instructions with a space to format them according to the specified format
+    const formattedInstructions = instructionsArray.join(' ');
+
+    // Create a Blob with the formatted instructions
+    const blob = new Blob(['v2.0 raw\n' + formattedInstructions], { type: 'text/plain' });
+
+    // Create a temporary anchor element to trigger the download
+    const anchor = document.createElement('a');
+    anchor.download = 'mips_instructions.hex';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.click();
+}
+
+
 
 function translateHextoMIPS() {
   const inputTextArea = document.getElementById('inputHex');
@@ -61,10 +85,6 @@ function translateHextoMIPS() {
 function translateInstructionToMIPS(hexInstruction) {
     console.log("hexInstruction",hexInstruction);
     const opcodeMap = {
-        // "add": "000000", "addi": "001000", "sub": "000000", "lw": "100011",
-        // "sw": "101011", "beq": "000100", "bne": "000101", "slt": "000000",
-        // "j": "000010"
-
         "000000": "add", "001000": "addi", "000000": "sub", "100011": "lw",
         "101011": "sw", "000100": "beq", "000101": "bne", "000000": "slt",
         "000010": "j"
@@ -77,14 +97,14 @@ function translateInstructionToMIPS(hexInstruction) {
     };
 
     const regMap = {
-        "00000": "zero", "00001": "$at", "00010": "$v0", "00011": "$v1",
-        "00100": "$a0", "00101": "$a1", "00110": "$a2", "00111": "$a3",
-        "01000": "$t0", "01001": "$t1", "01010": "$t2", "01011": "$t3",
-        "01100": "$t4", "01101": "$t5", "01110": "$t6", "01111": "$t7",
-        "10000": "$s0", "10001": "$s1", "10010": "$s2", "10011": "$s3",
-        "10100": "$s4", "10101": "$s5", "10110": "$s6", "10111": "$s7",
-        "11000": "$t8", "11001": "$t9", "11010": "$k0", "11011": "$k1",
-        "11100": "$gp", "11101": "$sp", "11110": "$fp", "11111": "$ra"
+        "00000": "zero", "00001": "at", "00010": "v0", "00011": "v1",
+        "00100": " a0", "00101": " a1", "00110": " a2", "00111": "a3",
+        "01000": " t0", "01001": " t1", "01010": " t2", "01011": "t3",
+        "01100": " t4", "01101": " t5", "01110": " t6", "01111": "t7",
+        "10000": " s0", "10001": " s1", "10010": " s2", "10011": "s3",
+        "10100": " s4", "10101": " s5", "10110": " s6", "10111": "s7",
+        "11000": " t8", "11001": " t9", "11010": " k0", "11011": "k1",
+        "11100": " gp", "11101": " sp", "11110": " fp", "11111": "ra"
     };
     const binaryInstruction = hexToBinary(hexInstruction);
     const opcode = binaryInstruction.slice(0, 6);
@@ -117,11 +137,15 @@ function translateInstructionToMIPS(hexInstruction) {
         mipsInstruction += rt + ", " + offset + "(" + rs + ")";
     } else if (["addi"].includes(opcodeMIPS)) {
         // I-type instruction
+        console.log("I-type instruction, addi");
         const rt = regMap[binaryInstruction.slice(6, 11)];
         const rs = regMap[binaryInstruction.slice(11, 16)];
-        const immediate = parseInt(binaryInstruction.slice(16, 32), 16);
-        if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
-        mipsInstruction += rt + ", " + rs + ", " + immediate;
+        // const immediate = parseInt(binaryInstruction.slice(16, 32), 16);
+        console.log('immediate ',binaryInstruction.slice(16, 32));
+        console.log('immediate formated ',binaryToHex(binaryInstruction.slice(16, 32)));
+        const immediate = binaryToHex(binaryInstruction.slice(16, 32));
+        if (!rt || !rs || !immediate) return "Invalid Syntax";
+        mipsInstruction += rt + " " + rs + " " + immediate;
     } else if (["beq", "bne"].includes(opcodeMIPS)) {
         // I-type instruction
         const rs = regMap[binaryInstruction.slice(6, 11)];
@@ -130,11 +154,36 @@ function translateInstructionToMIPS(hexInstruction) {
         if (!rs || !rt || isNaN(offset)) return "Invalid Syntax";
         // For simplicity, assuming label is an immediate value (offset)
         mipsInstruction += rs + ", " + rt + ", " + offset;
+    } else if (["j"].includes(opcodeMIPS)) {
+        // J-type instruction
+        const address = binaryToHex(binaryInstruction.slice(6, 32));
+        if (isNaN(address)) return "Invalid Syntax";
+        mipsInstruction += address;
     } else {
         return "Unsupported Instruction";
     }
 
     return mipsInstruction;
+}
+
+function binaryToHex(binaryString) {
+    // Pad the binary string with leading zeros to ensure it's a multiple of 4
+    while (binaryString.length % 4 !== 0) {
+        binaryString = '0' + binaryString;
+    }
+
+    // Initialize an empty string to store the hexadecimal representation
+    let hexString = '';
+
+    // Convert each group of 4 bits to its hexadecimal equivalent
+    for (let i = 0; i < binaryString.length; i += 4) {
+        const binaryChunk = binaryString.substr(i, 4); // Get a chunk of 4 bits
+        const hexDigit = parseInt(binaryChunk, 2).toString(16); // Convert the chunk to hexadecimal
+        hexString += hexDigit; // Append the hexadecimal digit to the result
+    }
+
+    // Return the hexadecimal representation
+    return "0x"+hexString.toUpperCase(); // Convert to uppercase for consistency
 }
 
 function hexToBinary(hex) {
@@ -155,7 +204,8 @@ function translateMIPS() {
   
   instructions.forEach(instruction => {
     const translated = translateInstructionToHex(instruction.trim());
-    output += `${instruction} --> ${translated}\n\n`;
+    //output += `${instruction} --> ${translated}\n\n`;
+    output += `${translated}\n`;
   });
   
   outputDiv.textContent = output;
