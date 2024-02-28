@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIPS Translator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <h1>MIPS Translator</h1>
     <div class="container">
         <div class="input-container">
             <textarea class="textarea" id="input" placeholder="Enter MIPS instructions here..."></textarea>
             <div class="mid-button-container">
-              <button onclick="translateMIPStoHex()">MIPS to Hex</button>
-              <button onclick="translateHextoMIPS()">Hex to MIPS</button>
-          </div>
+                <button onclick="translateMIPStoHex()">MIPS to Hex</button>
+                <button onclick="translateHextoMIPS()">Hex to MIPS</button>
+            </div>
             <textarea class="textarea" id="inputHex" placeholder="Enter hexadecimal instructions here..."></textarea>
         </div>
-        
+
         <div class="button-container">
             <button onclick="saveHexToFile()">Save to RAM</button>
             <div id="dropArea">
@@ -25,8 +27,146 @@
                 <input type="file" id="fileInput" style="display: none;">
                 <button onclick="processFile()">Process File</button>
             </div>
+            <button onclick="simulateMIPS()">Simulate MIPS</button>
         </div>
+        <h2>Registers</h2>
+        <table id="registerTable">
+            <tr>
+                <th>Register</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>zero</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>at</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>v0</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>v1</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>a0</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>a1</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>a2</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>a3</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t0</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t1</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t2</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t3</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t4</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t5</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t6</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t7</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s0</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s1</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s2</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s3</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s4</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s5</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s6</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>s7</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t8</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>t9</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>k0</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>k1</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>gp</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>sp</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>fp</td>
+                <td>0x00</td>
+            </tr>
+            <tr>
+                <td>ra</td>
+                <td>0x00</td>
+            </tr>
+        </table>
+        </table>
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

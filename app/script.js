@@ -327,6 +327,114 @@ function translateInstructionToHex(instruction) {
     return hexInstruction;
 }
 
+// SIMULATION FUNCTIONS
+
+function simulateMIPS() {
+    // Get the inputHex textarea element
+    const inputHexTextarea = document.getElementById('input');
+    // Get the value of the inputHex textarea and split it into instructions
+    const hexInstructions = inputHexTextarea.value.trim().split('\n');
+
+    // Initialize registers and memory
+    const registers = {
+        zero: 0, at: 0, v0: 0, v1: 0,
+        a0: 0, a1: 0, a2: 0, a3: 0,
+        t0: 0, t1: 0, t2: 0, t3: 0,
+        t4: 0, t5: 0, t6: 0, t7: 0,
+        s0: 0, s1: 0, s2: 0, s3: 0,
+        s4: 0, s5: 0, s6: 0, s7: 0,
+        t8: 0, t9: 0, k0: 0, k1: 0,
+        gp: 0, sp: 0, fp: 0, ra: 0
+    };
+    const memory = {};
+
+    for (let i = 0; i < 32; i++) {
+        memory[i] = 0;
+    }
+
+    // Iterate over each hexadecimal instruction
+    hexInstructions.forEach(instruction => {
+        executeMIPSInstruction(instruction, registers, memory);
+    });
+
+    // Display the final values of registers and memory
+    console.log('Final Registers:', registers);
+    console.log('Final Memory:', memory);
+
+    // Update the table with register values
+    const registerTable = document.getElementById('registerTable');
+    const rows = registerTable.getElementsByTagName('tr');
+    for (let i = 1; i < rows.length; i++) {
+        const registerName = rows[i].cells[0].textContent;
+        console.log(registerName);
+        const registerValue = registers[registerName].toString(16).toUpperCase();
+        rows[i].cells[1].textContent = '0x'+registerValue;
+        console.log(registerName,'0x'+registerValue);
+    }
+}
+
+function executeMIPSInstruction(instruction, registers, memory) {
+    // Split MIPS instruction into operation and operands
+    const [op, ...operands] = instruction.split(' ');
+    // Implement execution logic for each MIPS operation
+    switch (op) {
+        case 'add': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] + registers[rt];
+            break;
+        }
+        case 'sub': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] - registers[rt];
+            break;
+        }
+        case 'slt': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] < registers[rt] ? 1 : 0;
+            break;
+        }
+        case 'and': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] & registers[rt];
+            break;
+        }
+        case 'or': {
+            const [rd, rs, rt] = operands;
+            registers[rd] = registers[rs] | registers[rt];
+            break;
+        }
+        case 'addi': {
+            const [rd, rs, immediate] = operands;
+            registers[rd] = registers[rs] + parseInt(immediate);
+            break;
+        }
+        case 'lw': {
+            const [rt, offset, rs] = operands;
+            const address = registers[rs] + parseInt(offset);
+            if (memory.hasOwnProperty(address)) {
+                registers[rt] = memory[address];
+            } else {
+                console.error('Memory address not found:', address);
+            }
+            break;
+        }
+        case 'sw': {
+            const [rt, offset, rs] = operands;
+            const address = registers[rs] + parseInt(offset);
+            memory[address] = registers[rt];
+            break;
+        }
+        // Add cases for other MIPS operations
+        default: {
+            console.error('Unsupported operation:', op);
+            break;
+        }
+    }
+}
+
+
+
+// UTILITY FUNCTIONS
 
 function binaryToHex(binaryString) {
     // Pad the binary string with leading zeros to ensure it's a multiple of 4
