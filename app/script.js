@@ -148,15 +148,18 @@ function translateHextoMIPS() {
 function translateInstructionToMIPS(hexInstruction) {
     console.log("hexInstruction",hexInstruction);
     const opcodeMap = {
-        "000000": "add", "001000": "addi", "000000": "sub", "100011": "lw",
-        "101011": "sw", "000100": "beq", "000101": "bne", "000000": "slt",
+        "000000": "add", "000000": "sub","000000": "slt","000000": "and","000000": "or",
+        "001000": "addi",  "100011": "lw","101011": "sw",
+        "000100": "beq", "000101": "bne", 
         "000010": "j"
     };
 
     const funcMap = {
         "100000": "add",
         "100010": "sub",
-        "101010": "slt"
+        "101010": "slt",
+        "100100": "and",
+        "100101": "or",
     };
 
     const regMap = {
@@ -173,11 +176,11 @@ function translateInstructionToMIPS(hexInstruction) {
     const opcode = binaryInstruction.slice(0, 6);
     console.log(opcode);
     const opcodeMIPS = opcodeMap[opcode];
-    if (!opcodeMIPS) return "Unknown Instruction";
+    if (!opcodeMIPS) return "Unknown Instruction, opcode null";
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt"].includes(opcodeMIPS)) {
+    if (["add", "sub", "slt", "and", "or"].includes(opcodeMIPS)) {
         // R-type instruction
         const func = binaryInstruction.slice(26, 32);;
         console.log("Instruction func ",func);
@@ -222,14 +225,14 @@ function translateInstructionToMIPS(hexInstruction) {
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;
     } else {
-        return "Unsupported Instruction";
+        return "Unsupported Instruction opcode",opcodeMIPS;
     }
 
     return mipsInstruction;
 }
 
 
-function translateMIPS() {
+function translateMIPStoHex() {
     const inputTextArea = document.getElementById('input');
     const inputHexTextarea = document.getElementById('inputHex');
 
@@ -250,14 +253,14 @@ function translateMIPS() {
 
 function translateInstructionToHex(instruction) {
     const opcodeMap = {
-        "add": "000000", "addi": "001000", "sub": "000000", "lw": "100011",
-        "sw": "101011", "beq": "000100", "bne": "000101", "slt": "000000",
+        "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
+        "addi": "001000", "lw": "100011","sw": "101011", 
+        "beq": "000100", "bne": "000101", 
         "j": "000010"
     };
 
     const funcMap = {
-        "add": "100000", "sub": "100010", "slt": "101010"
-        // Add more func codes if necessary
+        "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
     };
 
     const regMap = {
@@ -278,7 +281,7 @@ function translateInstructionToHex(instruction) {
 
     let binaryInstruction = opcode;
     console.log(parts[0]);
-    if (["add", "sub", "slt"].includes(parts[0])) {
+    if (["add", "sub", "slt", "and", "or"].includes(parts[0])) {
         // R-type instruction
         const rd = regMap[parts[1]];
         const rs = regMap[parts[2]];
@@ -353,3 +356,4 @@ function hexToBinary(hex) {
     }
     return binary;
 }
+
