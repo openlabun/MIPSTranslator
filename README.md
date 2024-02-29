@@ -5,7 +5,7 @@ Funcionality:
 1. From MIPS to Hexa
 2. From Hexa to MIPS
 3. Export and import Logisim RAM
-4. MIPS Simulator (ongoing, add, addi, or, and are working)
+4. MIPS Simulator (ongoing, add, addi, or, and , load, store are working)
 
 List of supported instructions:
 1. R (add, sub, and, or)

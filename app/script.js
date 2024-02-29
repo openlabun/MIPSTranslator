@@ -197,7 +197,8 @@ function translateInstructionToMIPS(hexInstruction) {
         // I-type instruction
         const rt = regMap[binaryInstruction.slice(6, 11)];
         const rs = regMap[binaryInstruction.slice(11, 16)];
-        const offset = parseInt(binaryInstruction.slice(16, 32), 16);
+        const offset = binaryInstruction.slice(16, 32);
+        console.log('lw, sw offset ',binaryToHex(offset));
         if (!rt || !rs || isNaN(offset)) return "Invalid Syntax";
         mipsInstruction += rs +" " +rt + " " + binaryToHex(offset) ;
     } else if (["addi"].includes(opcodeMIPS)) {
@@ -366,10 +367,22 @@ function simulateMIPS() {
     const rows = registerTable.getElementsByTagName('tr');
     for (let i = 1; i < rows.length; i++) {
         const registerName = rows[i].cells[0].textContent;
-        console.log(registerName);
+        //console.log(registerName);
         const registerValue = registers[registerName].toString(16).toUpperCase();
         rows[i].cells[1].textContent = '0x'+registerValue;
         console.log(registerName,'0x'+registerValue);
+    }
+
+    // Update the table with memory values
+    const memoryTable = document.getElementById('ramTable');
+    const memRows = memoryTable.getElementsByTagName('tr');
+    for (let i = 1; i < memRows.length; i++) {
+        let memoryAddress = memRows[i].cells[0].textContent;
+        // convert memoryAddress to decimal from hex
+        memoryAddress = parseInt(memoryAddress, 16);
+        console.log(memoryAddress, memory[memoryAddress]);
+        const memoryValue = memory[memoryAddress].toString(16).toUpperCase();
+        memRows[i].cells[1].textContent = '0x'+memoryValue;
     }
 }
 
@@ -409,8 +422,10 @@ function executeMIPSInstruction(instruction, registers, memory) {
             break;
         }
         case 'lw': {
-            const [rt, offset, rs] = operands;
+            const [rt, rs,offset] = operands;
             const address = registers[rs] + parseInt(offset);
+            console.log('lw address:', address);
+            console.log('lw memory value:', memory[address]);
             if (memory.hasOwnProperty(address)) {
                 registers[rt] = memory[address];
             } else {
@@ -419,8 +434,9 @@ function executeMIPSInstruction(instruction, registers, memory) {
             break;
         }
         case 'sw': {
-            const [rt, offset, rs] = operands;
+            const [rt, rs,offset] = operands;
             const address = registers[rs] + parseInt(offset);
+            console.log('sw rt:', rt, 'rs', rs, 'offset', offset, 'address', address,'getting', registers[rt] );
             memory[address] = registers[rt];
             break;
         }
