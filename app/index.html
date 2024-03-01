@@ -12,22 +12,22 @@
     <h1>MIPS Translator</h1>
     <div class="container">
         <div class="input-container">
-            <textarea class="textarea" id="input" placeholder="Enter MIPS instructions here..."></textarea>
+            <textarea class="textarea" id="mips-input" placeholder="Enter MIPS instructions here..."></textarea>
             <div class="mid-button-container">
-                <button onclick="translateMIPStoHex()">MIPS to Hex</button>
-                <button onclick="translateHextoMIPS()">Hex to MIPS</button>
+                <button id="mips-to-hex-button">MIPS to Hex</button>
+                <button id="hex-to-mips-button">Hex to MIPS</button>
             </div>
-            <textarea class="textarea" id="inputHex" placeholder="Enter hexadecimal instructions here..."></textarea>
+            <textarea class="textarea" id="hex-input" placeholder="Enter hexadecimal instructions here..."></textarea>
         </div>
 
         <div class="button-container">
-            <button onclick="saveHexToFile()">Save to RAM</button>
+            <button id="save-to-ram-button">Save to RAM</button>
             <div id="dropArea">
                 <p>Drag and drop a RAM file here, or click to select one.</p>
                 <input type="file" id="fileInput" style="display: none;">
-                <button onclick="processFile()">Process File</button>
+                <button id="process-file-button">Process File</button>
             </div>
-            <button onclick="simulateMIPS()">Simulate MIPS</button>
+            <button id="simulate-mips-button">Simulate MIPS</button>
         </div>
         <div class="button-container">
             <div class="table-container">

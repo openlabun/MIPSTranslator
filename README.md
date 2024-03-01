@@ -18,6 +18,10 @@ To dockerize the app:
 sudo docker build -t mipstranslatori .   
 sudo docker run -d -it -p 5008:80 --restart unless-stopped --name mipstranslator-app mipstranslatori
 
+To test:
+npm install --save-dev jest
+npm test
+
 Augusto Salazar   
 Universidad del Norte 2024   
 GNU General Public License v3.0
