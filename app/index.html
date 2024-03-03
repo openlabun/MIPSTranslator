@@ -27,7 +27,10 @@
                 <input type="file" id="fileInput" style="display: none;">
                 <button id="process-file-button">Process File</button>
             </div>
-            <button id="simulate-mips-button">Simulate MIPS</button>
+            <div class="sim-buttons">
+                <button id="simulate-mips-button">Simulate MIPS</button>
+                <button id="start-debug">Debug 🐞</button>
+            </div>
         </div>
         <div id="simulation-tables" class="button-container">
             <div class="table-container">
@@ -104,7 +107,7 @@
                 </table>
             </div>
             
-            <div id="debugger">
+            <div id="debugger" class="hidden">
                 <h2>Debugger</h2>
                 <div class="debugger-container">
                     <div class="debugger-buttons">

@@ -210,11 +210,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const simulateMipsButton = document.getElementById('simulate-mips-button');
     const saveHexButton = document.getElementById('save-to-ram-button');
     const simulationTables = document.getElementById('simulation-tables');
+    const debugButton = document.getElementById('start-debug');
 
     mipsToHexButton.addEventListener('click', translateMIPStoHex);
     hexToMipsButton.addEventListener('click', translateHextoMIPS);
     simulateMipsButton.addEventListener('click', simulateMIPS);
     saveHexButton.addEventListener('click', saveHexToFile);
+    debugButton.addEventListener('click', startDebug);
 
     // Get references to the drop area and the file input
     const dropArea = document.getElementById('dropArea');
@@ -418,6 +420,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // SIMULATION FUNCTIONS
 
     function simulateMIPS() {
+        // !Hide the debugger cause' it use PC and the simulation does not (may cause conflicts)
+        hideDebugger();
+
         // Scroll to the simulation tables
         simulationTables.scrollIntoView({ behavior: 'smooth' });
 
@@ -502,11 +507,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function startDebug() {
+        resetMIPS();
+        showDebugger();
+
+        // Scroll to the simulation tables
+        simulationTables.scrollIntoView({ behavior: 'smooth' });
+    }
+
     // SETUP THE DEBUGGER
     const debugPlayButton = document.getElementById('dg-run-button');
     const debugStepButton = document.getElementById('dg-step-in-button');
     const debugBackButton = document.getElementById('dg-step-over-button');
     const debugResetButton = document.getElementById('dg-reset-button');
+    const debugr = document.getElementById('debugger');
     const debuggerInfo = document.querySelectorAll('#debugger-info>p');
 
     debugPlayButton.addEventListener('click', simulateMIPS);
@@ -515,14 +529,25 @@ document.addEventListener('DOMContentLoaded', function () {
     debugResetButton.addEventListener('click', resetMIPS);
     mipsInput.addEventListener('input', updateDebuggerInfo);
 
+    function showDebugger() {
+        if (debugr.classList.contains('hidden')) {
+            debugr.classList.remove('hidden');
+        }
+    }
+
+    function hideDebugger() {
+        if (!debugr.classList.contains('hidden')) {
+            debugr.classList.add('hidden');
+        }
+    }
+
     // Initialize the program counter (PC) and history stack
-    // TODO: DEACTIVATE THE DEBUGGER WHEN COMPLETE THE SIMULATION, SINCE IT DOES NOT USE THE PROGRAM COUNTER
     let PC = 0;
     const history = [];
     updateDebuggerInfo();
 
+    // TODO: Highlight the changed registers and memory cells
     function stepMIPS() {
-
 
         // Get the value of the inputHex textarea and split it into instructions
         const hexInstructions = mipsInput.value.trim().split('\n');

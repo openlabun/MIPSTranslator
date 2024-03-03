@@ -163,3 +163,38 @@ button:hover {
 .debugger-info p {
     margin: 0;
 }
+
+.sim-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.sim-buttons button {
+    flex-shrink: 0;
+    height: 100%;
+}
+
+#start-debug {
+    box-sizing: border-box;
+    height: fit-content;
+
+    padding: 8px 6px;
+    border-radius: 5px;
+    background-color: red;
+    font-size: .64rem;
+    font-weight: bold;
+}
+
+#start-debug:hover {
+    background-color: #ee0000;
+}
+
+#start-debug:active {
+    background-color: #cc0000;
+}
+
+#debugger.hidden {
+    display: none;
+}
