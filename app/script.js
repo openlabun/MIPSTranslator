@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
         t8: 0, t9: 0, k0: 0, k1: 0,
         gp: 0, sp: 0, fp: 0, ra: 0
     };
-    const memory = Array.from({ length: 32 }).reduce((acc, curr, i) => ({ ...acc, [i]: 0 }), {});
+    let memory = Array.from({ length: 32 }).reduce((acc, curr, i) => ({ ...acc, [i]: 0 }), {});
 
     // SIMULATION FUNCTIONS
 
@@ -425,20 +425,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const hexInstructions = mipsInput.value.trim().split('\n');
 
         // Initialize registers and memory
-        registers = {
-            zero: 0, at: 0, v0: 0, v1: 0,
-            a0: 0, a1: 0, a2: 0, a3: 0,
-            t0: 0, t1: 0, t2: 0, t3: 0,
-            t4: 0, t5: 0, t6: 0, t7: 0,
-            s0: 0, s1: 0, s2: 0, s3: 0,
-            s4: 0, s5: 0, s6: 0, s7: 0,
-            t8: 0, t9: 0, k0: 0, k1: 0,
-            gp: 0, sp: 0, fp: 0, ra: 0
-        };
-
-        for (let i = 0; i < 32; i++) {
-            memory[i] = 0;
-        }
+        resetMIPS();
 
         // Iterate over each hexadecimal instruction
         hexInstructions.forEach(instruction => {
@@ -516,7 +503,116 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // SETUP THE DEBUGGER
+    const debugPlayButton = document.getElementById('dg-run-button');
+    const debugStepButton = document.getElementById('dg-step-in-button');
+    const debugBackButton = document.getElementById('dg-step-over-button');
+    const debugResetButton = document.getElementById('dg-reset-button');
+    const debuggerInfo = document.querySelectorAll('#debugger-info>p');
 
+    debugPlayButton.addEventListener('click', simulateMIPS);
+    debugStepButton.addEventListener('click', stepMIPS);
+    debugBackButton.addEventListener('click', stepBackMIPS);
+    debugResetButton.addEventListener('click', resetMIPS);
+    mipsInput.addEventListener('input', updateDebuggerInfo);
+
+    // Initialize the program counter (PC) and history stack
+    // TODO: DEACTIVATE THE DEBUGGER WHEN COMPLETE THE SIMULATION, SINCE IT DOES NOT USE THE PROGRAM COUNTER
+    let PC = 0;
+    const history = [];
+    updateDebuggerInfo();
+
+    function stepMIPS() {
+
+
+        // Get the value of the inputHex textarea and split it into instructions
+        const hexInstructions = mipsInput.value.trim().split('\n');
+
+        if (PC >= hexInstructions.length)
+            return;
+
+        // Push the previous state to the history stack
+        // TODO: This can be improved by only storing the changes in state
+        history.push({ PC, registers: { ...registers }, memory: { ...memory } });
+
+        // Execute the current instruction
+        executeMIPSInstruction(hexInstructions[PC], registers, memory);
+
+        // Increment the program counter (PC)
+        PC++;
+
+        // Check if the program has finished
+        if (PC >= hexInstructions.length) {
+            console.log('Program finished');
+            console.log('Final Registers:', registers);
+            console.log('Final Memory:', memory);
+
+            // debugStepButton.disabled = true;
+        }
+
+        // Update tables
+        updateTables(registers, memory);
+
+        // Update debugger info
+        updateDebuggerInfo();
+    }
+
+    function stepBackMIPS() {
+        // Check if the PC is at the beginning of the program
+        if (PC === 0) {
+            console.log('No more steps to undo');
+            return;
+        }
+
+        // Pop the last state from the history stack
+        const lastState = history.pop();
+
+        // Check if there's a state to restore
+        if (lastState) {
+            // Restore the state
+            PC = lastState.PC;
+            registers = lastState.registers;
+            memory = lastState.memory;
+
+            // Update tables
+            updateTables(registers, memory);
+
+            // Update debugger info
+            updateDebuggerInfo();
+        } else {
+            console.log('No more steps to undo');
+        }
+    }
+
+    function resetMIPS() {
+        // Reset the program counter (PC) and history stack
+        PC = 0;
+        history.length = 0;
+
+        // Reset the registers and memory
+        registers = {
+            zero: 0, at: 0, v0: 0, v1: 0,
+            a0: 0, a1: 0, a2: 0, a3: 0,
+            t0: 0, t1: 0, t2: 0, t3: 0,
+            t4: 0, t5: 0, t6: 0, t7: 0,
+            s0: 0, s1: 0, s2: 0, s3: 0,
+            s4: 0, s5: 0, s6: 0, s7: 0,
+            t8: 0, t9: 0, k0: 0, k1: 0,
+            gp: 0, sp: 0, fp: 0, ra: 0
+        };
+        memory = Array.from({ length: 32 }).reduce((acc, curr, i) => ({ ...acc, [i]: 0 }), {});
+
+        // Update tables
+        updateTables(registers, memory);
+
+        // Update debugger info
+        updateDebuggerInfo();
+    }
+
+    function updateDebuggerInfo() {
+        debuggerInfo[0].textContent = `PC: ${PC}`;
+        debuggerInfo[1].textContent = `Current instruction: ${mipsInput.value.trim().split('\n')[PC] ?? null}`;
+        debuggerInfo[2].textContent = `Previous instruction: ${mipsInput.value.trim().split('\n')[PC - 1] ?? null}`;
+    }
 });
 
 module.exports = {
