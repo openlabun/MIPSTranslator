@@ -206,6 +206,7 @@ function sum(a, b) {
 document.addEventListener('DOMContentLoaded', function () {
     const mipsInput = document.getElementById('mips-input');
     const hexInput = document.getElementById('hex-input');
+    const explainInput = document.getElementById('instruction-explanation-input');
     const mipsToHexButton = document.getElementById('mips-to-hex-button');
     const hexToMipsButton = document.getElementById('hex-to-mips-button');
     const simulateMipsButton = document.getElementById('simulate-mips-button');
@@ -218,6 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
     simulateMipsButton.addEventListener('click', simulateMIPS);
     saveHexButton.addEventListener('click', saveHexToFile);
     debugButton.addEventListener('click', startDebug);
+    explain-button.addEventListener('click', explainInstruction);
 
     // Get references to the drop area and the file input
     const dropArea = document.getElementById('dropArea');
@@ -638,6 +640,12 @@ document.addEventListener('DOMContentLoaded', function () {
         debuggerInfo[0].textContent = `PC: ${PC}`;
         debuggerInfo[1].textContent = `Current instruction: ${mipsInput.value.trim().split('\n')[PC] ?? null}`;
         debuggerInfo[2].textContent = `Previous instruction: ${mipsInput.value.trim().split('\n')[PC - 1] ?? null}`;
+    }
+
+    function explainInstruction(){
+        const instruction = explainInput.value.trim();
+        const translated = translateInstructionToMIPS(instruction.trim());
+        explainInput.value = translated;
     }
 });
 
