@@ -30,9 +30,12 @@ h1 {
 
 .textarea {
     flex: 1;
-    min-width: 0; /* Allow shrinking beyond initial width */
-    width: 100%; /* Take up all available space */
-    height: 400px; /* Set initial height */
+    min-width: 0;
+    /* Allow shrinking beyond initial width */
+    width: 100%;
+    /* Take up all available space */
+    height: 400px;
+    /* Set initial height */
     min-width: 100px;
     margin-right: 10px;
     margin-left: 10px;
@@ -88,4 +91,110 @@ button:hover {
 
 .instruction {
     margin-bottom: 5px;
+}
+
+/* DEBUGGER SPECIFIC STYLES */
+
+.debugger-button {
+    box-sizing: border-box;
+    padding: 1px 5px;
+    padding-bottom: 3px;
+    background-color: #00a6ed;
+    border-radius: 5px;
+
+    font-size: larger;
+}
+
+#debugger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+
+    border: 2px dashed green;
+    flex-grow: 0;
+    height: fit-content;
+    padding: 10px 20px;
+}
+
+#debugger h2 {
+    display: block;
+    width: fit-content;
+    margin: 10px auto;
+}
+
+.debugger-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.debugger-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+}
+
+.debugger-button:hover {
+    background-color: #0096d6;
+}
+
+.debugger-button:active {
+    background-color: #0077a3;
+}
+
+.debugger-button:disabled {
+    background-color: #82c9e8;
+    cursor: not-allowed;
+}
+
+.debugger-info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+
+    width: 100%;
+}
+
+.debugger-info p {
+    margin: 0;
+}
+
+.sim-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.sim-buttons button {
+    flex-shrink: 0;
+    height: 100%;
+}
+
+#start-debug {
+    box-sizing: border-box;
+    height: fit-content;
+
+    padding: 8px 6px;
+    border-radius: 5px;
+    background-color: red;
+    font-size: .64rem;
+    font-weight: bold;
+}
+
+#start-debug:hover {
+    background-color: #ee0000;
+}
+
+#start-debug:active {
+    background-color: #cc0000;
+}
+
+#debugger.hidden {
+    display: none;
 }
