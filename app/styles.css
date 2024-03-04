@@ -198,3 +198,8 @@ button:hover {
 #debugger.hidden {
     display: none;
 }
+
+.textarea.single-line {
+    height: 30px; /* Adjust the height as needed */
+    overflow-y: hidden;
+}
