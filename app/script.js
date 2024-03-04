@@ -22,6 +22,7 @@ function translateInstructionToHex(instruction) {
         "gp": "11100", "sp": "11101", "fp": "11110", "ra": "11111"
     };
 
+    instruction = instruction.replace(/\$/g, ''); // Remove the dollar sign from register names
     const parts = instruction.split(' ');
 
     const opcode = opcodeMap[parts[0]];
