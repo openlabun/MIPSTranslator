@@ -19,6 +19,18 @@
             </div>
             <textarea class="textarea" id="hex-input" placeholder="Enter hexadecimal instructions here..."></textarea>
         </div>
+        <!-- "Explain This Instruction" textarea -->
+        <div class="explain-container-c">
+
+            <div class="explain-container">
+                <textarea class="textarea single-line" id="instruction-explanation-input" 
+                    placeholder="Instruction to be explained"></textarea>
+                <button id="explain-button">Explain This Instruction</button>
+                
+            </div>
+            <div id="instruction-explanation"></div>
+        </div>
+        
 
         <div class="button-container">
             <button id="save-to-ram-button">Save to RAM</button>
@@ -106,13 +118,13 @@
                     </tr>
                 </table>
             </div>
-            
+
             <div id="debugger" class="hidden">
                 <h2>Debugger</h2>
                 <div class="debugger-container">
                     <div class="debugger-buttons">
-                      <button class="debugger-button" id="dg-reset-button">🔃</button>
-                      <button class="debugger-button" id="dg-run-button">▶️</button>
+                        <button class="debugger-button" id="dg-reset-button">🔃</button>
+                        <button class="debugger-button" id="dg-run-button">▶️</button>
                         <button class="debugger-button" id="dg-step-in-button">⤵️</button>
                         <button class="debugger-button" id="dg-step-over-button">⬆️</button>
                     </div>
@@ -123,152 +135,146 @@
                     </div>
                 </div>
             </div>
-            
-            <div  class="table-container">
-            <h2>Registers</h2>
-            <table id="registerTable">
-                <tr>
-                    <th>Register</th>
-                    <th>Value</th>
-                </tr>
-                <tr>
-                    <td>zero</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>at</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>v0</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>v1</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>a0</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>a1</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>a2</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>a3</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t0</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t1</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t2</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t3</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t4</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t5</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t6</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t7</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s0</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s1</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s2</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s3</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s4</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s5</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s6</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>s7</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t8</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>t9</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>k0</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>k1</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>gp</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>sp</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>fp</td>
-                    <td>0x00</td>
-                </tr>
-                <tr>
-                    <td>ra</td>
-                    <td>0x00</td>
-                </tr>
-           
-            </table>
-                        <!-- "Explain This Instruction" textarea -->
-                        <div class="explain-container">
-                            <h2>Explain This Instruction</h2>
-                            <textarea class="textarea single-line" id="instruction-explanation-input" placeholder="Instruction to be explained" readonly></textarea>
-                            <button id="explain-button">Explain Instruction</button>
-                        
-                        </div>
-        </div>
+
+            <div class="table-container">
+                <h2>Registers</h2>
+                <table id="registerTable">
+                    <tr>
+                        <th>Register</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>zero</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>at</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>v0</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>v1</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>a0</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>a1</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>a2</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>a3</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t0</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t1</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t2</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t3</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t4</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t5</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t6</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t7</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s0</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s1</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s2</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s3</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s4</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s5</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s6</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>s7</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t8</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>t9</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>k0</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>k1</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>gp</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>sp</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>fp</td>
+                        <td>0x00</td>
+                    </tr>
+                    <tr>
+                        <td>ra</td>
+                        <td>0x00</td>
+                    </tr>
+
+                </table>
+
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

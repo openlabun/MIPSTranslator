@@ -1,11 +1,28 @@
 
-function translateInstructionToHex(instruction) {
+// Function to convert operation to function code for R-type
+function operationToFunctionCode(op) {
+    const functCodes = {
+        'add': '100000',
+        'sub': '100010',
+        'and': '100100',
+        'or': '100101',
+        'slt': '101010',
+    };
+    return functCodes[op] || 'unknown';
+}
+
+
+function convertOpCodeNameToCode(opcodeName) {
     const opcodeMap = {
         "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
         "addi": "001000", "lw": "100011", "sw": "101011",
         "beq": "000100", "bne": "000101",
         "j": "000010"
     };
+    return opcodeMap[opcodeName] || 'unknown';
+}
+
+function translateInstructionToHex(instruction) {
 
     const funcMap = {
         "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
@@ -25,7 +42,7 @@ function translateInstructionToHex(instruction) {
     instruction = instruction.replace(/\$/g, ''); // Remove the dollar sign from register names
     const parts = instruction.split(' ');
 
-    const opcode = opcodeMap[parts[0]];
+    const opcode = convertOpCodeNameToCode(parts[0]);
     if (!opcode) return "Unknown Instruction";
 
     let binaryInstruction = opcode;
@@ -76,23 +93,7 @@ function translateInstructionToHex(instruction) {
     return hexInstruction;
 }
 
-function translateInstructionToMIPS(hexInstruction) {
-    console.log("hexInstruction", hexInstruction);
-    const opcodeMap = {
-        "000000": "add", "000000": "sub", "000000": "slt", "000000": "and", "000000": "or",
-        "001000": "addi", "100011": "lw", "101011": "sw",
-        "000100": "beq", "000101": "bne",
-        "000010": "j"
-    };
-
-    const funcMap = {
-        "100000": "add",
-        "100010": "sub",
-        "101010": "slt",
-        "100100": "and",
-        "100101": "or",
-    };
-
+function convertRegisterToName(registerBinary) {
     const regMap = {
         "00000": "zero", "00001": "at", "00010": "v0", "00011": "v1",
         "00100": "a0", "00101": "a1", "00110": "a2", "00111": "a3",
@@ -103,10 +104,39 @@ function translateInstructionToMIPS(hexInstruction) {
         "11000": "t8", "11001": "t9", "11010": "k0", "11011": "k1",
         "11100": "gp", "11101": "sp", "11110": "fp", "11111": "ra"
     };
+    return regMap[registerBinary] || 'unknown';
+}
+
+function convertFunctToName(functBinary) {
+    const funcMap = {
+        "100000": "add",
+        "100010": "sub",
+        "101010": "slt",
+        "100100": "and",
+        "100101": "or",
+    };
+    return funcMap[functBinary] || 'unknown';
+}
+
+function convertOpcodeToName(opcodeBinary) {
+    const opcodeMap = {
+        "000000": "add", "000000": "sub", "000000": "slt", "000000": "and", "000000": "or",
+        "001000": "addi", "100011": "lw", "101011": "sw",
+        "000100": "beq", "000101": "bne",
+        "000010": "j"
+    };
+    return opcodeMap[opcodeBinary] || 'unknown';
+}
+
+
+
+function translateInstructionToMIPS(hexInstruction) {
+    console.log("hexInstruction", hexInstruction);
+
     const binaryInstruction = hexToBinary(hexInstruction);
     const opcode = binaryInstruction.slice(0, 6);
     console.log(opcode);
-    const opcodeMIPS = opcodeMap[opcode];
+    const opcodeMIPS = convertOpcodeToName(opcode);
     if (!opcodeMIPS) return "Unknown Instruction, opcode null";
 
     let mipsInstruction = opcodeMIPS + " ";
@@ -115,19 +145,19 @@ function translateInstructionToMIPS(hexInstruction) {
         // R-type instruction
         const func = binaryInstruction.slice(26, 32);;
         console.log("Instruction func ", func);
-        const funcMIPS = funcMap[func];
+        const funcMIPS = convertFunctToName(func);
         console.log("Instruction ", funcMIPS);
         if (!funcMIPS) return "Unknown Instruction (function)";
         mipsInstruction = funcMIPS + " ";
-        const rs = regMap[binaryInstruction.slice(6, 11)];
-        const rt = regMap[binaryInstruction.slice(11, 16)];
-        const rd = regMap[binaryInstruction.slice(16, 21)];
+        const rs = convertRegisterToName(binaryInstruction.slice(6, 11));
+        const rt = convertRegisterToName(binaryInstruction.slice(11, 16));
+        const rd = convertRegisterToName(binaryInstruction.slice(16, 21));
         if (!rs || !rt || !rd) return "Invalid Registers";
         mipsInstruction += rd + " " + rs + " " + rt;
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
         // I-type instruction
-        const rt = regMap[binaryInstruction.slice(6, 11)];
-        const rs = regMap[binaryInstruction.slice(11, 16)];
+        const rt = convertRegisterToName(binaryInstruction.slice(6, 11));
+        const rs = convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
         console.log('lw, sw offset ', binaryToHex(offset));
         if (!rt || !rs || isNaN(offset)) return "Invalid Syntax";
@@ -135,8 +165,8 @@ function translateInstructionToMIPS(hexInstruction) {
     } else if (["addi"].includes(opcodeMIPS)) {
         // I-type instruction
         console.log("I-type instruction, addi");
-        const rt = regMap[binaryInstruction.slice(6, 11)];
-        const rs = regMap[binaryInstruction.slice(11, 16)];
+        const rt = convertRegisterToName(binaryInstruction.slice(6, 11));
+        const rs = convertRegisterToName(binaryInstruction.slice(11, 16));
         // const immediate = parseInt(binaryInstruction.slice(16, 32), 16);
         console.log('immediate ', binaryInstruction.slice(16, 32));
         console.log('immediate formated ', binaryToHex(binaryInstruction.slice(16, 32)));
@@ -145,8 +175,8 @@ function translateInstructionToMIPS(hexInstruction) {
         mipsInstruction += rs + " " + rt + " " + immediate;
     } else if (["beq", "bne"].includes(opcodeMIPS)) {
         // I-type instruction
-        const rs = regMap[binaryInstruction.slice(6, 11)];
-        const rt = regMap[binaryInstruction.slice(11, 16)];
+        const rs = convertRegisterToName(binaryInstruction.slice(6, 11));
+        const rt = convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = parseInt(binaryInstruction.slice(16, 32), 16);
         if (!rs || !rt || isNaN(offset)) return "Invalid Syntax";
         // For simplicity, assuming label is an immediate value (offset)
@@ -195,13 +225,9 @@ function hexToBinary(hex) {
     return binary;
 }
 
-
-
 function sum(a, b) {
     return a + b;
 }
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const mipsInput = document.getElementById('mips-input');
@@ -210,16 +236,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const mipsToHexButton = document.getElementById('mips-to-hex-button');
     const hexToMipsButton = document.getElementById('hex-to-mips-button');
     const simulateMipsButton = document.getElementById('simulate-mips-button');
+    const explainButton = document.getElementById('explain-button');
     const saveHexButton = document.getElementById('save-to-ram-button');
     const simulationTables = document.getElementById('simulation-tables');
     const debugButton = document.getElementById('start-debug');
+    const explanationDiv = document.getElementById('instruction-explanation');
 
     mipsToHexButton.addEventListener('click', translateMIPStoHex);
     hexToMipsButton.addEventListener('click', translateHextoMIPS);
     simulateMipsButton.addEventListener('click', simulateMIPS);
     saveHexButton.addEventListener('click', saveHexToFile);
     debugButton.addEventListener('click', startDebug);
-    explain-button.addEventListener('click', explainInstruction);
+    explainButton.addEventListener('click', explainInstruction);
 
     // Get references to the drop area and the file input
     const dropArea = document.getElementById('dropArea');
@@ -642,11 +670,231 @@ document.addEventListener('DOMContentLoaded', function () {
         debuggerInfo[2].textContent = `Previous instruction: ${mipsInput.value.trim().split('\n')[PC - 1] ?? null}`;
     }
 
-    function explainInstruction(){
+    function explainInstruction() {
         const instruction = explainInput.value.trim();
-        const translated = translateInstructionToMIPS(instruction.trim());
-        explainInput.value = translated;
+        //const explanation = decodeInstruction(instruction.trim());
+        generateInstructionTable(instruction.trim());
+        //explanationDiv.textContent = explanation;
+        //explanationDiv.style.display = 'block'; // Show the explanation
     }
+
+    function produceRInstructionTable(instruction) {
+        const hexInstruction = translateInstructionToHex(instruction);
+        const binaryInstruction = hexToBinary(hexInstruction);
+        const parts = {
+            opcode: binaryInstruction.slice(0, 6),
+            rs: binaryInstruction.slice(6, 11),
+            rt: binaryInstruction.slice(11, 16),
+            rd: binaryInstruction.slice(16, 21),
+            shamt: binaryInstruction.slice(21, 26),
+            funct: binaryInstruction.slice(26, 32)
+        };
+
+        // Create the table structure
+        let tableHtml = `
+        <table class="mips-table">
+        <tr>
+            <th colspan="6">31-26</th>
+            <th colspan="5">26-21</th>
+            <th colspan="5">20-16</th>
+            <th colspan="5">15-11</th>
+            <th colspan="5">10-6</th>
+            <th colspan="6">5-0</th>
+        </tr>
+        <tr>
+            <td colspan="6">OpCode</td>
+            <td colspan="5">rs</td>
+            <td colspan="5">rt</td>
+            <td colspan="5">rd</td>
+            <td colspan="5">shamt</td>
+            <td colspan="6">func</td>
+        </tr>
+        <tr>
+            <td colspan="6">R-Type</td>
+            <td colspan="5">${convertRegisterToName(parts.rs)}</td>
+            <td colspan="5">${convertRegisterToName(parts.rt)}</td>
+            <td colspan="5">${convertRegisterToName(parts.rd)}</td>
+            <td colspan="5">${parts.shamt}</td>
+            <td colspan="6">${convertFunctToName(parts.funct)}</td>
+        </tr>
+        <tr>
+            <td colspan="6">${parts.opcode}</td>
+            <td colspan="5">${parts.rs}</td>
+            <td colspan="5">${parts.rt}</td>
+            <td colspan="5">${parts.rd}</td>
+            <td colspan="5">${parts.shamt}</td>
+            <td colspan="6">${parts.funct}</td>
+        </tr>
+        </table>
+    `;
+        return tableHtml;
+    }
+
+    function produceIInstructionTable(instruction) {
+        const hexInstruction = translateInstructionToHex(instruction);
+        const binaryInstruction = hexToBinary(hexInstruction);
+        const parts = {
+            opcode: binaryInstruction.slice(0, 6),
+            rs: binaryInstruction.slice(6, 11),
+            rt: binaryInstruction.slice(11, 16),
+            immediate: binaryInstruction.slice(16, 32)
+        };
+
+        // Create the table structure
+        let tableHtml = `
+        <table class="mips-table">
+        <tr>
+            <th colspan="6">31-26</th>
+            <th colspan="5">25-21</th>
+            <th colspan="5">20-16</th>
+            <th colspan="5">15-0</th>
+        </tr>
+        <tr>
+            <th colspan="6">opCode</th>
+            <th colspan="5">rs</th>
+            <th colspan="5">rt</th>
+            <th colspan="5">offset-imm</th>
+        </tr>
+        <tr>
+            <td colspan="6">${parts.opcode}</td>
+            <td colspan="5">${convertRegisterToName(parts.rs)}</td>
+            <td colspan="5">${convertRegisterToName(parts.rt)}</td>
+            <td colspan="5">${parts.immediate}</td>
+        </tr>
+        </table>
+    `;
+        return tableHtml;
+
+    }
+
+    function produceJInstructionTable(instruction) {
+        const hexInstruction = translateInstructionToHex(instruction);
+        const binaryInstruction = hexToBinary(hexInstruction);
+        const parts = {
+            opcode: binaryInstruction.slice(0, 6),
+            address: binaryInstruction.slice(6, 32)
+        };
+        let tableHtml = `
+        <table class="mips-table">
+        <tr>
+            <th colspan="6">31-26</th>
+            <th colspan="26">25-0</th>
+        </tr>
+        <tr>
+            <th colspan="6">opCode</th>
+            <th colspan="26">address</th>
+        </tr>
+        <tr>
+            <td colspan="6">${parts.opcode}</td>
+            <td colspan="26">${parts.address}</td>
+        </tr>
+        </table>
+    `;
+    return tableHtml;
+    }
+
+    function generateInstructionTable(instruction) {
+        const hexInstruction = translateInstructionToHex(instruction);
+        const binaryInstruction = hexToBinary(hexInstruction);
+        const opCode = binaryInstruction.slice(0, 6);
+
+        switch (opCode) {
+            case '000000':
+                explanationDiv.innerHTML = produceRInstructionTable(instruction);
+                break;
+            case '001000': //addi
+            case '100011': //lw
+            case '101011': //sw
+            case '000100': //beq
+            case '000101': //bne
+                explanationDiv.innerHTML = produceIInstructionTable(instruction);
+                break;
+            case '000010': //j
+                explanationDiv.innerHTML = produceJInstructionTable(instruction);
+                break;
+            default:
+                explanationDiv.textContent = 'Unknown instruction';
+        }
+        explanationDiv.style.display = 'block'; // Show the explanation
+    }
+
+
+    function decodeInstruction(instruction) {
+        let explanation = '';
+        let details = {};
+
+        // Assume `instruction` is a string like "add $t1, $t2, $t3"
+        const parts = instruction.split(/\s+/);
+        const operation = parts[0]; // e.g., "add"
+        console.log('operation', operation);
+        switch (operation) {
+            case 'add':
+            case 'sub':
+            case 'and':
+            case 'or':
+            case 'slt':
+                // R-type instructions
+                details = {
+                    operation: operation,
+                    rs: parts[2], // e.g., "$t2"
+                    rt: parts[3], // e.g., "$t3"
+                    rd: parts[1], // e.g., "$t1"
+                    shamt: '0',
+                    funct: operationToFunctionCode(operation),
+                };
+                explanation = `This is an R-type instruction where ${details.rd} gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
+                break;
+            // Add cases for I-type and J-type instructions
+            case 'lw':
+                details = {
+                    operation: operation,
+                    rt: parts[1], // e.g., "$t1"
+                    offset: parts[2], // e.g., "100($t2)"
+                    rs: parts[2].split('(')[1].replace(')', ''), // e.g., "$t2"
+                };
+                explanation = `This is an I-type instruction where ${details.rt} gets the value from memory at the address ${details.offset} offset from ${details.rs}.`;
+                break;
+            case 'sw':
+                details = {
+                    operation: operation,
+                    rt: parts[1], // e.g., "$t1"
+                    offset: parts[2], // e.g., "100($t2)"
+                    rs: parts[2].split('(')[1].replace(')', ''), // e.g., "$t2"
+                };
+                explanation = `This is an I-type instruction where the value in ${details.rt} is stored in memory at the address ${details.offset} offset from ${details.rs}.`;
+                break;
+            case 'addi':
+                details = {
+                    operation: operation,
+                    rt: parts[1], // e.g., "$t1"
+                    rs: parts[2], // e.g., "$t2"
+                    immediate: parts[3], // e.g., "100"
+                };
+                explanation = `This is an I-type instruction where ${details.rt} gets the result of adding the value in ${details.rs} and the immediate value ${details.immediate}.`;
+                break;
+            case 'beq':
+                details = {
+                    operation: operation,
+                    rs: parts[1], // e.g., "$t1"
+                    rt: parts[2], // e.g., "$t2"
+                    offset: parts[3], // e.g., "100"
+                };
+                explanation = `This is an I-type instruction where the program jumps to the target address if the values in ${details.rs} and ${details.rt} are equal.`;
+                break;
+            case 'bne':
+                details = {
+                    operation: operation,
+                    rs: parts[1], // e.g., "$t1"
+                    rt: parts[2], // e.g., "$t2"
+                    offset: parts[3], // e.g., "100"
+                };
+                explanation = `This is an I-type instruction where the program jumps to the target address if the values in ${details.rs} and ${details.rt} are not equal.`;
+                break;
+        }
+        return explanation;
+    }
+
+
 });
 
 module.exports = {
