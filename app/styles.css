@@ -39,6 +39,8 @@ h1 {
     min-width: 100px;
     margin-right: 10px;
     margin-left: 10px;
+    padding:5px;
+    font-size: large;
 }
 
 .mid-button-container {
@@ -69,6 +71,12 @@ h1 {
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 10px;
+}
+
+.explain-container-c{
+    display: flex;
+    flex-direction: column;
     margin-bottom: 10px;
 }
 
@@ -210,6 +218,12 @@ button:hover {
     height: 30px; /* Adjust the height as needed */
     width: 250px;
     overflow-y: hidden;
+    resize: none; /* Disable textarea resizing */
+    justify-content: center;
+    align-items: center;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-top: 2px;
 }
 
 .action-button {
