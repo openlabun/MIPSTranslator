@@ -65,6 +65,13 @@ h1 {
     margin-bottom: 10px;
 }
 
+.explain-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 button {
     padding: 10px 20px;
     background-color: #4CAF50;
@@ -201,5 +208,39 @@ button:hover {
 
 .textarea.single-line {
     height: 30px; /* Adjust the height as needed */
+    width: 250px;
     overflow-y: hidden;
 }
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .action-button:hover {
+    background-color: #0056b3;
+  }
+  
+  #instruction-explanation {
+    display: none; /* Hide by default */
+  }
+
+  .mips-table {
+    width: 100%; /* Adjust the width as necessary */
+    border-collapse: collapse; /* Collapse the borders */
+  }
+  
+  .mips-table th, .mips-table td {
+    border: 1px solid black; /* Add a solid border */
+    text-align: center;
+    padding: 8px; /* Adjust padding as necessary */
+  }
+  
+  .mips-table th {
+    background-color: #f2f2f2; /* A light grey background for header cells */
+  }
