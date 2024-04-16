@@ -23,7 +23,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/azureuser/MIPSTranslator/
+          cd /home/proyecto/MIPSTranslator/
           git pull origin main
           git status
           docker stop mipstranslator-app
