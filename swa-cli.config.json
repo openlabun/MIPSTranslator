@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "mipstranslator": {
+      "appLocation": "app",
+      "outputLocation": ".",
+      "appBuildCommand": "npm install",
+      "appName": "mipstranslator",
+      "resourceGroup": "mipstranslator-rg"
+    }
+  }
+}
