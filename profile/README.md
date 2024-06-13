@@ -1,3 +1,6 @@
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosuninorte/.github/blob/main/profile/README.md)
+[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/proyectosuninorte/.github/blob/main/profile/README.es.mdd)
+
 # Proyectos Ingeniería - Universidad del Norte
 
 Welcome to the **Proyectos Ingeniería** organization of **Universidad del Norte**! This organization hosts repositories of tools and utilities developed by our talented students with the support of our dedicated professors. Our goal is to provide valuable resources that aid in solving common technical tasks, benefiting both the university community and the wider public.
