@@ -2,15 +2,6 @@
 
 Welcome to the **Proyectos Ingeniería** organization of **Universidad del Norte**! This organization hosts repositories of tools and utilities developed by our talented students with the support of our dedicated professors. Our goal is to provide valuable resources that aid in solving common technical tasks, benefiting both the university community and the wider public.
 
-## Table of Contents
-- [Proyectos Ingeniería - Universidad del Norte](#proyectos-ingeniería---universidad-del-norte)
-  - [Table of Contents](#table-of-contents)
-  - [About Us](#about-us)
-  - [Projects](#projects)
-  - [Contributing](#contributing)
-  - [License](#license)
-  - [Contact](#contact)
-
 ## About Us
 
 **Proyectos Ingeniería** is an initiative of the **Universidad del Norte** aimed at fostering innovation and practical problem-solving. Our students, guided by experienced faculty members, develop tools that address everyday technical challenges. These projects are designed to be useful not only within the university but also for anyone looking for efficient technical solutions.
