@@ -6,10 +6,6 @@ Seguir estas pautas ayuda a comunicar que respetas el tiempo de los desarrollado
 
 Hay muchas formas de contribuir, desde mejorar la documentación, enviar informes de errores y solicitudes de funcionalidades hasta escribir código que pueda incorporarse a los proyectos de proyectosingenieriauninorte.
 
-## Código de Conducta
-
-Se espera que todos los miembros de nuestra comunidad sigan nuestro [Código de Conducta][conduct]. Por favor, asegúrate de ser acogedor y amigable en todos nuestros espacios.
-
 ## Cómo reportar un bug
 
 Estamos usando GitHub Issues para nuestros bugs públicos. Mantenemos un ojo cercano en esto e intentamos dejar claro cuando tenemos una solución interna en progreso. Antes de presentar una nueva tarea, intenta asegurarte de que tu problema no existe ya.
