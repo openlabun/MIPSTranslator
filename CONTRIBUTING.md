@@ -39,20 +39,118 @@ Antes de enviar una pull request, por favor asegúrate de que se haya hecho lo s
 
 ## Tu Primer Pull Request
 
-¿Trabajando en tu primer Pull Request? Puedes aprender cómo hacerlo con esta serie de videos gratuita:
+Este proyecto tiene como objetivo simplificar y guiar a los principiantes en su primera contribución. Si estás buscando hacer tu primera contribución, sigue los pasos a continuación.
 
-[Cómo Contribuir a un Proyecto de Código Abierto en GitHub][contributeguide]
+_Si no te sientes cómodo con la línea de comandos, [aquí tienes tutoriales usando herramientas GUI.](#tutorials-using-other-tools)_
 
-Para ayudarte a empezar y familiarizarte con nuestro proceso de contribución, tenemos una lista de [buenos primeros issues][good_first_issue] que contienen bugs con un alcance relativamente limitado. Este es un buen lugar para comenzar.
+<img align="right" width="300" src="https://firstcontributions.github.io/assets/Readme/fork.png" alt="fork this repository" />
 
-Si decides solucionar un problema, por favor asegúrate de revisar el hilo de comentarios por si alguien ya está trabajando en una solución. Si nadie está trabajando en ello en este momento, por favor deja un comentario indicando que tienes la intención de trabajar en ello para que otras personas no dupliquen tu esfuerzo.
+#### Si no tienes git en tu máquina, [instálalo](https://docs.github.com/en/get-started/quickstart/set-up-git).
 
-Si alguien reclama un issue pero no sigue adelante por más de dos semanas, está bien tomarlo, pero aún así deberías dejar un comentario.
+## Haz un fork de este repositorio
 
-## Directrices para Commits en Git
+Haz un fork de este repositorio haciendo clic en el botón de fork en la parte superior de esta página.
+Esto creará una copia de este repositorio en tu cuenta.
 
-Es una práctica recomendada mantener tus cambios lo más agrupados lógicamente posible dentro de commits individuales. No hay límite en el número de commits que puede tener una sola Pull Request, y muchos contribuyentes encuentran más fácil revisar los cambios que están divididos en múltiples commits.
+## Clona el repositorio
 
-```text
-$ git add mis/archivos/cambiados
-$ git commit
+<img align="right" width="300" src="https://firstcontributions.github.io/assets/Readme/clone.png" alt="clone this repository" />
+
+Ahora clona el repositorio forked en tu máquina. Ve a tu cuenta de GitHub, abre el repositorio forked, haz clic en el botón de código y luego en el ícono de _copiar al portapapeles_.
+
+Abre una terminal y ejecuta el siguiente comando git:
+
+```bash
+git clone "url que acabas de copiar"
+```
+
+donde "url que acabas de copiar" (sin las comillas) es la URL de este repositorio (tu fork de este proyecto). Consulta los pasos anteriores para obtener la URL.
+
+<img align="right" width="300" src="https://firstcontributions.github.io/assets/Readme/copy-to-clipboard.png" alt="copy URL to clipboard" />
+
+Por ejemplo:
+
+```bash
+git clone git@github.com:este-es-tu-usuario/first-contributions.git
+```
+
+donde `este-es-tu-usuario` es tu nombre de usuario de GitHub. Aquí estás copiando el contenido del repositorio first-contributions en GitHub a tu computadora.
+
+## Crea una rama
+
+Cambia al directorio del repositorio en tu computadora (si no estás ya allí):
+
+```bash
+cd first-contributions
+```
+
+Ahora crea una rama usando el comando `git switch`:
+
+```bash
+git switch -c nombre-de-tu-nueva-rama
+```
+
+Por ejemplo:
+
+```bash
+git switch -c agregar-alonzo-church
+```
+
+## Realiza los cambios necesarios y confirma esos cambios
+
+Ahora abre el archivo `Contributors.md` en un editor de texto, agrega tu nombre. No lo pongas al principio ni al final del archivo. Colócalo en cualquier parte del medio. Ahora, guarda el archivo.
+
+<img align="right" width="450" src="https://firstcontributions.github.io/assets/Readme/git-status.png" alt="git status" />
+
+Si vas al directorio del proyecto y ejecutas el comando `git status`, verás que hay cambios.
+
+Añade esos cambios a la rama que acabas de crear usando el comando `git add`:
+
+```bash
+git add Contributors.md
+```
+
+Ahora confirma esos cambios usando el comando `git commit`:
+
+```bash
+git commit -m "Agregar tu-nombre a la lista de Contribuyentes"
+```
+
+reemplazando `tu-nombre` con tu nombre.
+
+## Envía los cambios a GitHub
+
+Envía tus cambios usando el comando `git push`:
+
+```bash
+git push -u origin nombre-de-tu-rama
+```
+
+reemplazando `nombre-de-tu-rama` con el nombre de la rama que creaste anteriormente.
+
+<details>
+<summary> <strong>Si obtienes errores al enviar, haz clic aquí:</strong> </summary>
+
+- ### Error de Autenticación
+     <pre>remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.
+  remote: Please see https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/ for more information.
+  fatal: Authentication failed for 'https://github.com/<tu-usuario>/first-contributions.git/'</pre>
+  Ve al [tutorial de GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) sobre cómo generar y configurar una clave SSH para tu cuenta.
+
+</details>
+
+## Envía tus cambios para revisión
+
+Si vas a tu repositorio en GitHub, verás un botón de `Comparar & pull request`. Haz clic en ese botón.
+
+<img style="float: right;" src="https://firstcontributions.github.io/assets/Readme/compare-and-pull.png" alt="create a pull request" />
+
+Ahora envía la solicitud de extracción.
+
+<img style="float: right;" src="https://firstcontributions.github.io/assets/Readme/submit-pull-request.png" alt="submit pull request" />
+
+Pronto estaré fusionando todos tus cambios en la rama principal de este proyecto. Recibirás un correo electrónico de notificación una vez que los cambios se hayan fusionado.
+
+## ¿Dónde ir desde aquí?
+
+¡Felicidades! ¡Acabas de completar el flujo de trabajo estándar _fork -> clone -> edit -> pull request_ que a menudo encontrarás como contribuyente!
