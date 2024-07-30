@@ -1,4 +1,4 @@
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosuninorte/.github/blob/main/profile/README.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosingenieriauninorte/.github/blob/main/profile/README.md)
 
 # Proyectos Ingeniería - Universidad del Norte
 
@@ -20,14 +20,7 @@ Aquí encontrarás una variedad de repositorios que contienen diferentes herrami
 
 ## Contribuir
 
-Damos la bienvenida y alentamos las contribuciones de todos. Ya seas estudiante, exalumno o profesional, tu aporte es valioso. Para contribuir:
-
-1. Haz un fork del repositorio al que deseas contribuir.
-2. Crea una nueva rama para tu función o corrección de errores.
-3. Confirma tus cambios y envía tu rama a tu fork.
-4. Abre un Pull Request con una descripción detallada de tus cambios.
-
-Por favor, asegúrate de que tu código siga nuestras directrices de contribución y estándares de codificación, que puedes encontrar en el archivo `CONTRIBUTING.md` de cada repositorio.
+Damos la bienvenida y alentamos las contribuciones de todos. Ya seas estudiante, exalumno o profesional, tu aporte es valioso. Para contribuir, por favor lee nuestras [pautas de contribución](https://github.com/proyectosingenieriauninorte/.github/blob/main/CONTRIBUTING.md) para obtener instrucciones detalladas.
 
 ## Licencia
 

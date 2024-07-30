@@ -27,11 +27,6 @@ Aquí hay algunas notas sobre cómo reportar el bug para que podamos solucionarl
 Las contribuciones son bienvenidas a través de pull requests en GitHub. Cada pull request debe implementar UNA característica o corrección de errores.
 Si quieres añadir o arreglar más de una cosa, envía más de una pull request.
 
-Tenemos muchos proyectos escritos en diferentes lenguajes. Para cada lenguaje utilizamos un estilo de código correspondiente que debes seguir:
-
-* [Estilo de Código en Golang][golang_code_style]
-* [Estilo de Código en JavaScript][js_code_style]
-
 El equipo central está monitoreando las pull requests. Revisaremos tu pull request y la fusionaremos, solicitaremos cambios o la cerraremos con una explicación.
 
 Antes de enviar una pull request, por favor asegúrate de que se haya hecho lo siguiente:

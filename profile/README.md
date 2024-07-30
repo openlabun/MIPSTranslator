@@ -1,5 +1,5 @@
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosuninorte/.github/blob/main/profile/README.md)
-[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/proyectosuninorte/.github/blob/main/profile/README.es.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosingenieriauninorte/.github/blob/main/profile/README.md)
+[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/proyectosingenieriauninorte/.github/blob/main/profile/README.es.md)
 
 # Proyectos Ingeniería - Universidad del Norte
 
@@ -21,14 +21,7 @@ Explore our repositories to find a tool that suits your needs!
 
 ## Contributing
 
-We welcome and encourage contributions from everyone. Whether you are a student, an alum, or a professional, your input is valuable. To contribute:
-
-1. Fork the repository you wish to contribute to.
-2. Create a new branch for your feature or bug fix.
-3. Commit your changes and push your branch to your fork.
-4. Open a Pull Request with a detailed description of your changes.
-
-Please ensure your code follows our contribution guidelines and coding standards, which you can find in the `CONTRIBUTING.md` file of each repository.
+We welcome and encourage contributions from everyone. Whether you are a student, an alum, or a professional, your input is valuable. To contribute, please read our [contributing guidelines](https://github.com/proyectosingenieriauninorte/.github/blob/main/CONTRIBUTING.md) for detailed instructions.
 
 ## License
 
