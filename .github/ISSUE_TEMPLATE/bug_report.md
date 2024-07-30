@@ -1,20 +1,38 @@
-## Descripción del Bug
-Una descripción clara y concisa del bug.
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
 
-## Pasos para Reproducir
-1. Ir a '...'
-2. Hacer clic en '....'
-3. Desplazarse hacia '....'
-4. Ver el error
+---
 
-## Comportamiento Esperado
-Una descripción clara y concisa de lo que esperabas que sucediera.
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-## Comportamiento Observado
-Una descripción clara y concisa de lo que realmente sucedió.
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
-## Capturas de Pantalla
-Si aplica, añade capturas de pantalla para ayudar a explicar el problema.
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
-## Información Adicional
-Cualquier otra información que consideres relevante.
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+
+**Desktop (please complete the following information):**
+ - OS: [e.g. iOS]
+ - Browser [e.g. chrome, safari]
+ - Version [e.g. 22]
+
+**Smartphone (please complete the following information):**
+ - Device: [e.g. iPhone6]
+ - OS: [e.g. iOS8.1]
+ - Browser [e.g. stock browser, safari]
+ - Version [e.g. 22]
+
+**Additional context**
+Add any other context about the problem here.
