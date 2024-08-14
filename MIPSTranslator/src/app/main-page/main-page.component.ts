@@ -4,7 +4,7 @@ import { TranslateButtonComponent } from './translate-button/translate-button.co
 import { SwitchComponent } from './switch/switch.component';
 import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
 import { RamdropComponent } from './ramdrop/ramdrop.component';
-import { TranslatorService } from '../Shared/Services/Transalator/translator.service';
+import { TranslatorService } from '../Shared/Services/Translator/translator.service';
 
 @Component({
   selector: 'app-main-page',
