@@ -1,0 +1,59 @@
+.save-to-ram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+
+.drop-area {
+    border: 2px dashed #2a999d;
+    border-radius: 10px;
+    padding: 25px;
+    background-color: transparent;
+    text-align: center;
+    width: 350px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    margin-top: 40px;
+}
+
+.drop-area:hover {
+    background-color: #43296a42;
+    border-color: #7d2ae8;
+}
+
+
+.drop-text {
+    font-size: 16px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+.or-text {
+    font-size: 14px;
+    color: #ffffff;
+    margin: 15px 0;
+}
+.select-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff; 
+    background-color: transparent; 
+    border: 2px solid #2a999d; /* Borde del botón */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease; 
+}
+
+.select-button:hover {
+    background-color: #7c2ae85a;
+    border-color: #7d2ae8;
+}
+
+.file-input {
+    display: none;
+}
+
+#drop-area.active {
+    background-color: #e0e7ff;
+    border-color: #0056b3;
+}
+}
