@@ -897,8 +897,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-module.exports = {
-    sum,
-    translateInstructionToMIPS,
-    translateInstructionToHex
-};
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        sum,
+        translateInstructionToMIPS,
+        translateInstructionToHex
+    };
+}
