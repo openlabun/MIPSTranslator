@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, output, Output } from '@angular/core';
 
 @Component({
   selector: 'app-textbox',
@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './textbox.component.css'
 })
 export class TextboxComponent {
-  @Output() inputChange = new EventEmitter<string>();
+  inputChange = output<string>();
 
   onInput(event: Event): void {
     const inputText = (event.target as HTMLTextAreaElement).value;

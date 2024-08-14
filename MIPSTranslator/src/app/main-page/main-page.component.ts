@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TextboxComponent } from './textbox/textbox.component';
 import { TranslateButtonComponent } from './translate-button/translate-button.component';
 import { SwitchComponent } from './switch/switch.component';
@@ -20,11 +20,11 @@ import { TranslatorService } from '../Shared/Services/Transalator/translator.ser
   styleUrls: ['./main-page.component.css'], 
 })
 export class MainPageComponent {
-  private translator = Inject(TranslatorService);
   isHexToMIPS: boolean = true;
   inputText: string = '';
   output: string = '';
-
+  private translator = inject(TranslatorService);
+  
   // Manejadores de eventos
   onToggle(isChecked: boolean): void {
     this.isHexToMIPS = isChecked;
@@ -32,6 +32,7 @@ export class MainPageComponent {
 
   onInput(input: string): void {
     this.inputText = input;
+    
   }
 
   onTranslate(): void {

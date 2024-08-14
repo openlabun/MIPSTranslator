@@ -110,7 +110,7 @@ export class TranslatorService {
   }
 
   // Función para traducir de Hex a MIPS
-  translateInstructionToMIPS(hexInstruction: string): string {
+   translateInstructionToMIPS(hexInstruction: string): string {
     const binaryInstruction = this.hexToBinary(hexInstruction);
     const opcode = binaryInstruction.slice(0, 6);
     const opcodeMIPS = this.convertOpcodeToName(opcode);
