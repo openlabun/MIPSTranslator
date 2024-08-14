@@ -18,23 +18,17 @@ To dockerize the app:
 sudo docker build -t mipstranslatori .   
 sudo docker run -d -it -p 5008:80 --restart unless-stopped --name mipstranslator-app mipstranslatori
 
-Some MIPS examples:
+MIPS example:
 ```assembly
-addi t0 t0 0x01 -> 0x21080001
-addi t4 t4 0x02 -> 0x218C0002
-add t0 t0 t0 -> 0x01084020
-add t0 t0 t0 -> 0x01084020
-add t1 t0 t0 -> 0x01084820
-add t2 t1 t1 -> 0x01295020
-add t3 t2 t2 -> 0x014A5820
-Expected result:
-t0 = 4
-t1 = 8
-t2 = 10 (hex)
-t3 = 20 (hex)
-t4 = 2
+addi t0 t0 0x01
+addi t4 t4 0x02
+add t0 t0 t0
+add t0 t0 t0
+add t1 t0 t0
+add t2 t1 t1
+add t3 t2 t2
 ```
-Some Hexadecimal examples:
+Translates to:
 ```assembly
 21080001
 218C0002
@@ -43,6 +37,14 @@ Some Hexadecimal examples:
 01084820
 01295020
 014A5820
+```
+Expected result:
+```assembly
+t0 = 4
+t1 = 8
+t2 = 10 (hex)
+t3 = 20 (hex)
+t4 = 2
 ```
 
 To test (inside the app folder):
