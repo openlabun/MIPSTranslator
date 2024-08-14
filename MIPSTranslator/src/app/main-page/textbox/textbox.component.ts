@@ -1,17 +1,22 @@
-import { Component, EventEmitter, output, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-textbox',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './textbox.component.html',
-  styleUrl: './textbox.component.css'
+  styleUrl: './textbox.component.css',
 })
 export class TextboxComponent {
   inputChange = output<string>();
-
-  onInput(event: Event): void {
-    const inputText = (event.target as HTMLTextAreaElement).value;
-    this.inputChange.emit(inputText);
+  userInput = new FormControl('', [Validators.required]);
+  
+  constructor() {
+    this.userInput.valueChanges.subscribe((value: string | null) => {
+      if (value !== null) {
+        this.inputChange.emit(value); 
+      }
+    });
   }
 }

@@ -37,6 +37,7 @@ export class MainPageComponent {
 
   onTranslate(): void {
     if (this.isHexToMIPS) {
+      
       this.output = this.translator.translateInstructionToMIPS(this.inputText);
     } else {
       this.output = this.translator.translateInstructionToHex(this.inputText);
