@@ -43,4 +43,6 @@ export class MainPageComponent {
       this.output = this.translator.translateInstructionToHex(this.inputText);
     }
   }
+  
+  
 }

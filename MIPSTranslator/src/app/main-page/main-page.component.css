@@ -1,6 +1,6 @@
 .title{
     color: #ffffff;
-    font-family: Nunito;
+    font-family: "Nunito", sans-serif;
     font-size: 75px;
     font-style: normal;
     font-weight: 400;
@@ -19,7 +19,7 @@
 
 .input-textbox {
     display: flex;
-    
+    font-family: "Nunito", sans-serif;
     
 }
 

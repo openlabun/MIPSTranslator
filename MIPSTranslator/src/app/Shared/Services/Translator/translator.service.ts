@@ -109,23 +109,65 @@ export class TranslatorService {
     return regMap[registerBinary] || 'unknown';
   }
 
+  
+  convertFunctToName(functBinary: string): string {
+    const funcMap: { [key: string]: string } = {
+      "100000": "add",
+      "100010": "sub",
+      "101010": "slt",
+      "100100": "and",
+      "100101": "or",
+    };
+  
+    return funcMap[functBinary] || 'unknown';
+  }
+
+  
+  convertOpcodeToName(opcodeBinary: string): string {
+    
+    const opcodeMap: { [key: string]: string } = {
+     
+      "000000": "add",
+      // @ts-ignore
+      "000000": "sub", "000000": "slt", "000000": "and", "000000": "or",
+      "001000": "addi",
+      "100011": "lw",
+      "101011": "sw",
+      "000100": "beq",
+      "000101": "bne",
+      "000010": "j"
+    };
+    return opcodeMap[opcodeBinary] || 'unknown';
+  }
+
   // Función para traducir de Hex a MIPS
    translateInstructionToMIPS(hexInstruction: string): string {
+    console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
+    console.log('Binary Instruction:', binaryInstruction);
     const opcode = binaryInstruction.slice(0, 6);
+    console.log(opcode);
     const opcodeMIPS = this.convertOpcodeToName(opcode);
-    if (!opcodeMIPS) return "Unknown Instruction";
+    console.log('Opcode:', opcode, 'Opcode MIPS:', opcodeMIPS);
+
+    if (!opcodeMIPS) return "Unknown Instruction, opcode null";
 
     let mipsInstruction = opcodeMIPS + " ";
 
     if (["add", "sub", "slt", "and", "or"].includes(opcodeMIPS)) {
+      //R-type instruction
         const func = binaryInstruction.slice(26, 32);
+        console.log("Instruction func ", func);
+
         const funcMIPS = this.convertFunctToName(func);
+        console.log('Func:', func, 'Func MIPS:', funcMIPS);
+
         if (!funcMIPS) return "Unknown Instruction (function)";
         mipsInstruction = funcMIPS + " ";
         const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const rd = this.convertRegisterToName(binaryInstruction.slice(16, 21));
+        console.log('Registers:', { rs, rt, rd });
         if (!rs || !rt || !rd) return "Invalid Registers";
         mipsInstruction += rd + " " + rs + " " + rt;
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
@@ -151,49 +193,74 @@ export class TranslatorService {
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;
     } else {
-        return "Unsupported Instruction";
+        return "Unsupported Instruction, aqui ";
     }
 
     return mipsInstruction;
   }
 
   // Utilidades
- 
 
-  convertFunctToName(functBinary: string): string {
-    const funcMap: { [key: string]: string } = {
-      "100000": "add",
-      "100010": "sub",
-      "101010": "slt",
-      "100100": "and",
-      "100101": "or",
-    };
-  
-    return funcMap[functBinary] || 'unknown';
-  }
 
-  convertOpcodeToName(opcodeBinary: string): string {
-    const opcodeMap: { [key: string]: string } = {
-      "000000": "R-type",
-      "001000": "addi",
-      "100011": "lw",
-      "101011": "sw",
-      "000100": "beq",
-      "000101": "bne",
-      "000010": "j"
-    };
-    return opcodeMap[opcodeBinary] || 'unknown';
-  }
+  binaryToHex(binaryString: string): string {
+    // Pad the binary string with leading zeros to ensure it's a multiple of 4
+    while (binaryString.length % 4 !== 0) {
+        binaryString = '0' + binaryString;
+    }
 
- 
+    // Initialize an empty string to store the hexadecimal representation
+    let hexString = '';
 
-  binaryToHex(binary: string): string {
-    return parseInt(binary, 2).toString(16).toUpperCase();
+    // Convert each group of 4 bits to its hexadecimal equivalent
+    for (let i = 0; i < binaryString.length; i += 4) {
+        const binaryChunk = binaryString.substring(i, i + 4); // Get a chunk of 4 bits
+        const hexDigit = parseInt(binaryChunk, 2).toString(16); // Convert the chunk to hexadecimal
+        hexString += hexDigit; // Append the hexadecimal digit to the result
+    }
+
+    // Return the hexadecimal representation
+    return "0x" + hexString.toUpperCase(); // Convert to uppercase for consistency
   }
 
   hexToBinary(hex: string): string {
-    return parseInt(hex, 16).toString(2).padStart(32, '0');
+    let binary = '';
+    for (let i = 0; i < hex.length; i++) {
+        let bin = parseInt(hex[i], 16).toString(2);
+        binary += bin.padStart(4, '0');
+    }
+    return binary;
+  }
+  sum(a: number, b: number): number {
+    return a + b;
+  }
+  translateHextoMIPS(hexInput: HTMLTextAreaElement, mipsInput: HTMLTextAreaElement): void {
+    const instructions: string[] = hexInput.value.trim().split('\n');
+
+    // Translate each hexadecimal instruction to MIPS
+    const translatedInstructions: string[] = instructions.map(instruction => {
+        return this.translateInstructionToMIPS(instruction.trim());
+    });
+
+    // Join the translated instructions with a newline character
+    const formattedInstructions: string = translatedInstructions.join('\n');
+
+    // Set the value of the input textarea to the formatted instructions
+    mipsInput.value = formattedInstructions;
   }
 
+  translateMIPStoHex(mipsInput: HTMLTextAreaElement, hexInput: HTMLTextAreaElement): void {
+    const instructions: string[] = mipsInput.value.trim().split('\n');
+
+    // Translate each MIPS instruction to hexadecimal
+    const translatedInstructions: string[] = instructions.map(instruction => {
+        return this.translateInstructionToHex(instruction.trim());
+    });
+
+    // Join the translated instructions with a newline character
+    const formattedInstructions: string = translatedInstructions.join('\n');
+
+    // Set the value of the inputHex textarea to the formatted instructions
+    hexInput.value = formattedInstructions;
+}
   
 }
