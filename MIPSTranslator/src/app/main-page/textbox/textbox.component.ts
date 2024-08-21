@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, output} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -11,7 +11,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 export class TextboxComponent {
   inputChange = output<string>();
   userInput = new FormControl('', [Validators.required]);
-  
+
   constructor() {
     this.userInput.valueChanges.subscribe((value: string | null) => {
       if (value !== null) {
@@ -19,4 +19,6 @@ export class TextboxComponent {
       }
     });
   }
+
+ 
 }

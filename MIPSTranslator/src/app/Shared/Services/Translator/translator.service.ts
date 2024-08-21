@@ -193,15 +193,13 @@ export class TranslatorService {
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;
     } else {
-        return "Unsupported Instruction, aqui ";
+        return "Unsupported Instruction";
     }
 
     return mipsInstruction;
   }
 
   // Utilidades
-
-
   binaryToHex(binaryString: string): string {
     // Pad the binary string with leading zeros to ensure it's a multiple of 4
     while (binaryString.length % 4 !== 0) {
@@ -233,9 +231,9 @@ export class TranslatorService {
   sum(a: number, b: number): number {
     return a + b;
   }
-  translateHextoMIPS(hexInput: HTMLTextAreaElement, mipsInput: HTMLTextAreaElement): void {
-    const instructions: string[] = hexInput.value.trim().split('\n');
 
+  translateHextoMIPS(textInput: HTMLTextAreaElement, outputInput: HTMLTextAreaElement): void {
+    const instructions: string[] = textInput.value.trim().split('\n');
     // Translate each hexadecimal instruction to MIPS
     const translatedInstructions: string[] = instructions.map(instruction => {
         return this.translateInstructionToMIPS(instruction.trim());
@@ -245,11 +243,11 @@ export class TranslatorService {
     const formattedInstructions: string = translatedInstructions.join('\n');
 
     // Set the value of the input textarea to the formatted instructions
-    mipsInput.value = formattedInstructions;
+    outputInput.value = formattedInstructions;
   }
 
-  translateMIPStoHex(mipsInput: HTMLTextAreaElement, hexInput: HTMLTextAreaElement): void {
-    const instructions: string[] = mipsInput.value.trim().split('\n');
+  translateMIPStoHex(outputInput: HTMLTextAreaElement, textInput: HTMLTextAreaElement): void {
+    const instructions: string[] = outputInput.value.trim().split('\n');
 
     // Translate each MIPS instruction to hexadecimal
     const translatedInstructions: string[] = instructions.map(instruction => {
@@ -260,7 +258,9 @@ export class TranslatorService {
     const formattedInstructions: string = translatedInstructions.join('\n');
 
     // Set the value of the inputHex textarea to the formatted instructions
-    hexInput.value = formattedInstructions;
+    textInput.value = formattedInstructions;
 }
+
+
   
 }

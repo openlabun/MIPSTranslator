@@ -1,0 +1,62 @@
+/* From Uiverse.io by vinodjangid07 */ 
+.bookmarkBtn {
+    width: 100px;
+    height: 40px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.349);
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+  }
+  
+  .IconContainer {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgba(94, 31, 160, 0.96), rgba(31, 160, 160, 0.96));
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+  }
+  
+  .icon {
+    border-radius: 1px;
+  }
+  
+  .text {
+    height: 100%;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: 11px;
+    font-family: "Nunito", sans-serif;
+  }
+  
+  .bookmarkBtn:hover .IconContainer {
+    width: 90px;
+    transition-duration: 0.3s;
+  }
+  
+  .bookmarkBtn:hover .text {
+    transform: translate(10px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+  }
+  
+  .bookmarkBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+  }
+  

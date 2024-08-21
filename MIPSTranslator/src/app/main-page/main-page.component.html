@@ -1,14 +1,18 @@
 
 <p class="title">MIPS TRANSLATOR</p>
 <section class="container">
-    
     <div class="input-textbox">
         <app-textbox (inputChange)="onInput($event)"></app-textbox> 
     </div>
+
     <div class = "translate">
         <app-switch (toggleChange)="onToggle($event)"></app-switch> 
         <app-translate-button (click)="onTranslate()"></app-translate-button> 
+        <app-save-ram-button></app-save-ram-button>
     </div>
+
+   
+
     <div class="output-textbox">
         <app-texbox-output [outputText]="output"></app-texbox-output>
     </div>

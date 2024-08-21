@@ -4,7 +4,9 @@ import { TranslateButtonComponent } from './translate-button/translate-button.co
 import { SwitchComponent } from './switch/switch.component';
 import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
 import { RamdropComponent } from './ramdrop/ramdrop.component';
+import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
+
 
 @Component({
   selector: 'app-main-page',
@@ -15,6 +17,7 @@ import { TranslatorService } from '../Shared/Services/Translator/translator.serv
     SwitchComponent,
     TexboxOutputComponent,
     RamdropComponent,
+    SaveRamButtonComponent,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'], 
@@ -44,5 +47,6 @@ export class MainPageComponent {
     }
   }
   
+ 
   
 }
