@@ -58,7 +58,7 @@ export class RamdropComponent {
           translatedInstructions += `${translated}\n`;
           originalInstructions += `${instruction.trim()}\n`;
         });
-
+        console.log([originalInstructions, translatedInstructions]);
         resolve([originalInstructions, translatedInstructions]);
       };
 
