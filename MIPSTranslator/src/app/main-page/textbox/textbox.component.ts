@@ -1,5 +1,6 @@
-import { Component, output} from '@angular/core';
+import { Component, inject, output} from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormInputManagerService } from '../../Shared/Services/FormInputManager/form-input-manager.service';
 
 @Component({
   selector: 'app-textbox',
@@ -10,7 +11,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class TextboxComponent {
   inputChange = output<string>();
-  userInput = new FormControl('', [Validators.required]);
+  userInput = inject(FormInputManagerService).inputApp;
 
   constructor() {
     this.userInput.valueChanges.subscribe((value: string | null) => {

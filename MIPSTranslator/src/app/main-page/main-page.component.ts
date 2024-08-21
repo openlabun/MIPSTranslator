@@ -6,6 +6,7 @@ import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
 import { RamdropComponent } from './ramdrop/ramdrop.component';
 import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
+import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
 
 
 @Component({
@@ -28,10 +29,14 @@ export class MainPageComponent {
   output: string = '';
   parameter:string = '';
   private translator = inject(TranslatorService);
-  
+  private inputManager = inject(FormInputManagerService).inputApp;
   // Manejadores de eventos
   onToggle(isChecked: boolean): void {
     this.isHexToMIPS = isChecked;
+    let draft = this.inputManager.value;
+    this.inputManager.setValue(this.output);
+    this.output = draft;
+
   }
 
   onInput(input: string): void {
@@ -39,16 +44,16 @@ export class MainPageComponent {
     
   }
   onTextFile(textFile: Promise<string[]>): void {
-    console.log("HOLAAAAA");
+    
     textFile.then((instructions) => {
       
       if (this.isHexToMIPS) {
         
-        this.inputText = instructions[0];
+        this.inputManager.setValue(instructions[0]) ;
         this.output = instructions[1];
       } else {
         this.output = instructions[0];
-        this.inputText = instructions[1];
+        this.inputManager.setValue(instructions[1]) ;
       }
       
     });
