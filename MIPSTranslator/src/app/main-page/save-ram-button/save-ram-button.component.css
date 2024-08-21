@@ -1,62 +1,53 @@
-/* From Uiverse.io by vinodjangid07 */ 
-.bookmarkBtn {
-    width: 100px;
-    height: 40px;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
+/* From Uiverse.io by andrew-demchenk0 */ 
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px 8px 16px;
+  gap: 7px;
+  height: 40px;
+  width: 100px;
+  border: none;
+  background: #741ce7d6;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.lable {
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ffffff;
+  font-family: "Nunito", sans-serif;
+  letter-spacing: 1px;
+}
+
+.button:hover {
+  background: #2a9d8f;
+}
+
+.button:hover .svg-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .IconContainer {
-    width: 30px;
-    height: 30px;
-    background: linear-gradient(to bottom, rgba(94, 31, 160, 0.96), rgba(31, 160, 160, 0.96));
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-    transition-duration: 0.3s;
+
+  25% {
+    transform: rotate(-15deg);
   }
-  
-  .icon {
-    border-radius: 1px;
+
+  50% {
+    transform: rotate(0deg);
   }
-  
-  .text {
-    height: 100%;
-    width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 1;
-    transition-duration: 0.3s;
-    font-size: 11px;
-    font-family: "Nunito", sans-serif;
+
+  75% {
+    transform: rotate(15deg);
   }
-  
-  .bookmarkBtn:hover .IconContainer {
-    width: 90px;
-    transition-duration: 0.3s;
+
+  100% {
+    transform: rotate(0deg);
   }
-  
-  .bookmarkBtn:hover .text {
-    transform: translate(10px);
-    width: 0;
-    font-size: 0;
-    transition-duration: 0.3s;
-  }
-  
-  .bookmarkBtn:active {
-    transform: scale(0.95);
-    transition-duration: 0.3s;
-  }
-  
+}

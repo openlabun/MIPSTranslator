@@ -232,8 +232,8 @@ export class TranslatorService {
     return a + b;
   }
 
-  translateHextoMIPS(textInput: HTMLTextAreaElement, outputInput: HTMLTextAreaElement): void {
-    const instructions: string[] = textInput.value.trim().split('\n');
+  translateHextoMIPS(textInput: string): string {
+    const instructions: string[] = textInput.trim().split('\n');
     // Translate each hexadecimal instruction to MIPS
     const translatedInstructions: string[] = instructions.map(instruction => {
         return this.translateInstructionToMIPS(instruction.trim());
@@ -243,11 +243,11 @@ export class TranslatorService {
     const formattedInstructions: string = translatedInstructions.join('\n');
 
     // Set the value of the input textarea to the formatted instructions
-    outputInput.value = formattedInstructions;
+    return formattedInstructions;
   }
 
-  translateMIPStoHex(outputInput: HTMLTextAreaElement, textInput: HTMLTextAreaElement): void {
-    const instructions: string[] = outputInput.value.trim().split('\n');
+  translateMIPStoHex(textInput: string): string {
+    const instructions: string[] = textInput.trim().split('\n');
 
     // Translate each MIPS instruction to hexadecimal
     const translatedInstructions: string[] = instructions.map(instruction => {
@@ -258,7 +258,7 @@ export class TranslatorService {
     const formattedInstructions: string = translatedInstructions.join('\n');
 
     // Set the value of the inputHex textarea to the formatted instructions
-    textInput.value = formattedInstructions;
+    return formattedInstructions;
 }
 
 

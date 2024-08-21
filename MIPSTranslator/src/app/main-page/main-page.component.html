@@ -8,7 +8,7 @@
     <div class = "translate">
         <app-switch (toggleChange)="onToggle($event)"></app-switch> 
         <app-translate-button (click)="onTranslate()"></app-translate-button> 
-        <app-save-ram-button></app-save-ram-button>
+        <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
     </div>
 
    
@@ -19,7 +19,7 @@
 </section>
 
 <section class ="save-ram">
-    <app-ramdrop></app-ramdrop>
+    <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
 </section>
 
 

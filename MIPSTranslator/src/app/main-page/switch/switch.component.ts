@@ -1,4 +1,4 @@
-import { Component, EventEmitter, output, Output} from '@angular/core';
+import { Component, output} from '@angular/core';
 
 @Component({
   selector: 'app-switch',

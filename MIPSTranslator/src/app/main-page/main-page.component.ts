@@ -26,6 +26,7 @@ export class MainPageComponent {
   isHexToMIPS: boolean = true;
   inputText: string = '';
   output: string = '';
+  parameter:string = '';
   private translator = inject(TranslatorService);
   
   // Manejadores de eventos
@@ -37,13 +38,29 @@ export class MainPageComponent {
     this.inputText = input;
     
   }
-
+  onTextFile(textFile: Promise<string[]>): void {
+    console.log("HOLAAAAA");
+    textFile.then((instructions) => {
+      
+      if (this.isHexToMIPS) {
+        
+        this.inputText = instructions[0];
+        this.output = instructions[1];
+      } else {
+        this.output = instructions[0];
+        this.inputText = instructions[1];
+      }
+      
+    });
+  }
   onTranslate(): void {
     if (this.isHexToMIPS) {
       
-      this.output = this.translator.translateInstructionToMIPS(this.inputText);
+      this.output = this.translator.translateHextoMIPS(this.inputText);
+      this.parameter = this.inputText;
     } else {
-      this.output = this.translator.translateInstructionToHex(this.inputText);
+      this.output = this.translator.translateMIPStoHex(this.inputText);
+      this.parameter = this.output
     }
   }
   
