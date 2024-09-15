@@ -9,11 +9,13 @@ WORKDIR /project
 # Instala Angular CLI versión 13
 RUN npm install -g @angular/cli@13
 
+COPY app/ ./
+
 # Copia los archivos package.json al contenedor
-COPY package.json ./
+#COPY package.json ./
 
 # Elimina el package-lock.json y node_modules si existen (instalación limpia)
-RUN rm -rf node_modules package-lock.json
+#RUN rm -rf node_modules package-lock.json
 
 # Instala las dependencias usando npm install en lugar de npm ci
 RUN npm install
@@ -22,7 +24,7 @@ RUN npm install
 RUN apt-get update && apt-get install -y --no-install-recommends git
 
 # Copia el resto del código
-COPY . .
+#COPY . .
 
 # Expone el puerto 4200 para servir la aplicación Angular
 EXPOSE 4200
