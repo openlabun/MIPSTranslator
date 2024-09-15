@@ -1,0 +1,13 @@
+.output-textbox {
+    width: 15rem;
+    height: 10rem;
+    border-radius: 36px;
+    border: 5px #2a999d;
+    box-shadow: 1px 4px 10.2px 0px rgba(31, 160, 160, 0.96);
+    background-color: rgba(0, 0, 0, 0); 
+    color: #266478;
+    padding: 2rem;
+    font-size: 1.2rem;
+    font-family: "Nunito", sans-serif;
+    white-space: pre-wrap;
+}

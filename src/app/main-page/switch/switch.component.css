@@ -1,0 +1,79 @@
+/* From Uiverse.io by AnthonyPreite */ 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch .checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    box-shadow: 1px 1px 5px 0 #7d2ae8  inset;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #7d2ae8 ;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    box-shadow: inset 1px 1px 2px 0px #c47cff;
+  }
+  
+  .checkbox:checked + .slider {
+    box-shadow: 1px 1px 5px 0 #2a9d8f inset;
+  }
+  
+  .checkbox:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+    background-color: #2a999d;
+    box-shadow: inset -1px 1px 2px 0px #a3fff4;
+  }
+  
+  .switch-label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #7d2ae8;
+    font-family: "Nunito", sans-serif;
+  }
+  
+  .left-label {
+    left: -90px; /* Ajusta la posición a la izquierda */
+  }
+  
+  .right-label {
+    right: -90px; /* Ajusta la posición a la derecha */
+    color: #2a9d8f; /* Cambia el color si lo deseas */
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  
