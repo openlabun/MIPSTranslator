@@ -7,6 +7,8 @@ import { RamdropComponent } from './ramdrop/ramdrop.component';
 import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
 import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
+import { InstructionTableComponent } from './instruction-table/instruction-table.component';
+import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
 
 
 @Component({
@@ -19,20 +21,31 @@ import { FormInputManagerService } from '../Shared/Services/FormInputManager/for
     TexboxOutputComponent,
     RamdropComponent,
     SaveRamButtonComponent,
+    InstructionTableComponent
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'], 
 })
 export class MainPageComponent {
-  isHexToMIPS: boolean = true;
+  
   inputText: string = '';
   output: string = '';
   parameter:string = '';
   private translator = inject(TranslatorService);
   private inputManager = inject(FormInputManagerService).inputApp;
+  private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
+  isHexToMIPS: boolean = false;
+  tableManager = inject(TableInstructionService);
+
+  onTableValueChange(value: string): void {
+    this.tableManager.updateSelectedLineText(value);
+    
+  }
+
   // Manejadores de eventos
   onToggle(isChecked: boolean): void {
     this.isHexToMIPS = isChecked;
+    this.inputManagerIsHexToMips.setValue(isChecked);
     let draft = this.inputManager.value;
     this.inputManager.setValue(this.output);
     this.output = draft;

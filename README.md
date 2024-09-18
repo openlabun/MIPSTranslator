@@ -15,8 +15,8 @@ List of supported instructions:
 5. Jump
 
 To dockerize the app:   
-sudo docker build -t mipstranslatori .   
-sudo docker run -d -it -p 4200:80 --restart unless-stopped --name mipstranslator-app mipstranslatori
+docker build -t mipstranslatori .   
+docker run -d -it -p 5008:4200 --restart unless-stopped --name mipstranslator-app mipstranslatori
 
 MIPS example:
 ```assembly
