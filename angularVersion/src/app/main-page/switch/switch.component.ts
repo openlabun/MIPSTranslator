@@ -10,7 +10,7 @@ import { Component, output} from '@angular/core';
 export class SwitchComponent {
   toggleChange = output<boolean>();
 
-  isHexToMIPS: boolean = true; 
+  isHexToMIPS: boolean = false; 
 
   onToggle(): void {
     this.isHexToMIPS = !this.isHexToMIPS;
