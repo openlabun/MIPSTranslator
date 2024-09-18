@@ -1,0 +1,44 @@
+.title{
+    color: #266478;
+    font-family: "Nunito", sans-serif;
+    font-size: 75px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+   
+}
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    margin-top: 75px;
+
+}
+
+.input-textbox {
+    display: flex;
+    font-family: "Nunito", sans-serif;
+    
+}
+
+.translate {
+    display: flex;
+    margin-left: 180px;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 40px; 
+}
+
+
+.output-textbox {
+    display: flex;
+    margin-left: 180px;
+}
+
+.save-to-ram-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,20 @@
+<section class="save-to-ram-container">
+    <div class="drop-area" id="drop-area">
+      <input
+        type="file"
+        #fileInput
+        [formControl]="fileForm"
+        (change)="getFile($event)"
+        class="file-input"
+      />
+      @if(file){
+      <p class="file-name">{{ file.name }}</p>
+      }
+  
+      <p class="drop-text">Drag and drop a file here to save to RAM</p>
+      <p class="or-text">or</p>
+      <button class="select-button" (click)="fileInput.click()">
+        Select a File
+      </button>
+    </div>
+  </section>

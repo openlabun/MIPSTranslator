@@ -1,0 +1,28 @@
+
+<p class="title">MIPS TRANSLATOR</p>
+<section class="container">
+    <div class="input-textbox">
+        <app-textbox (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 
+    </div>
+
+    <div class = "translate">
+        <app-switch (toggleChange)="onToggle($event)"></app-switch> 
+        <app-translate-button (click)="onTranslate()"></app-translate-button> 
+        <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
+    </div>
+
+   
+
+    <div class="output-textbox">
+        <app-texbox-output [outputText]="output"></app-texbox-output>
+    </div>
+</section>
+<section class = "instruction-table">
+    <app-instruction-table></app-instruction-table>
+<section class ="save-ram">
+    <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
+</section>
+
+
+    
+

@@ -1,0 +1,87 @@
+@if(instructionType === 'R') {
+    <div>
+      <table class="mips-table">
+        <tr>
+          <th colspan="6">31-26</th>
+          <th colspan="5">25-21</th>
+          <th colspan="5">20-16</th>
+          <th colspan="5">15-11</th>
+          <th colspan="5">10-6</th>
+            <th colspan="6">5-0</th>
+      </tr>
+        <tr>
+          <td colspan="6">OpCode</td>
+          <td colspan="5">rs</td>
+          <td colspan="5">rt</td>
+          <td colspan="5">rd</td>
+          <td colspan="5">shamt</td>
+          <td colspan="6">func</td>
+        </tr>
+        <tr>
+          <td colspan="6">R-Type</td>
+          <td colspan="5">{{tableService.convertRegisterToName(parts.rs)}}</td>
+          <td colspan="5">{{tableService.convertRegisterToName(parts.rt)}}</td>
+          <td colspan="5">{{tableService.convertRegisterToName(parts.rd)}}</td>
+          <td colspan="5">{{parts.shamt}}</td>
+          <td colspan="6">{{tableService.converter.convertFunctToName(parts.funct)}}</td>
+        </tr>
+        <tr>
+          <td colspan="6">{{parts.opcode}}</td>
+          <td colspan="5">{{parts.rs}}</td>
+          <td colspan="5">{{parts.rt}}</td>
+          <td colspan="5">{{parts.rd}}</td>
+          <td colspan="5">{{parts.shamt}}</td>
+          <td colspan="6">{{parts.funct}}</td>
+        </tr>
+      </table>
+    </div>
+}
+    
+@if(instructionType === 'I'){
+  <div>
+    <table class="mips-table">
+      <tr>
+        <th colspan="6">31-26</th>
+        <th colspan="5">25-21</th>
+        <th colspan="5">20-16</th>
+        <th colspan="5">15-0</th>
+        
+      </tr>
+      <tr>
+        <th colspan="6">opCode</th>
+        <th colspan="5">rs</th>
+        <th colspan="5">rt</th>
+        <th colspan="5">offset-imm</th>
+    </tr>
+    <tr>
+      <td colspan="6">{{parts.opcode}}</td>
+      <td colspan="5">{{tableService.convertRegisterToName(parts.rs)}}</td>
+      <td colspan="5">{{tableService.convertRegisterToName(parts.rt)}}</td>
+      <td colspan="5">{{parts.immediate}}</td>
+  </tr>
+    </table>
+  </div>
+  } 
+  
+  @if(instructionType === 'J'){
+  <div>
+    <table class="mips-table">
+      <tr>
+        <th colspan="6">31-26</th>
+        <th colspan="26">25-0</th>
+    </tr>
+    <tr>
+      <th colspan="6">opCode</th>
+      <th colspan="26">address</th>
+  </tr>
+  <tr>
+    <td colspan="6">{{parts.opcode}}</td>
+    <td colspan="26">{{parts.address}}</td>
+  </tr>
+    </table>
+  </div>
+  } @if(instructionType === 'unknown'){
+  <div>
+    <p>{{ instructionData }}</p>
+  </div>
+  }

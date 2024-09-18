@@ -29,4 +29,4 @@ jobs:
           docker stop mipstranslator-app
           docker rm mipstranslator-app
           docker build -t mipstranslatori .
-          docker run -d -it -p 5008:80 --restart unless-stopped --name mipstranslator-app mipstranslatori
+          docker run -d -it -p 5008:4200 --restart unless-stopped --name mipstranslator-app mipstranslatori
