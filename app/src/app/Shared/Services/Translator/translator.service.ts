@@ -73,24 +73,15 @@ export class TranslatorService {
         if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["beq", "bne", "bgtz", "blez"].includes(parts[0])) {
-        const opcode = this.convertOpCodeNameToCode(parts[0]); // Usar la función para obtener el opcode
-        const rs = regMap[parts[1]]; // Primer registro
-        const rt = ["beq", "bne"].includes(parts[0]) ? regMap[parts[2]] : "00000"; // Para bgtz/blez, rt será 00000
-        const label = parts[parts.length - 1]; // El label (offset)
-        // Verificar que los registros sean válidos
+        const opcode = this.convertOpCodeNameToCode(parts[0]);
+        const rs = regMap[parts[1]];
+        const rt = ["beq", "bne"].includes(parts[0]) ? regMap[parts[2]] : "00000"; // for bgtz/blez, rt is 00000
+        const label = parts[parts.length - 1]; //offset
         if (!rs || (["beq", "bne"].includes(parts[0]) && !rt)) return "Invalid Registers";
-    
-        // Calcular el offset
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
-    
-        // Convertir el offset a binario de 16 bits
         const offsetBinary = (offset >>> 0).toString(2).padStart(16, '0');
-    
-        // Construir la instrucción en binario
         const binaryInstruction = opcode + rs + rt + offsetBinary;
-    
-        // Convertir la instrucción binaria a hexadecimal
         const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
     
         return hexInstruction;
@@ -155,7 +146,7 @@ export class TranslatorService {
     return opcodeMap[opcodeBinary] || 'unknown';
   }
 
-  // Función para traducir de Hex a MIPS
+  
    translateInstructionToMIPS(hexInstruction: string): string {
     console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
