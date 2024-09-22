@@ -21,6 +21,7 @@ export class TranslatorService {
       "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
       "addi": "001000", "lw": "100011", "sw": "101011",
       "beq": "000100", "bne": "000101",
+      "bgtz": "000111", "blez": "000110", 
       "j": "000010"
   };
   return opcodeMap[opcodeName] || 'unknown';
@@ -71,16 +72,19 @@ export class TranslatorService {
         const immediate = parseInt(parts[3]);
         if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
-    } else if (["beq", "bne"].includes(parts[0])) {
-
+    } else if (["beq", "bne", "bgtz", "blez"].includes(parts[0])) {
+        const opcode = this.convertOpCodeNameToCode(parts[0]);
         const rs = regMap[parts[1]];
-        const rt = regMap[parts[2]];
-        const label = parts[3];
-        if (!rs || !rt) return "Invalid Registers";
-        // For simplicity, assuming label is an immediate value (offset)
+        const rt = ["beq", "bne"].includes(parts[0]) ? regMap[parts[2]] : "00000"; // for bgtz/blez, rt is 00000
+        const label = parts[parts.length - 1]; //offset
+        if (!rs || (["beq", "bne"].includes(parts[0]) && !rt)) return "Invalid Registers";
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
-        binaryInstruction += rs + rt + (offset >>> 0).toString(2).padStart(16, '0');
+        const offsetBinary = (offset >>> 0).toString(2).padStart(16, '0');
+        const binaryInstruction = opcode + rs + rt + offsetBinary;
+        const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
+    
+        return hexInstruction;
     } else if (["j"].includes(parts[0])) {
         // J-type instruction
         const address = parseInt(parts[1]);
@@ -135,12 +139,14 @@ export class TranslatorService {
       "101011": "sw",
       "000100": "beq",
       "000101": "bne",
+      "000111": "bgtz",
+      "000110": "blez",
       "000010": "j"
     };
     return opcodeMap[opcodeBinary] || 'unknown';
   }
 
-  // Función para traducir de Hex a MIPS
+  
    translateInstructionToMIPS(hexInstruction: string): string {
     console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
@@ -182,13 +188,18 @@ export class TranslatorService {
         const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
         if (!rt || !rs || !immediate) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + immediate;
-    } else if (["beq", "bne"].includes(opcodeMIPS)) {
-        const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
-        const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
-        const offset = parseInt(binaryInstruction.slice(16, 32), 2);
-        if (!rs || !rt || isNaN(offset)) return "Invalid Syntax";
-        mipsInstruction += rs + " " + rt + " " + offset;
-    } else if (["j"].includes(opcodeMIPS)) {
+    } else if (["beq", "bne", "bgtz", "blez"].includes(opcodeMIPS)) {
+      const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+      const rt = ["beq", "bne"].includes(opcodeMIPS) ? this.convertRegisterToName(binaryInstruction.slice(11, 16)) : "00000";
+      const offset = parseInt(binaryInstruction.slice(16, 32), 2);
+      if (!rs || isNaN(offset)) return "Invalid Registers or Syntax";
+
+      if (opcodeMIPS === "bgtz" || opcodeMIPS === "blez") {
+          mipsInstruction += rs + " " + offset;
+      } else {
+          mipsInstruction += rs + " " + rt + " " + offset;
+      }
+  }else if (["j"].includes(opcodeMIPS)) {
         const address = parseInt(binaryInstruction.slice(6, 32), 2);
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;
