@@ -22,7 +22,7 @@ export class TranslatorService {
       "addi": "001000", "lw": "100011", "sw": "101011",
       "beq": "000100", "bne": "000101",
       "bgtz": "000111", "blez": "000110", 
-      "j": "000010"
+      "j": "000010", "jal": "000011"
   };
   return opcodeMap[opcodeName] || 'unknown';
   }
@@ -85,11 +85,13 @@ export class TranslatorService {
         const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
     
         return hexInstruction;
-    } else if (["j"].includes(parts[0])) {
-        // J-type instruction
-        const address = parseInt(parts[1]);
-        if (isNaN(address)) return "Invalid Syntax";
-        binaryInstruction += (address >>> 0).toString(2).padStart(26, '0');
+    } else if (["j", "jal"].includes(parts[0])) {
+          const address = parseInt(parts[1]);
+          if (isNaN(address)) return "Invalid Syntax";
+      
+          const opcode = parts[0] === "j" ? "000010" : "000011"; 
+      
+          binaryInstruction = opcode + (address >>> 0).toString(2).padStart(26, '0');
     } else {
         return "Unsupported Instruction";
     }
@@ -130,7 +132,7 @@ export class TranslatorService {
   convertOpcodeToName(opcodeBinary: string): string {
     
     const opcodeMap: { [key: string]: string } = {
-     
+    
       "000000": "add",
       // @ts-ignore
       "000000": "sub", "000000": "slt", "000000": "and", "000000": "or",
@@ -141,7 +143,8 @@ export class TranslatorService {
       "000101": "bne",
       "000111": "bgtz",
       "000110": "blez",
-      "000010": "j"
+      "000010": "j",
+      "000011": "jal"
     };
     return opcodeMap[opcodeBinary] || 'unknown';
   }
@@ -199,7 +202,7 @@ export class TranslatorService {
       } else {
           mipsInstruction += rs + " " + rt + " " + offset;
       }
-  }else if (["j"].includes(opcodeMIPS)) {
+  }else if (["j", "jal"].includes(opcodeMIPS)) {
         const address = parseInt(binaryInstruction.slice(6, 32), 2);
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;
