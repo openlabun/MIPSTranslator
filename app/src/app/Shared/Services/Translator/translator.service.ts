@@ -151,6 +151,8 @@ export class TranslatorService {
       "101010": "slt",
       "100100": "and",
       "100101": "or",
+      "001000": "jr",
+      "001001": "jalr",
     };
   
     return funcMap[functBinary] || 'unknown';
@@ -163,7 +165,7 @@ export class TranslatorService {
     
       "000000": "add",
       // @ts-ignore
-      "000000": "sub", "000000": "slt", "000000": "and", "000000": "or",
+      "000000": "sub", "000000": "slt", "000000": "and", "000000": "or", "000000":"jalr", "000000":"jr",
       "001000": "addi",
       "100011": "lw",
       "101011": "sw",
@@ -178,69 +180,78 @@ export class TranslatorService {
   }
 
   
-  translateInstructionToMIPS(hexInstruction: string): string {
+   translateInstructionToMIPS(hexInstruction: string): string {
+    console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
+    console.log('Binary Instruction:', binaryInstruction);
     const opcode = binaryInstruction.slice(0, 6);
+    console.log(opcode);
     const opcodeMIPS = this.convertOpcodeToName(opcode);
+    console.log('Opcode:', opcode, 'Opcode MIPS:', opcodeMIPS);
 
     if (!opcodeMIPS) return "Unknown Instruction, opcode null";
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (opcode === "000000") { 
-        // Instrucciones R-type (incluye add, sub, jalr, jr, etc.)
-        const funct = binaryInstruction.slice(26, 32);
+    if (["add", "sub", "slt", "and", "or", "jr", "jalr"].includes(opcodeMIPS)) {
+        // Instrucción R-type
+        const func = binaryInstruction.slice(26, 32);
+        const funcMIPS = this.convertFunctToName(func);
+        
+        if (!funcMIPS) return "Unknown Instruction (function)";
+        
         const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const rd = this.convertRegisterToName(binaryInstruction.slice(16, 21));
-        const shamt = binaryInstruction.slice(21, 26);
-
-        if (funct === "001000") {
-            // Instrucción JR
-            mipsInstruction = "jr " + rs;
-        } else if (funct === "001001") {
-            // Instrucción JALR
-            mipsInstruction = "jalr " + rs;
-            if (rd !== "ra") {
-                mipsInstruction += " " +rd; // Solo mostrar rd si no es $ra
-            }
-        } else {
-            // Otras instrucciones R-type (add, sub, etc.)
-            const funcMIPS = this.convertFunctToName(funct);
-            if (!funcMIPS) return "Unknown R-type Instruction";
+        
+        // Para instrucciones comunes como add, sub, slt, etc.
+        if (["add", "sub", "slt", "and", "or"].includes(funcMIPS)) {
             mipsInstruction = funcMIPS + " " + rd + " " + rs + " " + rt;
         }
+        
+        // Para JR (funct code = 001000)
+        else if (funcMIPS === "jr") {
+            mipsInstruction = "jr " + rs;
+        }
+        
+        // Para JALR (funct code = 001001)
+        else if (funcMIPS === "jalr") {
+            mipsInstruction = "jalr " + rs;
+            if (rd !== "ra") {  // Solo mostrar rd si no es $ra
+                mipsInstruction += " " + rd;
+            }
+       }
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
-        // Instrucciones tipo I (lw, sw)
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
         if (!rt || !rs || isNaN(parseInt(offset, 2))) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + parseInt(offset, 2);
     } else if (["addi"].includes(opcodeMIPS)) {
-        // Instrucción tipo I (addi)
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
         if (!rt || !rs || !immediate) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + immediate;
     } else if (["beq", "bne", "bgtz", "blez"].includes(opcodeMIPS)) {
-        const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
-        const rt = ["beq", "bne"].includes(opcodeMIPS) ? this.convertRegisterToName(binaryInstruction.slice(11, 16)) : "00000";
-        const offset = parseInt(binaryInstruction.slice(16, 32), 2);
-        if (!rs || isNaN(offset)) return "Invalid Registers or Syntax";
-        if (opcodeMIPS === "bgtz" || opcodeMIPS === "blez") {
-            mipsInstruction += rs + " " + offset;
-        } else {
-            mipsInstruction += rs + " " + rt + " " + offset;
-        }
-    } else if (["j", "jal"].includes(opcodeMIPS)) {
+      const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+      const rt = ["beq", "bne"].includes(opcodeMIPS) ? this.convertRegisterToName(binaryInstruction.slice(11, 16)) : "00000";
+      const offset = parseInt(binaryInstruction.slice(16, 32), 2);
+      if (!rs || isNaN(offset)) return "Invalid Registers or Syntax";
+
+      if (opcodeMIPS === "bgtz" || opcodeMIPS === "blez") {
+          mipsInstruction += rs + " " + offset;
+      } else {
+          mipsInstruction += rs + " " + rt + " " + offset;
+      }
+  }else if (["j", "jal"].includes(opcodeMIPS)) {
         const address = parseInt(binaryInstruction.slice(6, 32), 2);
         if (isNaN(address)) return "Invalid Syntax";
         mipsInstruction += address;
     } else {
         return "Unsupported Instruction";
     }
+
     return mipsInstruction;
   }
 
