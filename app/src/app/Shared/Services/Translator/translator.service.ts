@@ -216,10 +216,7 @@ export class TranslatorService {
         
         // Para JALR (funct code = 001001)
         else if (funcMIPS === "jalr") {
-            mipsInstruction = "jalr " + rs;
-            if (rd !== "ra") {  // Solo mostrar rd si no es $ra
-                mipsInstruction += " " + rd;
-            }
+            mipsInstruction = "jalr " + rs + " " + rd ;
        }
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
