@@ -123,6 +123,13 @@ export class TableInstructionService {
       case '101011':
       case '000100':
       case '000101':
+      // Añadimos las instrucciones de carga y almacenamiento
+      case '100000': // lb
+      case '100100': // lbu
+      case '100001': // lh
+      case '100101': // lhu
+      case '101000': // sb
+      case '101001': // sh
         return { type: 'I', data: this.produceIInstruction(instruction) };
       case '000010':
         return { type: 'J', data: this.produceJInstruction(instruction) };
@@ -130,13 +137,13 @@ export class TableInstructionService {
         return { type: 'unknown', data: 'Unknown instruction' };
     }
   }
+
   decodeInstruction(instruction: string) {
     let explanation = '';
     let details: any = {};
 
-    // Assume `instruction` is a string like "add $t1, $t2, $t3"
     const parts = instruction.split(/\s+/);
-    const operation = parts[0]; // e.g., "add"
+    const operation = parts[0];
     console.log('operation', operation);
     switch (operation) {
       case 'add':
@@ -155,8 +162,12 @@ export class TableInstructionService {
         };
         explanation = `This is an R-type instruction where ${details.rd} gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
         break;
-      // Add cases for I-type and J-type instructions
+      // Instrucciones de tipo I para lw y sw
       case 'lw':
+      case 'lb':
+      case 'lbu':
+      case 'lh':
+      case 'lhu':
         details = {
           operation: operation,
           rt: parts[1], // e.g., "$t1"
@@ -166,6 +177,8 @@ export class TableInstructionService {
         explanation = `This is an I-type instruction where ${details.rt} gets the value from memory at the address ${details.offset} offset from ${details.rs}.`;
         break;
       case 'sw':
+      case 'sb':
+      case 'sh':
         details = {
           operation: operation,
           rt: parts[1], // e.g., "$t1"

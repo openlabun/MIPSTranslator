@@ -12,25 +12,30 @@ export class TranslatorService {
       'and': '100100',
       'or': '100101',
       'slt': '101010',
-  };
-  return functCodes[op] || 'unknown';
+    };
+    return functCodes[op] || 'unknown';
   }
 
   convertOpCodeNameToCode(opcodeName: string): string {
     const opcodeMap: { [key: string]: string } = {
       "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
       "addi": "001000", "lw": "100011", "sw": "101011",
-      "beq": "000100", "bne": "000101",
-      "j": "000010"
-  };
-  return opcodeMap[opcodeName] || 'unknown';
+      "beq": "000100", "bne": "000101", "j": "000010",
+      // Nuevas instrucciones añadidas
+      "lb": "100000",  // Añadir lb
+      "lbu": "100100", // Añadir lbu
+      "lh": "100001",  // Añadir lh
+      "lhu": "100101", // Añadir lhu
+      "sb": "101000",  // Añadir sb
+      "sh": "101001"   // Añadir sh
+    };
+    return opcodeMap[opcodeName] || 'unknown';
   }
 
   translateInstructionToHex(instruction: string): string {
     const funcMap: { [key: string]: string } = {
       "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
     };
-  
 
     const regMap: { [key: string]: string } = {
       "zero": "00000", "at": "00001", "v0": "00010", "v1": "00011",
@@ -57,8 +62,8 @@ export class TranslatorService {
         const rt = regMap[parts[3]];
         if (!rd || !rs || !rt) return "Invalid Registers";
         binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
-    } else if (["lw", "sw"].includes(parts[0])) {
- 
+    } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(parts[0])) {
+        // Nuevas instrucciones añadidas (load/store)
         const rt = regMap[parts[1]];
         const rs = regMap[parts[3].split(',')[0]];
         const immediate = parseInt(parts[2]);
@@ -77,7 +82,6 @@ export class TranslatorService {
         const rt = regMap[parts[2]];
         const label = parts[3];
         if (!rs || !rt) return "Invalid Registers";
-        // For simplicity, assuming label is an immediate value (offset)
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
         binaryInstruction += rs + rt + (offset >>> 0).toString(2).padStart(16, '0');
@@ -126,22 +130,25 @@ export class TranslatorService {
   convertOpcodeToName(opcodeBinary: string): string {
     
     const opcodeMap: { [key: string]: string } = {
-     
       "000000": "add",
-      // @ts-ignore
-      "000000": "sub", "000000": "slt", "000000": "and", "000000": "or",
       "001000": "addi",
       "100011": "lw",
       "101011": "sw",
       "000100": "beq",
       "000101": "bne",
-      "000010": "j"
+      "000010": "j",
+      // Nuevas instrucciones añadidas
+      "100000": "lb",  // Añadir lb
+      "100100": "lbu", // Añadir lbu
+      "100001": "lh",  // Añadir lh
+      "100101": "lhu", // Añadir lhu
+      "101000": "sb",  // Añadir sb
+      "101001": "sh"   // Añadir sh
     };
     return opcodeMap[opcodeBinary] || 'unknown';
   }
 
-  // Función para traducir de Hex a MIPS
-   translateInstructionToMIPS(hexInstruction: string): string {
+  translateInstructionToMIPS(hexInstruction: string): string {
     console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
     console.log('Binary Instruction:', binaryInstruction);
@@ -170,7 +177,8 @@ export class TranslatorService {
         console.log('Registers:', { rs, rt, rd });
         if (!rs || !rt || !rd) return "Invalid Registers";
         mipsInstruction += rd + " " + rs + " " + rt;
-    } else if (["lw", "sw"].includes(opcodeMIPS)) {
+    } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(opcodeMIPS)) {
+        // Nuevas instrucciones añadidas (load/store)
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
@@ -206,18 +214,14 @@ export class TranslatorService {
         binaryString = '0' + binaryString;
     }
 
-    // Initialize an empty string to store the hexadecimal representation
     let hexString = '';
-
-    // Convert each group of 4 bits to its hexadecimal equivalent
     for (let i = 0; i < binaryString.length; i += 4) {
-        const binaryChunk = binaryString.substring(i, i + 4); // Get a chunk of 4 bits
-        const hexDigit = parseInt(binaryChunk, 2).toString(16); // Convert the chunk to hexadecimal
-        hexString += hexDigit; // Append the hexadecimal digit to the result
+        const binaryChunk = binaryString.substring(i, i + 4); 
+        const hexDigit = parseInt(binaryChunk, 2).toString(16);
+        hexString += hexDigit;
     }
 
-    // Return the hexadecimal representation
-    return "0x" + hexString.toUpperCase(); // Convert to uppercase for consistency
+    return "0x" + hexString.toUpperCase();
   }
 
   hexToBinary(hex: string): string {
@@ -228,39 +232,28 @@ export class TranslatorService {
     }
     return binary;
   }
+
   sum(a: number, b: number): number {
     return a + b;
   }
 
   translateHextoMIPS(textInput: string): string {
     const instructions: string[] = textInput.trim().split('\n');
-    // Translate each hexadecimal instruction to MIPS
     const translatedInstructions: string[] = instructions.map(instruction => {
         return this.translateInstructionToMIPS(instruction.trim());
     });
 
-    // Join the translated instructions with a newline character
     const formattedInstructions: string = translatedInstructions.join('\n');
-
-    // Set the value of the input textarea to the formatted instructions
     return formattedInstructions;
   }
 
   translateMIPStoHex(textInput: string): string {
     const instructions: string[] = textInput.trim().split('\n');
-
-    // Translate each MIPS instruction to hexadecimal
     const translatedInstructions: string[] = instructions.map(instruction => {
         return this.translateInstructionToHex(instruction.trim());
     });
 
-    // Join the translated instructions with a newline character
     const formattedInstructions: string = translatedInstructions.join('\n');
-
-    // Set the value of the inputHex textarea to the formatted instructions
     return formattedInstructions;
-}
-
-
-  
+  }
 }
