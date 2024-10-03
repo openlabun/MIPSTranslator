@@ -123,8 +123,11 @@ export class TableInstructionService {
       case '101011':
       case '000100':
       case '000101':
+      case '000110':
+      case '000111': 
         return { type: 'I', data: this.produceIInstruction(instruction) };
       case '000010':
+      case '000011':
         return { type: 'J', data: this.produceJInstruction(instruction) };
       default:
         return { type: 'unknown', data: 'Unknown instruction' };
