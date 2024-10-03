@@ -21,13 +21,14 @@ export class TranslatorService {
       "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
       "addi": "001000", "lw": "100011", "sw": "101011",
       "beq": "000100", "bne": "000101", "j": "000010",
-      // Nuevas instrucciones añadidas
-      "lb": "100000",  // Añadir lb
-      "lbu": "100100", // Añadir lbu
-      "lh": "100001",  // Añadir lh
-      "lhu": "100101", // Añadir lhu
-      "sb": "101000",  // Añadir sb
-      "sh": "101001"   // Añadir sh
+      // Instrucciones Load
+      "lb": "100000", 
+      "lbu": "100100",
+      "lh": "100001", 
+      "lhu": "100101",
+      // Intrucciones Store
+      "sb": "101000",
+      "sh": "101001"
     };
     return opcodeMap[opcodeName] || 'unknown';
   }
@@ -63,7 +64,6 @@ export class TranslatorService {
         if (!rd || !rs || !rt) return "Invalid Registers";
         binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
     } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(parts[0])) {
-        // Nuevas instrucciones añadidas (load/store)
         const rt = regMap[parts[1]];
         const rs = regMap[parts[3].split(',')[0]];
         const immediate = parseInt(parts[2]);
@@ -137,13 +137,12 @@ export class TranslatorService {
       "000100": "beq",
       "000101": "bne",
       "000010": "j",
-      // Nuevas instrucciones añadidas
-      "100000": "lb",  // Añadir lb
-      "100100": "lbu", // Añadir lbu
-      "100001": "lh",  // Añadir lh
-      "100101": "lhu", // Añadir lhu
-      "101000": "sb",  // Añadir sb
-      "101001": "sh"   // Añadir sh
+      "100000": "lb",  
+      "100100": "lbu", 
+      "100001": "lh",  
+      "100101": "lhu", 
+      "101000": "sb",  
+      "101001": "sh"   
     };
     return opcodeMap[opcodeBinary] || 'unknown';
   }
@@ -178,7 +177,6 @@ export class TranslatorService {
         if (!rs || !rt || !rd) return "Invalid Registers";
         mipsInstruction += rd + " " + rs + " " + rt;
     } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(opcodeMIPS)) {
-        // Nuevas instrucciones añadidas (load/store)
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
