@@ -123,7 +123,6 @@ export class TableInstructionService {
       case '101011':
       case '000100':
       case '000101':
-      // Añadimos las instrucciones de carga y almacenamiento
       case '100000': // lb
       case '100100': // lbu
       case '100001': // lh
