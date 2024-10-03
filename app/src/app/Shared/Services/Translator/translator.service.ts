@@ -21,14 +21,8 @@ export class TranslatorService {
       "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
       "addi": "001000", "lw": "100011", "sw": "101011",
       "beq": "000100", "bne": "000101", "j": "000010",
-      // Instrucciones Load
-      "lb": "100000", 
-      "lbu": "100100",
-      "lh": "100001", 
-      "lhu": "100101",
-      // Intrucciones Store
-      "sb": "101000",
-      "sh": "101001"
+      "lb": "100000", "lbu": "100100", "lh": "100001", "lhu": "100101",
+      "sb": "101000", "sh": "101001"
     };
     return opcodeMap[opcodeName] || 'unknown';
   }
@@ -131,6 +125,7 @@ export class TranslatorService {
     
     const opcodeMap: { [key: string]: string } = {
       "000000": "add",
+      // @ts-ignore
       "001000": "addi",
       "100011": "lw",
       "101011": "sw",
@@ -147,6 +142,7 @@ export class TranslatorService {
     return opcodeMap[opcodeBinary] || 'unknown';
   }
 
+  // Función para traducir de Hex a MIPS
   translateInstructionToMIPS(hexInstruction: string): string {
     console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
@@ -211,14 +207,16 @@ export class TranslatorService {
     while (binaryString.length % 4 !== 0) {
         binaryString = '0' + binaryString;
     }
-
+    // Initialize an empty string to store the hexadecimal representation
     let hexString = '';
+
+    // Convert each group of 4 bits to its hexadecimal equivalent
     for (let i = 0; i < binaryString.length; i += 4) {
         const binaryChunk = binaryString.substring(i, i + 4); 
         const hexDigit = parseInt(binaryChunk, 2).toString(16);
         hexString += hexDigit;
     }
-
+    // Return the hexadecimal representation
     return "0x" + hexString.toUpperCase();
   }
 
@@ -235,23 +233,31 @@ export class TranslatorService {
     return a + b;
   }
 
+  // Translate each hexadecimal instruction to MIPS
   translateHextoMIPS(textInput: string): string {
     const instructions: string[] = textInput.trim().split('\n');
     const translatedInstructions: string[] = instructions.map(instruction => {
         return this.translateInstructionToMIPS(instruction.trim());
     });
 
+    // Join the translated instructions with a newline character
     const formattedInstructions: string = translatedInstructions.join('\n');
+
+    // Set the value of the input textarea to the formatted instructions
     return formattedInstructions;
   }
-
+  
+  // Translate each MIPS instruction to hexadecimal
   translateMIPStoHex(textInput: string): string {
     const instructions: string[] = textInput.trim().split('\n');
     const translatedInstructions: string[] = instructions.map(instruction => {
         return this.translateInstructionToHex(instruction.trim());
     });
 
+    // Join the translated instructions with a newline character
     const formattedInstructions: string = translatedInstructions.join('\n');
+
+    // Set the value of the inputHex textarea to the formatted instructions
     return formattedInstructions;
   }
 }
