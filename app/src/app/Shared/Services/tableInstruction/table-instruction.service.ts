@@ -123,12 +123,12 @@ export class TableInstructionService {
       case '101011':
       case '000100':
       case '000101':
-      case '100000': // lb
-      case '100100': // lbu
-      case '100001': // lh
-      case '100101': // lhu
-      case '101000': // sb
-      case '101001': // sh
+      case '100000': 
+      case '100100': 
+      case '100001': 
+      case '100101': 
+      case '101000': 
+      case '101001': 
         return { type: 'I', data: this.produceIInstruction(instruction) };
       case '000010':
         return { type: 'J', data: this.produceJInstruction(instruction) };
@@ -141,6 +141,7 @@ export class TableInstructionService {
     let explanation = '';
     let details: any = {};
 
+    // Assume `instruction` is a string like "add $t1, $t2, $t3"
     const parts = instruction.split(/\s+/);
     const operation = parts[0];
     console.log('operation', operation);
@@ -161,7 +162,7 @@ export class TableInstructionService {
         };
         explanation = `This is an R-type instruction where ${details.rd} gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
         break;
-      // Instrucciones de tipo I para lw y sw
+      // Add cases for I-type and J-type instructions
       case 'lw':
       case 'lb':
       case 'lbu':
