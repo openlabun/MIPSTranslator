@@ -46,32 +46,32 @@ export class TranslatorService {
 
     instruction = instruction.replace(/\$/g, ''); 
     const parts = instruction.split(' ');
-
     const opcode = this.convertOpCodeNameToCode(parts[0]);
-    if (!opcode) return "Unknown Instruction";
-
+    if (opcode=="unknown") return `Unknown Opcode for "${parts[0]}"`;
+    console.log(parts,parts.length)
     let binaryInstruction = opcode;
     if (["add", "sub", "slt", "and", "or"].includes(parts[0])) {
         
-        const rd = regMap[parts[1]];
-        const rs = regMap[parts[2]];
-        const rt = regMap[parts[3]];
-        if (!rd || !rs || !rt) return "Invalid Registers";
-        binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
+      const [rd, rs, rt] = [parts[1], parts[2], parts[3]].map(p => regMap[p]);
+      if (!rd || !rs || !rt) {
+          return `Missing ${!rd ? ' rd' : ''}${!rs ? ' rs' : ''}${!rt ? ' rt' : ''}`;
+      }
+
+      binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
     } else if (["lw", "sw"].includes(parts[0])) {
- 
-        const rt = regMap[parts[1]];
-        const rs = regMap[parts[3].split(',')[0]];
-        const immediate = parseInt(parts[2]);
-        if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
-        binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+        
+      const [rt, rs, immediate] = [regMap[parts[1]], regMap[parts[3]], parseInt(parts[2])];
+      if (!rt || !rs || isNaN(immediate)) {
+          return `Missing${!rt ? ' rt' : ''}${isNaN(immediate) ? ' immediate (hex)' : ''}${!rs ? ' rs' : ''}`;
+      }
+      binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["addi"].includes(parts[0])) {
 
-        const rt = regMap[parts[1]];
-        const rs = regMap[parts[2]];
-        const immediate = parseInt(parts[3]);
-        if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
-        binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+      const [rt, rs, immediate] = [regMap[parts[1]], regMap[parts[2]], parseInt(parts[3])];
+      if (!rt || !rs || isNaN(immediate)) {
+          return `Missing${!rt ? ' rt' : ''}${!rs ? ' rs' : ''}${isNaN(immediate) ? ' immediate (hex)' : ''}`;
+      }
+      binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["beq", "bne", "bgtz", "blez"].includes(parts[0])) {
         const opcode = this.convertOpCodeNameToCode(parts[0]);
         const rs = regMap[parts[1]];
