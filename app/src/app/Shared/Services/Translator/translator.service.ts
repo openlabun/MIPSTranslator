@@ -44,7 +44,7 @@ export class TranslatorService {
       "gp": "11100", "sp": "11101", "fp": "11110", "ra": "11111"
     };
 
-    instruction = instruction.replace(/\$/g, ''); 
+    instruction = instruction.toLowerCase().replace(/\$/g, ''); 
     const parts = instruction.split(' ');
     const opcode = this.convertOpCodeNameToCode(parts[0]);
     if (opcode=="unknown") return `Unknown Opcode for "${parts[0]}"`;
