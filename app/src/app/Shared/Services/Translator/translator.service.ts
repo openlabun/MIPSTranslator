@@ -77,7 +77,15 @@ export class TranslatorService {
         const rs = regMap[parts[1]];
         const rt = ["beq", "bne"].includes(parts[0]) ? regMap[parts[2]] : "00000"; // for bgtz/blez, rt is 00000
         const label = parts[parts.length - 1]; //offset
-        if (!rs || (["beq", "bne"].includes(parts[0]) && !rt)) return "Invalid Registers";
+      
+        const missingParts: string[] = [];
+        if (!rs) missingParts.push('rs');
+        if (['beq', 'bne'].includes(parts[0]) && !rt) missingParts.push('rt'); // Solo para beq y bne
+        if (isNaN(parseInt(label))) missingParts.push('offset');
+
+        if (missingParts.length > 0) {
+          return `Missing ${missingParts.join(', ')}`;
+        }
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
         const offsetBinary = (offset >>> 0).toString(2).padStart(16, '0');
@@ -87,7 +95,7 @@ export class TranslatorService {
         return hexInstruction;
     } else if (["j", "jal"].includes(parts[0])) {
         const address = parseInt(parts[1]);
-        if (isNaN(address)) return "Invalid Syntax";
+        if (isNaN(address)) return "Missing address";
       
         const opcode = parts[0] === "j" ? "000010" : "000011"; 
       
