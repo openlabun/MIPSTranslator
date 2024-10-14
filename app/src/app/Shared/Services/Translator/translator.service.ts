@@ -22,7 +22,8 @@ export class TranslatorService {
       "addi": "001000", "lw": "100011", "sw": "101011",
       "beq": "000100", "bne": "000101",
       "bgtz": "000111", "blez": "000110", 
-      "j": "000010", "jal": "000011"
+      "j": "000010", "jal": "000011", 
+      "jalr":"001001", "jr":" 001000"
   };
   return opcodeMap[opcodeName] || 'unknown';
   }
@@ -108,7 +109,7 @@ export class TranslatorService {
         const rt = "00000";
         const shamt = "00000";
         const funct = "001001";
-        if (!rs || !rd) return "Invalid Registers";
+        if (!rs ) return "Missing rs";
         const binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
         const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
     
@@ -121,7 +122,7 @@ export class TranslatorService {
         const shamt = "00000"; // Sin desplazamiento
         const funct = "001000"; // Funct code para jr
 
-        if (!rs) return "Invalid Register";
+        if (!rs) return "Missing rs";
 
         const binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
 
