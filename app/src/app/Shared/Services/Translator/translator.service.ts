@@ -193,7 +193,7 @@ export class TranslatorService {
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt", "and", "or", "jr", "jalr"].includes(opcodeMIPS)) {
+    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "addu", "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
         // Instrucción R-type
         const func = binaryInstruction.slice(26, 32);
         const funcMIPS = this.convertFunctToName(func);
@@ -205,7 +205,7 @@ export class TranslatorService {
         const rd = this.convertRegisterToName(binaryInstruction.slice(16, 21));
         
         // Para instrucciones comunes como add, sub, slt, etc.
-        if (["add", "sub", "slt", "and", "or"].includes(funcMIPS)) {
+        if (["add", "sub", "slt", "and", "or", "addu", "subu", "xor", "nor", "srlv", "sllv", "srav"].includes(funcMIPS)) {
             mipsInstruction = funcMIPS + " " + rd + " " + rs + " " + rt;
         }
         
@@ -217,15 +217,30 @@ export class TranslatorService {
         // Para JALR (funct code = 001001)
         else if (funcMIPS === "jalr") {
             mipsInstruction = "jalr " + rs + " " + rd ;
-       }
+        }
+
+        // Para instrucciones de desplazamiento
+        else if (["sll", "srl", "sra"].includes(funcMIPS)) {
+          const shamt = parseInt(binaryInstruction.slice(21, 26),2); //los bits de shamt
+          mipsInstruction = funcMIPS + " " + rd + " " + rt + " " + shamt;
+        }
+
+        // Para mult y div
+        else if (["mult", "div", "multu", "divu"].includes(funcMIPS)) {
+          mipsInstruction = funcMIPS + " " + rs + " " + rt;
+        }
+
+
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
         if (!rt || !rs || isNaN(parseInt(offset, 2))) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + parseInt(offset, 2);
-    } else if (["addi"].includes(opcodeMIPS)) {
-        const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+
+        //Instruccion Tipo I
+    } else if (["addi", "addiu", "andi", "ori", "xori"].includes(opcodeMIPS)) {
+        const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));      
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
         if (!rt || !rs || !immediate) return "Invalid Syntax";
