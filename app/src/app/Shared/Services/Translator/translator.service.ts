@@ -16,20 +16,25 @@ export class TranslatorService {
   return functCodes[op] || 'unknown';
   }
 
-  convertOpCodeNameToCode(opcodeName: string): string {
+    convertOpCodeNameToCode(opcodeName: string): string {
     const opcodeMap: { [key: string]: string } = {
-      "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
-      "addi": "001000", "lw": "100011", "sw": "101011",
-      "beq": "000100", "bne": "000101",
-      "bgtz": "000111", "blez": "000110", 
-      "j": "000010", "jal": "000011"
-  };
-  return opcodeMap[opcodeName] || 'unknown';
+      "add": "000000", "addu": "000000", "and": "000000", "div": "000000", "divu": "000000",
+      "mult": "000000", "multu": "000000", "nor": "000000", "or": "000000", "sll": "000000",
+      "sllv": "000000", "sra": "000000", "srav": "000000", "srl": "000000", "srlv": "000000",
+      "sub": "000000", "subu": "000000", "xor": "000000", "addi": "001000", "addiu": "001001",
+      "andi": "001100", "ori": "001101", "xori": "001110", "lw": "100011", "sw": "101011",
+      "beq": "000100", "bne": "000101", "bgtz": "000111", "blez": "000110", "j": "000010", "jal": "000011"
+    };
+    return opcodeMap[opcodeName] || 'unknown';
   }
 
   translateInstructionToHex(instruction: string): string {
     const funcMap: { [key: string]: string } = {
-      "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
+      "add": "100000", "addu": "100001", "and": "100100", "div": "011010", "divu": "011011",
+      "mult": "011000", "multu": "011001", "nor": "100111", "or": "100101", "sll": "000000",
+      "sllv": "000100", "sra": "000011", "srav": "000111", "srl": "000010", "srlv": "000110",
+      "sub": "100010", "subu": "100011", "xor": "100110", "addi": "001000", "addiu": "001001",
+      "andi": "001100", "ori": "001101", "xori": "001110"
     };
   
 
@@ -51,27 +56,34 @@ export class TranslatorService {
     if (!opcode) return "Unknown Instruction";
 
     let binaryInstruction = opcode;
-    if (["add", "sub", "slt", "and", "or"].includes(parts[0])) {
-        
+
+        if (["add", "addu", "and", "nor", "or", "sll", "sllv", "sra", "srav", "srl", "srlv", "sub", "subu", "xor"].includes(parts[0])) {
         const rd = regMap[parts[1]];
         const rs = regMap[parts[2]];
         const rt = regMap[parts[3]];
         if (!rd || !rs || !rt) return "Invalid Registers";
-        binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
+        binaryInstruction = "000000" + rs + rt + rd + "00000" + funcMap[parts[0]];
+    
+    } else if (["div", "divu", "mult", "multu"].includes(parts[0])) {
+        const rs = regMap[parts[1]];
+        const rt = regMap[parts[2]];
+        if (!rs || !rt  || parts[3] !== undefined) return "Invalid Registers";
+        binaryInstruction = "000000" + rs + rt + "00000" + "00000" + funcMap[parts[0]];
+    
     } else if (["lw", "sw"].includes(parts[0])) {
- 
         const rt = regMap[parts[1]];
         const rs = regMap[parts[3].split(',')[0]];
         const immediate = parseInt(parts[2]);
         if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
-        binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
-    } else if (["addi"].includes(parts[0])) {
-
+        binaryInstruction = this.convertOpCodeNameToCode(parts[0]) + rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+    
+    } else if (["addi", "addiu", "andi", "ori", "xori"].includes(parts[0])) {
         const rt = regMap[parts[1]];
         const rs = regMap[parts[2]];
         const immediate = parseInt(parts[3]);
         if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
-        binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+        binaryInstruction = this.convertOpCodeNameToCode(parts[0]) + rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+    
     } else if (["beq", "bne", "bgtz", "blez"].includes(parts[0])) {
         const opcode = this.convertOpCodeNameToCode(parts[0]);
         const rs = regMap[parts[1]];
@@ -81,17 +93,19 @@ export class TranslatorService {
         const offset = parseInt(label);
         if (isNaN(offset)) return "Invalid Syntax";
         const offsetBinary = (offset >>> 0).toString(2).padStart(16, '0');
-        const binaryInstruction = opcode + rs + rt + offsetBinary;
+        binaryInstruction = opcode + rs + rt + offsetBinary;
         const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
     
         return hexInstruction;
+    
     } else if (["j", "jal"].includes(parts[0])) {
         const address = parseInt(parts[1]);
         if (isNaN(address)) return "Invalid Syntax";
-      
+    
         const opcode = parts[0] === "j" ? "000010" : "000011"; 
-      
+    
         binaryInstruction = opcode + (address >>> 0).toString(2).padStart(26, '0');
+    
     } else if (["jalr"].includes(parts[0])) {
         // Instrucción tipo R para JALR: Opcode 000000 y Funct code 001001
         const rs = regMap[parts[1]]; // Primer operando (registro fuente)
@@ -101,25 +115,27 @@ export class TranslatorService {
         const shamt = "00000";
         const funct = "001001";
         if (!rs || !rd) return "Invalid Registers";
-        const binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
+        binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
         const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
     
         return hexInstruction;
+    
     } else if (["jr"].includes(parts[0])) {
         const rs = regMap[parts[1]]; // Registro fuente
-
+    
         const rt = "00000"; // No utilizado
         const rd = "00000"; // No utilizado
         const shamt = "00000"; // Sin desplazamiento
         const funct = "001000"; // Funct code para jr
-
+    
         if (!rs) return "Invalid Register";
-
-        const binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
-
+    
+        binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
+    
         const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
-
+    
         return hexInstruction;
+    
     } else {
         return "Unsupported Instruction";
     }
