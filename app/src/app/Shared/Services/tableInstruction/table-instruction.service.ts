@@ -123,27 +123,27 @@ export class TableInstructionService {
       case '101011':
       case '000100':
       case '000101':
-      case '000110':
-      case '000111': 
-      case '001001':
-      case '001100':
-      case '001101':
-      case '001110':
+      case '100000': 
+      case '100100': 
+      case '100001': 
+      case '100101': 
+      case '101000': 
+      case '101001': 
         return { type: 'I', data: this.produceIInstruction(instruction) };
       case '000010':
-      case '000011':
         return { type: 'J', data: this.produceJInstruction(instruction) };
       default:
         return { type: 'unknown', data: 'Unknown instruction' };
     }
   }
+
   decodeInstruction(instruction: string) {
     let explanation = '';
     let details: any = {};
 
     // Assume `instruction` is a string like "add $t1, $t2, $t3"
     const parts = instruction.split(/\s+/);
-    const operation = parts[0]; // e.g., "add"
+    const operation = parts[0];
     console.log('operation', operation);
     switch (operation) {
       case 'add':
@@ -164,6 +164,10 @@ export class TableInstructionService {
         break;
       // Add cases for I-type and J-type instructions
       case 'lw':
+      case 'lb':
+      case 'lbu':
+      case 'lh':
+      case 'lhu':
         details = {
           operation: operation,
           rt: parts[1], // e.g., "$t1"
@@ -173,6 +177,8 @@ export class TableInstructionService {
         explanation = `This is an I-type instruction where ${details.rt} gets the value from memory at the address ${details.offset} offset from ${details.rs}.`;
         break;
       case 'sw':
+      case 'sb':
+      case 'sh':
         details = {
           operation: operation,
           rt: parts[1], // e.g., "$t1"
@@ -208,46 +214,6 @@ export class TableInstructionService {
         };
         explanation = `This is an I-type instruction where the program jumps to the target address if the values in ${details.rs} and ${details.rt} are not equal.`;
         break;
-        case 'addiu':
-          details = {
-            operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
-          };
-          explanation = `This is an I-type instruction where ${details.rt} get the result of adding the value in ${details.rs} and the immediate value ${details.immediate}, but without generating an overflow.`;
-          break;
-  
-        case 'andi':
-          details = {
-            operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
-          };
-          explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise AND between the value in ${details.rs} and the immediate value ${details.immediate}.`;
-          break;
-  
-        case 'ori':
-          details = {
-            operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
-          };
-          explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise OR between the value in ${details.rs} and the immediate value ${details.immediate}.`;
-          break;
-  
-        case 'xori':
-          details = {
-            operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
-          };
-          explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise XOR between the value in ${details.rs} and the immediate value ${details.immediate}.`;
-          break;
-      
     }
     return explanation;
   }
