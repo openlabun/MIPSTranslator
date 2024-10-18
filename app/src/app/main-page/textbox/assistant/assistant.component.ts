@@ -11,7 +11,7 @@ import { AssistantService } from '../../../Shared/Services/Assistant/assistant.s
 })
 export class AssistantComponent implements OnInit {
   suggestions: string[] = [];
-  public assistantService = inject(AssistantService); // Cambiado a public
+  public assistantService = inject(AssistantService); 
 
   ngOnInit(): void {
     this.assistantService.inputManager.inputApp.valueChanges.subscribe((value: string) => {
