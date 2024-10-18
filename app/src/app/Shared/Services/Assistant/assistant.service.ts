@@ -17,16 +17,19 @@ export class AssistantService {
     "j": "000010", "jal": "000011",
     "jr": "000000", "jalr": "000000"
   };
-
+  
   constructor() {}
-
+  
   getSuggestions(value: string): string[] {
     const lowerValue = value.toLowerCase();
+    const hasSpace = lowerValue.includes(' ');
+    const firstWord = lowerValue.split(' ')[0];
+  
     const filteredInstructions = Object.keys(this.instructions).filter(instruction =>
-      instruction.startsWith(lowerValue)
+      hasSpace ? instruction === firstWord : instruction.startsWith(firstWord)
     );
-
-    const examples = filteredInstructions.map(instruction => {
+  
+    const examples = filteredInstructions.flatMap(instruction => {
       switch (instruction) {
         case 'add':
           return ['add t1 t2 t3', 'add t0 t1 t2', 'add s1 s2 s3'];
@@ -55,8 +58,8 @@ export class AssistantService {
         default:
           return [`${instruction} (Sin ejemplo disponible)`];
       }
-    }).flat();
-
-    return examples;
-  }
+    });
+  
+    return examples.filter(example => example.includes(firstWord)); 
+  }  
 }
