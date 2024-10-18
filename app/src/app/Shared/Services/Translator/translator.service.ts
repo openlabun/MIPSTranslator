@@ -38,7 +38,8 @@ export class TranslatorService {
       "div": "000000", "divu": "000000", "mult": "000000", "multu": "000000", "nor": "000000",
       "sll": "000000", "sllv": "000000", "sra": "000000", "srav": "000000", "srl": "000000",
       "srlv": "000000", "subu": "000000", "xor": "000000", "addiu": "001001", "andi": "001100",
-      "ori": "001101", "xori": "001110", "jalr": "000000"
+      "ori": "001101", "xori": "001110", "jalr": "000000", "lb": "100000", "lbu": "100100", 
+      "lh": "100001", "lhu": "100101", "sb": "101000", "sh": "101001"   
     };
     return opcodeMap[opcodeName] || 'unknown';
   }
@@ -87,8 +88,8 @@ export class TranslatorService {
       const rt = regMap[parts[2]];
       if (!rs || !rt) return "Invalid Registers";
       binaryInstruction += rs + rt + "00000" + "00000" + funcMap[parts[0]];
-    } else if (["lw", "sw"].includes(parts[0])) {
-
+    } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(parts[0])) {
+      
       const rt = regMap[parts[1]];
       const rs = regMap[parts[3].split(',')[0]];
       const immediate = parseInt(parts[2]);
@@ -220,7 +221,13 @@ export class TranslatorService {
       "000000": "sub", "000000": "slt", "000000": "and", "000000": "or", "000000": "jalr", "000000": "jr", "000000": "addu", "000000": "div", "000000": "divu", "000000": "mult", "000000": "multu", "000000": "nor", "000000": "sll", "000000": "sllv", "000000": "sra", "000000": "srav", "000000": "srl", "000000": "srlv", "000000": "subu", "000000": "xor",
       "001000": "addi",
       "100011": "lw",
+      "100000": "lb",  
+      "100100": "lbu", 
+      "100001": "lh",  
+      "100101": "lhu", 
       "101011": "sw",
+      "101000": "sb",  
+      "101001": "sh",
       "000100": "beq",
       "000101": "bne",
       "000111": "bgtz",
@@ -287,13 +294,13 @@ export class TranslatorService {
         }
 
 
-    } else if (["lw", "sw"].includes(opcodeMIPS)) {
+      } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
         if (!rt || !rs || isNaN(parseInt(offset, 2))) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + parseInt(offset, 2);
-
+        
         //Instruccion Tipo I
     } else if (["addi", "addiu", "andi", "ori", "xori"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));      
