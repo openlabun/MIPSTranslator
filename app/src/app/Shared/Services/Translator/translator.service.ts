@@ -44,6 +44,11 @@ export class TranslatorService {
     return opcodeMap[opcodeName] || 'unknown';
   }
 
+  toLowerCaseString(text: string): string {
+    return text.toLowerCase();
+  }
+  
+
   translateInstructionToHex(instruction: string): string {
     const funcMap: { [key: string]: string } = {
       "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
@@ -68,8 +73,8 @@ export class TranslatorService {
       "gp": "11100", "sp": "11101", "fp": "11110", "ra": "11111"
     };
 
-    instruction = instruction.replace(/\$/g, '');
-    const parts = instruction.split(' ');
+    instruction = this.toLowerCaseString(instruction.replace(/\$/g, ''));
+    const parts = (instruction.split(' '));
 
     const opcode = this.convertOpCodeNameToCode(parts[0]);
     if (!opcode) return "Unknown Instruction";
