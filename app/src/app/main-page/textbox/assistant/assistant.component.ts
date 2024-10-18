@@ -11,7 +11,7 @@ import { AssistantService } from '../../../Shared/Services/Assistant/assistant.s
 })
 export class AssistantComponent implements OnInit {
   suggestions: string[] = [];
-  private assistantService = inject(AssistantService);
+  public assistantService = inject(AssistantService); // Cambiado a public
 
   ngOnInit(): void {
     this.assistantService.inputManager.inputApp.valueChanges.subscribe((value: string) => {
@@ -25,5 +25,9 @@ export class AssistantComponent implements OnInit {
 
   isValid(value: any): boolean {
     return value !== undefined && value !== '';
+  }
+
+  selectSuggestion(suggestion: string): void {
+    this.assistantService.inputManager.inputApp.setValue(suggestion);
   }
 }

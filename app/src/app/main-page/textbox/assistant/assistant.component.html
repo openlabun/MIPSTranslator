@@ -1,5 +1,7 @@
 <div>
-    <ul *ngIf="suggestions.length > 0">
-      <li *ngFor="let suggestion of suggestions">{{ suggestion }}</li>
-    </ul>
+  <ul>
+    <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+      {{ suggestion }}
+    </li>
+  </ul>
 </div>
