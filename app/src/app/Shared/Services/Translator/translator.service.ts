@@ -57,14 +57,21 @@ export class TranslatorService {
 
     let binaryInstruction = opcode;
 
-        if (["add", "addu", "and", "nor", "or", "sll", "sllv", "sra", "srav", "srl", "srlv", "sub", "subu", "xor"].includes(parts[0])) {
-        const rd = regMap[parts[1]];
-        const rs = regMap[parts[2]];
-        const rt = regMap[parts[3]];
-        if (!rd || !rs || !rt) return "Invalid Registers";
-        binaryInstruction = "000000" + rs + rt + rd + "00000" + funcMap[parts[0]];
-    
-    } else if (["div", "divu", "mult", "multu"].includes(parts[0])) {
+    if (["add", "addu", "and", "nor", "or", "sllv", "srav", "srlv", "sub", "subu", "xor"].includes(parts[0])) {
+      const rd = regMap[parts[1]];
+      const rs = regMap[parts[2]];
+      const rt = regMap[parts[3]];
+      if (!rd || !rs || !rt) return "Invalid Registers";
+      binaryInstruction = "000000" + rs + rt + rd + "00000" + funcMap[parts[0]];
+
+  } else if (["sll", "srl", "sra"].includes(parts[0])) {
+      const rd = regMap[parts[1]];
+      const rt = regMap[parts[2]];
+      const shamt = parseInt(parts[3]).toString(2).padStart(5, '0');
+      if (!rd || !rt || isNaN(parseInt(parts[3]))) return "Invalid Registers or Shift Amount";
+      binaryInstruction = "000000" + "00000" + rt + rd + shamt + funcMap[parts[0]];
+      
+  } else if (["div", "divu", "mult", "multu"].includes(parts[0])) {
         const rs = regMap[parts[1]];
         const rt = regMap[parts[2]];
         if (!rs || !rt  || parts[3] !== undefined) return "Invalid Registers";
@@ -162,26 +169,21 @@ export class TranslatorService {
   
   convertFunctToName(functBinary: string): string {
     const funcMap: { [key: string]: string } = {
-      "100000": "add",
-      "100010": "sub",
-      "101010": "slt",
-      "100100": "and",
-      "100101": "or",
-      "001000": "jr",
-      "001001": "jalr",
+      "100000": "add", "100010": "sub", "101010": "slt", "100100": "and", "100101": "or",
+      "001000": "jr", "001001": "jalr", "100001": "addu", "100011": "subu", "100110": "xor",
+      "100111": "nor", "000000": "sll", "000010": "srl", "000011": "sra", "000100": "sllv", 
+      "000110": "srlv", "000111": "srav", "011000": "mult", "011001": "multu", "011010": "div",
+      "011011": "divu",
     };
   
     return funcMap[functBinary] || 'unknown';
   }
-
   
   convertOpcodeToName(opcodeBinary: string): string {
     
     const opcodeMap: { [key: string]: string } = {
     
-      "000000": "add",
-      // @ts-ignore
-      "000000": "sub", "000000": "slt", "000000": "and", "000000": "or", "000000":"jalr", "000000":"jr",
+      "000000": "R-type",
       "001000": "addi",
       "100011": "lw",
       "101011": "sw",
@@ -190,7 +192,11 @@ export class TranslatorService {
       "000111": "bgtz",
       "000110": "blez",
       "000010": "j",
-      "000011": "jal"
+      "000011": "jal",
+      "001100": "andi",
+      "001101": "ori",
+      "001110": "xori",
+      "001001": "addiu",
     };
     return opcodeMap[opcodeBinary] || 'unknown';
   }
@@ -209,7 +215,7 @@ export class TranslatorService {
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt", "and", "or", "jr", "jalr"].includes(opcodeMIPS)) {
+    if ("R-type" === opcodeMIPS) {
         // Instrucción R-type
         const func = binaryInstruction.slice(26, 32);
         const funcMIPS = this.convertFunctToName(func);
@@ -221,8 +227,16 @@ export class TranslatorService {
         const rd = this.convertRegisterToName(binaryInstruction.slice(16, 21));
         
         // Para instrucciones comunes como add, sub, slt, etc.
-        if (["add", "sub", "slt", "and", "or"].includes(funcMIPS)) {
+        if (["add", "addu", "sub", "subu", "slt", "and", "or", "xor", "nor", "sllv", "srav", "srlv"].includes(funcMIPS)) {
             mipsInstruction = funcMIPS + " " + rd + " " + rs + " " + rt;
+        } else if (["sll", "srl", "sra"].includes(funcMIPS)) {
+            const shamt = parseInt(binaryInstruction.slice(21, 26), 2);
+            mipsInstruction = funcMIPS + " " + rd + " " + rt + " " + shamt;
+        }
+        
+        // Para instrucciones que afectan los registros lo y hi
+        else if (["div", "divu", "mult", "multu"].includes(funcMIPS)) {
+            mipsInstruction = funcMIPS + " " + rs + " " + rt;
         }
         
         // Para JR (funct code = 001000)
@@ -232,15 +246,15 @@ export class TranslatorService {
         
         // Para JALR (funct code = 001001)
         else if (funcMIPS === "jalr") {
-            mipsInstruction = "jalr " + rs + " " + rd ;
-       }
+            mipsInstruction = "jalr " + rs + " " + rd;
+        }
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const offset = binaryInstruction.slice(16, 32);
         if (!rt || !rs || isNaN(parseInt(offset, 2))) return "Invalid Syntax";
         mipsInstruction += rs + " " + rt + " " + parseInt(offset, 2);
-    } else if (["addi"].includes(opcodeMIPS)) {
+    } else if (["addi", "andi", "ori", "xori", "addiu"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
         const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
