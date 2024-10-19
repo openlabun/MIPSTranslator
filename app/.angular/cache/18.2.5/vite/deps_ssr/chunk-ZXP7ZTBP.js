@@ -9,7 +9,7 @@ import {
   isPlatformServer,
   parseCookieValue,
   setRootDomAdapter
-} from "./chunk-VZTX2A42.js";
+} from "./chunk-27HNZWKO.js";
 import {
   APP_BOOTSTRAP_LISTENER,
   APP_ID,
@@ -20,6 +20,7 @@ import {
   ENVIRONMENT_INITIALIZER,
   EnvironmentInjector,
   ErrorHandler,
+  GLOBAL_EVENT_DELEGATION,
   INJECTOR_SCOPE,
   Inject,
   Injectable,
@@ -43,7 +44,6 @@ import {
   Version,
   ViewEncapsulation$1,
   XSS_SECURITY_URL,
-  ZONELESS_ENABLED,
   _global,
   _sanitizeHtml,
   _sanitizeUrl,
@@ -76,10 +76,10 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-Q3R2RZWL.js";
+} from "./chunk-QIUYSFOA.js";
 import {
   require_cjs
-} from "./chunk-2H3L6IVL.js";
+} from "./chunk-VDZEJD3D.js";
 import {
   __async,
   __objRest,
@@ -1484,8 +1484,6 @@ var JsonpClientBackend = class _JsonpClientBackend {
         finished = true;
       };
       const cleanup = () => {
-        node.removeEventListener("load", onLoad);
-        node.removeEventListener("error", onError);
         node.remove();
         delete this.callbackMap[callback];
       };
@@ -3109,6 +3107,45 @@ var DomEventsPlugin = class _DomEventsPlugin extends EventManagerPlugin {
     }]
   }], null);
 })();
+var EventDelegationPlugin = class _EventDelegationPlugin extends EventManagerPlugin {
+  constructor(doc) {
+    super(doc);
+    this.delegate = inject(GLOBAL_EVENT_DELEGATION, {
+      optional: true
+    });
+  }
+  supports(eventName) {
+    return this.delegate ? this.delegate.supports(eventName) : false;
+  }
+  addEventListener(element, eventName, handler) {
+    return this.delegate.addEventListener(element, eventName, handler);
+  }
+  removeEventListener(element, eventName, callback) {
+    return this.delegate.removeEventListener(element, eventName, callback);
+  }
+  static {
+    this.ɵfac = function EventDelegationPlugin_Factory(__ngFactoryType__) {
+      return new (__ngFactoryType__ || _EventDelegationPlugin)(ɵɵinject(DOCUMENT));
+    };
+  }
+  static {
+    this.ɵprov = ɵɵdefineInjectable({
+      token: _EventDelegationPlugin,
+      factory: _EventDelegationPlugin.ɵfac
+    });
+  }
+};
+(() => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(EventDelegationPlugin, [{
+    type: Injectable
+  }], () => [{
+    type: void 0,
+    decorators: [{
+      type: Inject,
+      args: [DOCUMENT]
+    }]
+  }], null);
+})();
 var MODIFIER_KEYS = ["alt", "control", "meta", "shift"];
 var _keyMap = {
   "\b": "Backspace",
@@ -3348,6 +3385,10 @@ var BROWSER_MODULE_PROVIDERS = [{
   useClass: KeyEventsPlugin,
   multi: true,
   deps: [DOCUMENT]
+}, {
+  provide: EVENT_MANAGER_PLUGINS,
+  useClass: EventDelegationPlugin,
+  multi: true
 }, DomRendererFactory2, SharedStylesHost, EventManager, {
   provide: RendererFactory2,
   useExisting: DomRendererFactory2
@@ -4115,8 +4156,7 @@ function provideZoneJsCompatibilityDetector() {
     provide: ENVIRONMENT_INITIALIZER,
     useValue: () => {
       const ngZone = inject(NgZone);
-      const isZoneless = inject(ZONELESS_ENABLED);
-      if (!isZoneless && ngZone.constructor !== NgZone) {
+      if (ngZone.constructor !== NgZone) {
         const console2 = inject(Console);
         const message = formatRuntimeError(-5e3, "Angular detected that hydration was enabled for an application that uses a custom or a noop Zone.js implementation. This is not yet a fully supported configuration.");
         console2.warn(message);
@@ -4143,7 +4183,7 @@ function provideClientHydration(...features) {
   }
   return makeEnvironmentProviders([typeof ngDevMode !== "undefined" && ngDevMode ? provideZoneJsCompatibilityDetector() : [], withDomHydration(), featuresKind.has(HydrationFeatureKind.NoHttpTransferCache) || hasHttpTransferCacheOptions ? [] : withHttpTransferCache({}), providers]);
 }
-var VERSION = new Version("18.2.8");
+var VERSION = new Version("18.2.5");
 
 export {
   HTTP_ROOT_INTERCEPTOR_FNS,
@@ -4189,16 +4229,16 @@ export {
 
 @angular/common/fesm2022/http.mjs:
   (**
-   * @license Angular v18.2.8
+   * @license Angular v18.2.5
    * (c) 2010-2024 Google LLC. https://angular.io/
    * License: MIT
    *)
 
 @angular/platform-browser/fesm2022/platform-browser.mjs:
   (**
-   * @license Angular v18.2.8
+   * @license Angular v18.2.5
    * (c) 2010-2024 Google LLC. https://angular.io/
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-UQAGCRQY.js.map
+//# sourceMappingURL=chunk-ZXP7ZTBP.js.map

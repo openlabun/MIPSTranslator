@@ -59,7 +59,7 @@ import {
   ɵɵinject,
   ɵɵinjectAttribute,
   ɵɵstyleProp
-} from "./chunk-Q3R2RZWL.js";
+} from "./chunk-QIUYSFOA.js";
 import {
   __async,
   __spreadProps,
@@ -2285,19 +2285,15 @@ var NgForOfContext = class {
     this.index = index;
     this.count = count;
   }
-  // Indicates whether this is the first item in the collection.
   get first() {
     return this.index === 0;
   }
-  // Indicates whether this is the last item in the collection.
   get last() {
     return this.index === this.count - 1;
   }
-  // Indicates whether an index of this item in the collection is even.
   get even() {
     return this.index % 2 === 0;
   }
-  // Indicates whether an index of this item in the collection is odd.
   get odd() {
     return !this.even;
   }
@@ -3513,6 +3509,13 @@ var DecimalPipe = class _DecimalPipe {
   constructor(_locale) {
     this._locale = _locale;
   }
+  /**
+   * @param value The value to be formatted.
+   * @param digitsInfo Sets digit and decimal representation.
+   * [See more](#digitsinfo).
+   * @param locale Specifies what locale format rules to use.
+   * [See more](#locale).
+   */
   transform(value, digitsInfo, locale) {
     if (!isValue(value)) return null;
     locale ||= this._locale;
@@ -3790,7 +3793,7 @@ function isPlatformBrowser(platformId) {
 function isPlatformServer(platformId) {
   return platformId === PLATFORM_SERVER_ID;
 }
-var VERSION = new Version("18.2.8");
+var VERSION = new Version("18.2.5");
 var ViewportScroller = class _ViewportScroller {
   static {
     this.ɵprov = ɵɵdefineInjectable({
@@ -4627,7 +4630,6 @@ var NgOptimizedImage = class _NgOptimizedImage {
     };
     const removeLoadListenerFn = this.renderer.listen(img, "load", callback);
     const removeErrorListenerFn = this.renderer.listen(img, "error", callback);
-    callOnLoadIfImageIsLoaded(img, callback);
   }
   /** @nodoc */
   ngOnDestroy() {
@@ -4881,7 +4883,7 @@ function assertGreaterThanZero(dir, inputValue, inputName) {
   }
 }
 function assertNoImageDistortion(dir, img, renderer) {
-  const callback = () => {
+  const removeLoadListenerFn = renderer.listen(img, "load", () => {
     removeLoadListenerFn();
     removeErrorListenerFn();
     const computedStyle = window.getComputedStyle(img);
@@ -4929,13 +4931,11 @@ Recommended intrinsic image size: ${recommendedWidth}w x ${recommendedHeight}h.
 Note: Recommended intrinsic image size is calculated assuming a maximum DPR of ${RECOMMENDED_SRCSET_DENSITY_CAP}. To improve loading time, resize the image or consider using the "ngSrcset" and "sizes" attributes.`));
       }
     }
-  };
-  const removeLoadListenerFn = renderer.listen(img, "load", callback);
+  });
   const removeErrorListenerFn = renderer.listen(img, "error", () => {
     removeLoadListenerFn();
     removeErrorListenerFn();
   });
-  callOnLoadIfImageIsLoaded(img, callback);
 }
 function assertNonEmptyWidthAndHeight(dir) {
   let missingAttributes = [];
@@ -4951,20 +4951,18 @@ function assertEmptyWidthAndHeight(dir) {
   }
 }
 function assertNonZeroRenderedHeight(dir, img, renderer) {
-  const callback = () => {
+  const removeLoadListenerFn = renderer.listen(img, "load", () => {
     removeLoadListenerFn();
     removeErrorListenerFn();
     const renderedHeight = img.clientHeight;
     if (dir.fill && renderedHeight === 0) {
       console.warn(formatRuntimeError(2952, `${imgDirectiveDetails(dir.ngSrc)} the height of the fill-mode image is zero. This is likely because the containing element does not have the CSS 'position' property set to one of the following: "relative", "fixed", or "absolute". To fix this problem, make sure the container element has the CSS 'position' property defined and the height of the element is not zero.`));
     }
-  };
-  const removeLoadListenerFn = renderer.listen(img, "load", callback);
+  });
   const removeErrorListenerFn = renderer.listen(img, "error", () => {
     removeLoadListenerFn();
     removeErrorListenerFn();
   });
-  callOnLoadIfImageIsLoaded(img, callback);
 }
 function assertValidLoadingInput(dir) {
   if (dir.loading && dir.priority) {
@@ -5018,11 +5016,6 @@ function assertPlaceholderDimensions(dir, imgElement) {
   let renderedHeight = parseFloat(computedStyle.getPropertyValue("height"));
   if (renderedWidth > PLACEHOLDER_DIMENSION_LIMIT || renderedHeight > PLACEHOLDER_DIMENSION_LIMIT) {
     console.warn(formatRuntimeError(2967, `${imgDirectiveDetails(dir.ngSrc)} it uses a placeholder image, but at least one of the dimensions attribute (height or width) exceeds the limit of ${PLACEHOLDER_DIMENSION_LIMIT}px. To fix this, use a smaller image as a placeholder.`));
-  }
-}
-function callOnLoadIfImageIsLoaded(img, callback) {
-  if (img.complete && img.naturalWidth) {
-    callback();
   }
 }
 function round(input) {
@@ -5142,9 +5135,9 @@ export {
 
 @angular/common/fesm2022/common.mjs:
   (**
-   * @license Angular v18.2.8
+   * @license Angular v18.2.5
    * (c) 2010-2024 Google LLC. https://angular.io/
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-VZTX2A42.js.map
+//# sourceMappingURL=chunk-27HNZWKO.js.map

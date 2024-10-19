@@ -1,7 +1,7 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
   getDOM
-} from "./chunk-NOQW35ZC.js";
+} from "./chunk-27HNZWKO.js";
 import {
   ChangeDetectorRef,
   Directive,
