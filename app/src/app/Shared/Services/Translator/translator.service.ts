@@ -68,9 +68,28 @@ export class TranslatorService {
       binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["addi"].includes(parts[0])) {
 
-      const [rt, rs, immediate] = [regMap[parts[1]], regMap[parts[2]], parseInt(parts[3])];
-      if (!rt || !rs || isNaN(immediate)) {
-          return `Missing${!rt ? ' rt' : ''}${!rs ? ' rs' : ''}${isNaN(immediate) ? ' immediate (hex)' : ''}`;
+      
+      const [rt, rs, immediateHex] = [
+        regMap[parts[1]],
+        regMap[parts[2]],
+        String(parts[3]),
+      ];
+      if (!immediateHex.startsWith('0x') && !immediateHex.startsWith('0X')) {
+        return `Invalid hex imm value: "${immediateHex}".`;
+      }
+      const immediateWithoutPrefix = immediateHex.substring(2);
+      const hexPattern = /^[0-9A-Fa-f]+$/;
+      if (!hexPattern.test(immediateWithoutPrefix)) {
+        return `Invalid hex imm: "${immediateHex}"`;
+      }
+
+      // Convertir el inmediato hexadecimal a entero
+      const immediate = parseInt(immediateWithoutPrefix, 16);
+      if (isNaN(immediate))
+        return `Invalid immediate value: "${immediateHex}".`;
+
+      if (!rt || !rs) {
+          return `Missing${!rt ? ' rt' : ''}${!rs ? ' rs' : ''}`;
       }
       binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["beq", "bne", "bgtz", "blez"].includes(parts[0])) {
