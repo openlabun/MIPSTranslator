@@ -147,6 +147,10 @@ export class TableInstructionService {
       case 'and':
       case 'or':
       case 'slt':
+      case 'addu':
+      case 'nor':
+      case 'subu':
+      case 'xor':
         // R-type instructions
         details = {
           operation: operation,
@@ -157,6 +161,66 @@ export class TableInstructionService {
           funct: this.converter.operationToFunctionCode(operation),
         };
         explanation = `This is an R-type instruction where ${details.rd} gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
+        break;
+      case 'mult':
+      case 'multu':
+      case 'div':
+      case 'divu':
+        details = {
+          operation: operation,
+          rs: parts[1], // e.g., "$t2"
+          rt: parts[2], // e.g., "$t3"
+          rd: '0',
+          shamt: '0',
+          funct: this.converter.operationToFunctionCode(operation),
+        };
+        explanation = `This is an R-type instruction where the specials registers hi and lo gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
+        break;
+      case 'sll':
+        details = {
+          operation: operation,
+          rs: '0', // e.g., "$t2"
+          rt: parts[2], // e.g., "$t3"
+          rd: parts[1], // e.g., "$t1"
+          shamt: parts[3],
+          funct: this.converter.operationToFunctionCode(operation),
+        };
+        explanation = `This is an R-type instruction where ${details.rt} realizes a logical shift to the left to ${details.rd} determined by ${details.shamt}.`;
+        break;
+      case 'srl':
+      case 'sra':
+        details = {
+          operation: operation,
+          rs: '0', // e.g., "$t2"
+          rt: parts[2], // e.g., "$t3"
+          rd: parts[1], // e.g., "$t1"
+          shamt: parts[3],
+          funct: this.converter.operationToFunctionCode(operation),
+        };
+        explanation = `This is an R-type instruction where ${details.rt} realizes a logical shift to the right to ${details.rd} determined by ${details.shamt}.`;
+        break;
+      case 'sllv':
+        details = {
+          operation: operation,
+          rs: parts[3], // e.g., "$t2"
+          rt: parts[2], // e.g., "$t3"
+          rd: parts[1], // e.g., "$t1"
+          shamt: '0',
+          funct: this.converter.operationToFunctionCode(operation),
+        };
+        explanation = `This is an R-type instruction where ${details.rt} realizes a logical shift to the left to ${details.rd} determined by ${details.rs}.`;
+        break;
+      case 'srav':
+      case 'srlv':
+        details = {
+          operation: operation,
+          rs: parts[3], // e.g., "$t2"
+          rt: parts[2], // e.g., "$t3"
+          rd: parts[1], // e.g., "$t1"
+          shamt: '0',
+          funct: this.converter.operationToFunctionCode(operation),
+        };
+        explanation = `This is an R-type instruction where ${details.rt} realizes a logical shift to the right to ${details.rd} determined by ${details.rs}.`;
         break;
       // Add cases for I-type and J-type instructions
       case 'lw':
@@ -178,6 +242,10 @@ export class TableInstructionService {
         explanation = `This is an I-type instruction where the value in ${details.rt} is stored in memory at the address ${details.offset} offset from ${details.rs}.`;
         break;
       case 'addi':
+      case 'addiu':
+      case 'andi':
+      case 'ori':
+      case 'xori':
         details = {
           operation: operation,
           rt: parts[1], // e.g., "$t1"
