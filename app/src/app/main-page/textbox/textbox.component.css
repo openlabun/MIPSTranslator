@@ -1,13 +1,32 @@
-.textbox {
+.form-control {
     width: 15rem;
     height: 10rem;
     flex-shrink: 0;
     border-radius: 36px;
     border: 5px #7d2ae8;
     box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.96);
-    background-color: rgba(1, 0, 0, 0); 
+    background-color: rgba(255, 255, 255, 0); 
     color: #266478;
     padding: 2rem;
     font-size: 1.2rem;
     font-family: "Nunito", sans-serif;
 }
+
+.card {
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: 80px; /* Altura máxima antes de activar el scroll */
+    overflow-y: auto; /* Activa el scroll vertical */
+    transform: translateY(0);  /* Evita movimientos */
+    will-change: transform;    /* Mejora el rendimiento */
+  }
+
+.search-result{
+    color: black;
+}
+

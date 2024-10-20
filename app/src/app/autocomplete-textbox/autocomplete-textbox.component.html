@@ -1,9 +1,0 @@
-<div class="textbox-container">
-    <input type="text" (input)="onInput($event)" placeholder="Enter instruction" />
-    <div *ngIf="suggestions.length > 0" class="suggestions">
-      <ul>
-        <li *ngFor="let suggestion of suggestions">{{ suggestion }}</li>
-      </ul>
-    </div>
-  </div>
-  

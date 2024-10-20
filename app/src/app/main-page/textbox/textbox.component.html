@@ -1,8 +1,19 @@
-<div *ngIf="suggestions.length > 0" class="suggestions">
-    <ul>
-      <li *ngFor="let suggestion of suggestions" (click)="onSelectSuggestion(suggestion)">
-        {{ suggestion }}
-      </li>
-    </ul>
+
+  <textarea #completarInstrucciones (select)="onSelect($event)" type="text" id="instrucciones" 
+    placeholder="Input" [formControl]="userInput" autocomplete="off" (click)="showSearches = true"
+    class="form-control"></textarea>
+
+
+  <!--  DropDown Starts  -->
+  <div class="card" [hidden]="!showSearches">
+    <div class="search">
+      <div *ngFor="let instrucciones of searchedInstrucciones; trackBy: trackById" tappable (click)="setInstruccionName(instrucciones)"
+        class="search-result">
+        {{instrucciones}}
+      </div>
+    </div>
+    <p class="search" *ngIf="searchedInstrucciones && searchedInstrucciones.length <= 0 && !isSearching">No instructions found</p>
+    <p class="search" [hidden]="!isSearching">Searching instructions...</p>
   </div>
-  
+  <!--  DropDown Ends  -->
+
