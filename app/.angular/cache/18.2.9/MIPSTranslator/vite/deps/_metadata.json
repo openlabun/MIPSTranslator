@@ -1,0 +1,70 @@
+{
+  "hash": "8669cb8a",
+  "configHash": "5a486078",
+  "lockfileHash": "3b2d13b4",
+  "browserHash": "6d243ed7",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../../node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "e22f5fad",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "26a1dec6",
+      "needsInterop": false
+    },
+    "@angular/forms": {
+      "src": "../../../../../../node_modules/@angular/forms/fesm2022/forms.mjs",
+      "file": "@angular_forms.js",
+      "fileHash": "126d8782",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "685a96ce",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "494927c4",
+      "needsInterop": false
+    },
+    "rxjs": {
+      "src": "../../../../../../node_modules/rxjs/dist/esm5/index.js",
+      "file": "rxjs.js",
+      "fileHash": "a2321012",
+      "needsInterop": false
+    },
+    "rxjs/operators": {
+      "src": "../../../../../../node_modules/rxjs/dist/esm5/operators/index.js",
+      "file": "rxjs_operators.js",
+      "fileHash": "480a0355",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-UL4CBD6I": {
+      "file": "chunk-UL4CBD6I.js"
+    },
+    "chunk-JZPTM3SI": {
+      "file": "chunk-JZPTM3SI.js"
+    },
+    "chunk-RMTVCVCI": {
+      "file": "chunk-RMTVCVCI.js"
+    },
+    "chunk-ZILRDZYF": {
+      "file": "chunk-ZILRDZYF.js"
+    },
+    "chunk-HHDBSK6W": {
+      "file": "chunk-HHDBSK6W.js"
+    },
+    "chunk-32LHFCYG": {
+      "file": "chunk-32LHFCYG.js"
+    }
+  }
+}
