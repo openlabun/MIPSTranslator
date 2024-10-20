@@ -34,14 +34,12 @@ import {
   createNgModule,
   findLocaleData,
   formatRuntimeError,
-  getLocaleCurrencyCode,
   getLocalePluralCase,
   inject,
   isPromise,
   isSubscribable,
   numberAttribute,
   performanceMarkFeature,
-  registerLocaleData,
   setClassMetadata,
   stringify,
   untracked,
@@ -951,14 +949,6 @@ function getLocaleEraNames(locale, width) {
   const erasData = data[LocaleDataIndex.Eras];
   return getLastDefinedValue(erasData, width);
 }
-function getLocaleFirstDayOfWeek(locale) {
-  const data = findLocaleData(locale);
-  return data[LocaleDataIndex.FirstDayOfWeek];
-}
-function getLocaleWeekEndRange(locale) {
-  const data = findLocaleData(locale);
-  return data[LocaleDataIndex.WeekendRange];
-}
 function getLocaleDateFormat(locale, width) {
   const data = findLocaleData(locale);
   return getLastDefinedValue(data[LocaleDataIndex.DateFormat], width);
@@ -987,17 +977,6 @@ function getLocaleNumberSymbol(locale, symbol) {
 function getLocaleNumberFormat(locale, type) {
   const data = findLocaleData(locale);
   return data[LocaleDataIndex.NumberFormats][type];
-}
-function getLocaleCurrencySymbol(locale) {
-  const data = findLocaleData(locale);
-  return data[LocaleDataIndex.CurrencySymbol] || null;
-}
-function getLocaleCurrencyName(locale) {
-  const data = findLocaleData(locale);
-  return data[LocaleDataIndex.CurrencyName] || null;
-}
-function getLocaleCurrencyCode2(locale) {
-  return getLocaleCurrencyCode(locale);
 }
 function getLocaleCurrencies(locale) {
   const data = findLocaleData(locale);
@@ -1035,10 +1014,6 @@ function getLocaleExtraDayPeriods(locale, formStyle, width) {
   ]];
   const dayPeriods = getLastDefinedValue(dayPeriodsData, formStyle) || [];
   return getLastDefinedValue(dayPeriods, width) || [];
-}
-function getLocaleDirection(locale) {
-  const data = findLocaleData(locale);
-  return data[LocaleDataIndex.Directionality];
 }
 function getLastDefinedValue(data, index) {
   for (let i = index; i > -1; i--) {
@@ -2002,9 +1977,6 @@ var NgLocaleLocalization = class _NgLocaleLocalization extends NgLocalization {
     }]
   }], null);
 })();
-function registerLocaleData2(data, localeId, extraData) {
-  return registerLocaleData(data, localeId, extraData);
-}
 function parseCookieValue(cookieStr, name) {
   name = encodeURIComponent(name);
   for (const cookie of cookieStr.split(";")) {
@@ -4062,49 +4034,6 @@ var NETLIFY_LOADER_REGEX = /https?\:\/\/[^\/]+\.netlify\.app\/.+/;
 function isNetlifyUrl(url) {
   return NETLIFY_LOADER_REGEX.test(url);
 }
-function provideNetlifyLoader(path) {
-  if (path && !isValidPath(path)) {
-    throw new RuntimeError(2959, ngDevMode && `Image loader has detected an invalid path (\`${path}\`). To fix this, supply either the full URL to the Netlify site, or leave it empty to use the current site.`);
-  }
-  if (path) {
-    const url = new URL(path);
-    path = url.origin;
-  }
-  const loaderFn = (config) => {
-    return createNetlifyUrl(config, path);
-  };
-  const providers = [{
-    provide: IMAGE_LOADER,
-    useValue: loaderFn
-  }];
-  return providers;
-}
-var validParams = /* @__PURE__ */ new Map([["height", "h"], ["fit", "fit"], ["quality", "q"], ["q", "q"], ["position", "position"]]);
-function createNetlifyUrl(config, path) {
-  const url = new URL(path ?? "https://a/");
-  url.pathname = "/.netlify/images";
-  if (!isAbsoluteUrl(config.src) && !config.src.startsWith("/")) {
-    config.src = "/" + config.src;
-  }
-  url.searchParams.set("url", config.src);
-  if (config.width) {
-    url.searchParams.set("w", config.width.toString());
-  }
-  const configQuality = config.loaderParams?.["quality"] ?? config.loaderParams?.["q"];
-  if (config.isPlaceholder && !configQuality) {
-    url.searchParams.set("q", PLACEHOLDER_QUALITY);
-  }
-  for (const [param, value] of Object.entries(config.loaderParams ?? {})) {
-    if (validParams.has(param)) {
-      url.searchParams.set(validParams.get(param), value.toString());
-    } else {
-      if (ngDevMode) {
-        console.warn(formatRuntimeError(2959, `The Netlify image loader has detected an \`<img>\` tag with the unsupported attribute "\`${param}\`".`));
-      }
-    }
-  }
-  return url.hostname === "a" ? url.href.replace(url.origin, "") : url.href;
-}
 function imgDirectiveDetails(ngSrc, includeNgSrc = true) {
   const ngSrcInfo = includeNgSrc ? `(activated on an <img> element with the \`ngSrc="${ngSrc}"\`) ` : "";
   return `The NgOptimizedImage directive ${ngSrcInfo}has detected that`;
@@ -5044,98 +4973,18 @@ export {
   getDOM,
   setRootDomAdapter,
   DomAdapter,
-  PlatformNavigation,
   DOCUMENT,
-  PlatformLocation,
   LOCATION_INITIALIZED,
-  BrowserPlatformLocation,
-  normalizeQueryParams,
   LocationStrategy,
-  APP_BASE_HREF,
   PathLocationStrategy,
   HashLocationStrategy,
   Location,
-  NumberFormatStyle,
-  Plural,
-  FormStyle,
-  TranslationWidth,
-  FormatWidth,
-  NumberSymbol,
-  WeekDay,
-  getLocaleId,
-  getLocaleDayPeriods,
-  getLocaleDayNames,
-  getLocaleMonthNames,
-  getLocaleEraNames,
-  getLocaleFirstDayOfWeek,
-  getLocaleWeekEndRange,
-  getLocaleDateFormat,
-  getLocaleTimeFormat,
-  getLocaleDateTimeFormat,
-  getLocaleNumberSymbol,
-  getLocaleNumberFormat,
-  getLocaleCurrencySymbol,
-  getLocaleCurrencyName,
-  getLocaleCurrencyCode2 as getLocaleCurrencyCode,
-  getLocalePluralCase2 as getLocalePluralCase,
-  getLocaleExtraDayPeriodRules,
-  getLocaleExtraDayPeriods,
-  getLocaleDirection,
-  getCurrencySymbol,
-  getNumberOfCurrencyDigits,
-  formatDate,
-  formatCurrency,
-  formatPercent,
-  formatNumber,
-  NgLocalization,
-  NgLocaleLocalization,
-  registerLocaleData2 as registerLocaleData,
   parseCookieValue,
-  NgClass,
-  NgComponentOutlet,
-  NgForOfContext,
-  NgForOf,
-  NgIf,
-  NgIfContext,
-  NgSwitch,
-  NgSwitchCase,
-  NgSwitchDefault,
-  NgPlural,
-  NgPluralCase,
-  NgStyle,
-  NgTemplateOutlet,
-  AsyncPipe,
-  LowerCasePipe,
-  TitleCasePipe,
-  UpperCasePipe,
-  DATE_PIPE_DEFAULT_TIMEZONE,
-  DATE_PIPE_DEFAULT_OPTIONS,
-  DatePipe,
-  I18nPluralPipe,
-  I18nSelectPipe,
-  JsonPipe,
-  KeyValuePipe,
-  DecimalPipe,
-  PercentPipe,
-  CurrencyPipe,
-  SlicePipe,
   CommonModule,
   PLATFORM_BROWSER_ID,
-  PLATFORM_SERVER_ID,
-  isPlatformBrowser,
   isPlatformServer,
-  VERSION,
   ViewportScroller,
-  NullViewportScroller,
-  XhrFactory,
-  IMAGE_LOADER,
-  provideCloudflareLoader,
-  provideCloudinaryLoader,
-  provideImageKitLoader,
-  provideImgixLoader,
-  provideNetlifyLoader,
-  PRECONNECT_CHECK_BLOCKLIST,
-  NgOptimizedImage
+  XhrFactory
 };
 /*! Bundled license information:
 
@@ -5146,4 +4995,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-BAOIP7IO.js.map
+//# sourceMappingURL=chunk-EXU5GNJE.js.map
