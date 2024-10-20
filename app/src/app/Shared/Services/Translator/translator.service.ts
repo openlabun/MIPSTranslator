@@ -12,6 +12,16 @@ export class TranslatorService {
       'and': '100100',
       'or': '100101',
       'slt': '101010',
+      'mfhi': '010000', 
+      'mflo': '010010',
+      'mthi': '010001',
+      'mtlo': '010011',
+      'teq': '110100',
+      'tge': '110000',
+      'tgeu': '110001',
+      'tlt': '110010',
+      'tltu': '110011',
+      'tne': '110110',
       'addu': '100001', // Operaciones Agregadas
       'div': '011010',
       'divu': '011011',
@@ -33,6 +43,10 @@ export class TranslatorService {
   convertOpCodeNameToCode(opcodeName: string): string {
     const opcodeMap: { [key: string]: string } = {
       "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
+      'mfhi': "000000", 'mflo': '000000', 'mthi': '000000', 'mtlo': '000000',
+      'teq': '000000', 'tge': '000000', 'tgeu': '000000', 'tlt': '000000', 'tltu': '000000', 
+      'tne': '000000', 'teqi': '000001', 'tgei': '000001', 'tgeiu': '000001', 'tlti': '000001',
+      'tltiu': '000001', 'tnei': '000001',
       "addi": "001000", "lw": "100011", "sw": "101011", "beq": "000100", "bne": "000101",
       "bgtz": "000111", "blez": "000110", "j": "000010", "jal": "000011", "addu": "000000",
       "div": "000000", "divu": "000000", "mult": "000000", "multu": "000000", "nor": "000000",
@@ -52,6 +66,8 @@ export class TranslatorService {
   translateInstructionToHex(instruction: string): string {
     const funcMap: { [key: string]: string } = {
       "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
+      'mfhi': '010000', 'mflo': '010010', 'mthi': '010001', 'mtlo': '010011', 'teq': '110100', 'tge': '110000',
+      'tgeu': '110001', 'tlt': '110010', 'tltu': '110011', 'tne': '110110',
       "addu": "100001", "div": "011010",
       "divu": "011011", "mult": "011000",
       "multu": "011001", "nor": "100111",
@@ -93,7 +109,17 @@ export class TranslatorService {
       const rt = regMap[parts[2]];
       if (!rs || !rt) return "Invalid Registers";
       binaryInstruction += rs + rt + "00000" + "00000" + funcMap[parts[0]];
-    } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(parts[0])) {
+    }else if (["mfhi", "mflo"].includes(parts[0])) {
+      const rd = regMap[parts[1]]; // Registro destino
+      if (!rd) {
+        return "Invalid Registers";
+      }
+      binaryInstruction += "00000" + "00000" + rd + "00000" + funcMap[parts[0]];
+    }else if (["mthi", "mtlo"].includes(parts[0])) {
+      const rs = regMap[parts[1]]; // Registro fuente
+      if (!rs) return "Invalid Registers";
+      binaryInstruction += rs + "00000" + "00000" + "00000" + funcMap[parts[0]];
+    }else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(parts[0])) {
       
       const rt = regMap[parts[1]];
       const rs = regMap[parts[3].split(',')[0]];
@@ -164,6 +190,34 @@ export class TranslatorService {
       const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
 
       return hexInstruction;
+    }else if (["teq", "tge", "tgeu", "tlt", "tltu", "tne"].includes(parts[0])) {
+      const rt = regMap[parts[1]];
+      const rs = regMap[parts[2]];
+      let code = parseInt(parts[3]);
+      if (!rs || !rt) return "Invalid Registers";
+      if (isNaN(code) || code < 0 || code > 1023) return "Invalid Code";
+      const codeBinary = code.toString(2).padStart(10, '0');
+      binaryInstruction += rs + rt + codeBinary + funcMap[parts[0]];
+      const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
+      return hexInstruction;
+    } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(parts[0])) {
+      const opcode = this.convertOpCodeNameToCode(parts[0]);
+      const rtMap: { [key: string]: string } = {
+        "tgei": "01000",
+        "tgeiu": "01001",
+        "tlti": "01010",
+        "tltiu": "01011",
+        "teqi": "01100",
+        "tnei": "01110"
+      };
+      const rs = regMap[parts[1]];
+      const immediate = parseInt(parts[2]);
+      if (!rs || isNaN(immediate)) return "Invalid Syntax";
+      const immediateBinary = (immediate >>> 0).toString(2).padStart(16, '0');
+      const rt = rtMap[parts[0]];
+      const binaryInstruction = opcode + rs + rt + immediateBinary;
+      const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
+      return hexInstruction;
     } else {
       return "Unsupported Instruction";
     }
@@ -197,6 +251,16 @@ export class TranslatorService {
       "100101": "or",
       "001000": "jr",
       "001001": "jalr",
+      '010000': 'mfhi', //añadido
+      '010010': 'mflo',
+      '010001': 'mthi',
+      '010011': 'mtlo',
+      '110100': 'teq',
+      '110000': 'tge',
+      '110001': 'tgeu',
+      '110010': 'tlt',
+      '110011': 'tltu',
+      '110110': 'tne',
       "100001": "addu",
       "011010": "div",
       "011011": "divu",
@@ -224,6 +288,11 @@ export class TranslatorService {
       "000000": "add",
       // @ts-ignore
       "000000": "sub", "000000": "slt", "000000": "and", "000000": "or", "000000": "jalr", "000000": "jr", "000000": "addu", "000000": "div", "000000": "divu", "000000": "mult", "000000": "multu", "000000": "nor", "000000": "sll", "000000": "sllv", "000000": "sra", "000000": "srav", "000000": "srl", "000000": "srlv", "000000": "subu", "000000": "xor",
+      // @ts-ignore
+      "000000": "mfhi", "000000": "mflo", "000000": "mthi", "000000": "mtlo", '000000': 'teq', '000000': 'tge', '000000': 'tgeu', '000000': 'tlt', '000000': 'tltu', '000000': 'tne',
+      '000001': 'tgei',
+      // @ts-ignore
+      '000001': 'tgeiu', '000001': 'tlti', '000001': 'tltiu', '000001': 'teqi', '000001': 'tnei',
       "001000": "addi",
       "100011": "lw",
       "100000": "lb",  
@@ -261,7 +330,7 @@ export class TranslatorService {
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "addu", "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
+    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
         // Instrucción R-type
         const func = binaryInstruction.slice(26, 32);
         const funcMIPS = this.convertFunctToName(func);
@@ -297,6 +366,37 @@ export class TranslatorService {
         else if (["mult", "div", "multu", "divu"].includes(funcMIPS)) {
           mipsInstruction = funcMIPS + " " + rs + " " + rt;
         }
+        //para movimiento de datos
+        else if (["mfhi", "mflo"].includes(funcMIPS)) {
+          mipsInstruction = funcMIPS + " " + rd;
+        }
+        else if (["mthi", "mtlo"].includes(funcMIPS)) {
+          mipsInstruction = funcMIPS + " " + rs;
+        //para manejo de expeciones
+        } else if (["tge", "tgeu", "tlt", "tltu", "teq", "tne"].includes(funcMIPS)) {
+          const code = binaryInstruction.slice(16, 26);
+          mipsInstruction = funcMIPS + " " + rt + " " + rs + " " + parseInt(code, 2);
+        }
+      } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(opcodeMIPS)) {
+        const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+        const rt = binaryInstruction.slice(11, 16); // rt define la operación específica
+  
+        const rtMap: { [key: string]: string } = {
+          "01000": "tgei",
+          "01001": "tgeiu",
+          "01010": "tlti",
+          "01011": "tltiu",
+          "01100": "teqi",
+          "01110": "tnei"
+        };
+  
+        const instructionName = rtMap[rt]; // Identificamos la instrucción por el valor de rt
+        const immediate = parseInt(binaryInstruction.slice(16, 32), 2); // Obtenemos el inmediato de 16 bits
+  
+        if (!instructionName || !rs || isNaN(immediate)) return "Invalid Syntax";
+  
+        // Retornamos la instrucción con el formato correcto
+        mipsInstruction = instructionName + " " + rs + " " + immediate;
 
 
       } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(opcodeMIPS)) {
