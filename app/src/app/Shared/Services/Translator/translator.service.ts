@@ -77,8 +77,21 @@ export class TranslatorService {
         const opcode = this.convertOpCodeNameToCode(parts[0]);
         const rs = regMap[parts[1]];
         const rt = ["beq", "bne"].includes(parts[0]) ? regMap[parts[2]] : "00000"; // for bgtz/blez, rt is 00000
-        const label = parts[parts.length - 1]; //offset
-      
+
+         // Asegurarse de que label es una cadena
+        let label = String(parts[parts.length - 1]).trim(); // Convertir a cadena y eliminar espacios adicionales
+
+        // Permitir prefijos "0x" y convertir si es necesario
+        if (label.startsWith("0x") || label.startsWith("0X")) {
+            label = label.substring(2); // Eliminar el prefijo para la validación
+        }
+
+        // Verificar si el label es un valor hexadecimal válido (0-9, A-F)
+        const hexPattern = /^[0-9A-Fa-f]+$/;
+        if (!hexPattern.test(label)) {
+            return `Invalid hex offset: "${label}".`;
+        }
+
         const missingParts: string[] = [];
         if (!rs) missingParts.push('rs');
         if (['beq', 'bne'].includes(parts[0]) && !rt) missingParts.push('rt'); // Solo para beq y bne
@@ -189,7 +202,7 @@ export class TranslatorService {
   }
 
   
-   translateInstructionToMIPS(hexInstruction: string): string {
+  translateInstructionToMIPS(hexInstruction: string): string {
     console.log("hexInstruction", hexInstruction);  
     const binaryInstruction = this.hexToBinary(hexInstruction);
     console.log('Binary Instruction:', binaryInstruction);
@@ -226,7 +239,7 @@ export class TranslatorService {
         // Para JALR (funct code = 001001)
         else if (funcMIPS === "jalr") {
             mipsInstruction = "jalr " + rs + " " + rd ;
-       }
+      }
     } else if (["lw", "sw"].includes(opcodeMIPS)) {
         const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
