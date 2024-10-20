@@ -108,12 +108,26 @@ export class TranslatorService {
     
         return hexInstruction;
     } else if (["j", "jal"].includes(parts[0])) {
-        const address = parseInt(parts[1]);
-        if (isNaN(address)) return "Missing address";
-      
-        const opcode = parts[0] === "j" ? "000010" : "000011"; 
-      
-        binaryInstruction = opcode + (address >>> 0).toString(2).padStart(26, '0');
+      let address = String(parts[1]).trim(); 
+  
+      if (address.startsWith("0x") || address.startsWith("0X")) {
+          address = address.substring(2); 
+      }
+  
+      const hexPattern = /^[0-9A-Fa-f]+$/;
+      if (!hexPattern.test(address)) {
+          return `Invalid hex address: "${address}".`;
+      }
+  
+      const addressValue = parseInt(address, 16); 
+      if (isNaN(addressValue)) return "Invalid address";
+  
+      const opcode = parts[0] === "j" ? "000010" : "000011";
+  
+      binaryInstruction = opcode + (addressValue >>> 0).toString(2).padStart(26, '0');
+  
+
+
     } else if (["jalr"].includes(parts[0])) {
         // Instrucción tipo R para JALR: Opcode 000000 y Funct code 001001
         const rs = regMap[parts[1]]; // Primer operando (registro fuente)
