@@ -118,13 +118,17 @@ export class TableInstructionService {
     switch (opCode) {
       case '000000':
         return { type: 'R', data: this.produceRInstruction(instruction) };
-      case '001000':
-      case '100011':
-      case '101011':
-      case '000100':
-      case '000101':
-      case '000110':
-      case '000111': 
+      case '001000': // addi
+      case '001001': // addiu
+      case '001100': // andi
+      case '001101': // ori
+      case '001110': // xori
+      case '100011': // lw
+      case '101011': // sw
+      case '000100': // beq
+      case '000101': // bne
+      case '000110': // blez
+      case '000111': // bgtz
         return { type: 'I', data: this.produceIInstruction(instruction) };
       case '000010':
       case '000011':
