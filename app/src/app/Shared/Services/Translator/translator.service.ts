@@ -184,7 +184,7 @@ export class TranslatorService {
       "11000": "t8", "11001": "t9", "11010": "k0", "11011": "k1",
       "11100": "gp", "11101": "sp", "11110": "fp", "11111": "ra"
     };
-    return regMap[registerBinary] || 'unknown';
+    return regMap[registerBinary] ? `$${regMap[registerBinary]}` : 'unknown';
   }
 
 
