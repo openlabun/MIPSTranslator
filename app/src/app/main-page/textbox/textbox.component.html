@@ -1,19 +1,10 @@
+<textarea #hexInput (input)="onSelect($event, true)" (select)="onSelect($event)"  type="text" id="textInput" class="textbox" placeholder="Input"
+  [formControl]="userInput">
+</textarea>
 
-  <textarea #completarInstrucciones (select)="onSelect($event)" type="text" id="instrucciones" 
-    placeholder="Input" [formControl]="userInput" autocomplete="off" (click)="showSearches = true"
-    class="form-control"></textarea>
-
-
-  <!--  DropDown Starts  -->
-  <div class="card" [hidden]="!showSearches">
-    <div class="search">
-      <div *ngFor="let instrucciones of searchedInstrucciones; trackBy: trackById" tappable (click)="setInstruccionName(instrucciones)"
-        class="search-result">
-        {{instrucciones}}
-      </div>
-    </div>
-    <p class="search" *ngIf="searchedInstrucciones && searchedInstrucciones.length <= 0 && !isSearching">No instructions found</p>
-    <p class="search" [hidden]="!isSearching">Searching instructions...</p>
+<!-- Div que muestra las sugerencias filtradas -->
+<div id="autocomplete-list" *ngIf="suggestions.length > 0">
+  <div *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+    {{ suggestion }}
   </div>
-  <!--  DropDown Ends  -->
-
+</div>
