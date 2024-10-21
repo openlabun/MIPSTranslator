@@ -12,30 +12,30 @@
     font-family: "Nunito", sans-serif;
 }
 
-/* Contenedor para la lista de sugerencias */
+
 #autocomplete-list {
     position: absolute;
-    background-color: white;  /* Fondo blanco */
+    background-color: white; 
     border-radius: 8px;
-    border: 1px solid #d4d4d4;  /* Borde gris claro */
+    border: 1px solid #d4d4d4;
     max-height: 150px;
     overflow-y: auto;
     z-index: 99;
     width: 300px;
-    color: black;  /* Asegura que todo el texto dentro del contenedor sea negro */
+    color: black;
   }
   
-  /* Estilo para cada sugerencia individual */
+
   #autocomplete-list div {
     padding: 10px;
     cursor: pointer;
-    background-color: white;  /* Fondo blanco para cada sugerencia */
-    color: black;  /* Asegura que el texto sea negro */
+    background-color: white;
+    color: black;
   }
   
-  /* Estilo para cuando se pasa el mouse sobre una sugerencia */
+ 
   #autocomplete-list div:hover {
-    background-color: #e9e9e9;  /* Cambia el fondo a gris claro cuando se hace hover */
-    color: black;  /* Mantén el color negro cuando se hace hover */
+    background-color: #e9e9e9;
+    color: black;
   }
   
