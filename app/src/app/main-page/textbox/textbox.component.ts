@@ -1,6 +1,6 @@
 import { Component, inject, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';  // Importar CommonModule para NgIf y NgFor
+import { CommonModule } from '@angular/common';
 import { FormInputManagerService } from '../../Shared/Services/FormInputManager/form-input-manager.service';
 import { TableInstructionService } from '../../Shared/Services/tableInstruction/table-instruction.service';
 
@@ -8,11 +8,11 @@ import { TableInstructionService } from '../../Shared/Services/tableInstruction/
   selector: 'app-textbox',
   standalone: true,
   imports: [
-    ReactiveFormsModule,  // Para formularios reactivos
-    CommonModule  // Para usar NgIf, NgFor y otras directivas comunes
+    ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './textbox.component.html',
-  styleUrls: ['./textbox.component.css'],  // corregido a styleUrls
+  styleUrls: ['./textbox.component.css'], 
 })
 export class TextboxComponent {
   inputChange = output<string>();
