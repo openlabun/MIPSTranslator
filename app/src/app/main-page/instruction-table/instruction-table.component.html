@@ -85,3 +85,61 @@
     <p>{{ instructionData }}</p>
   </div>
   }
+  @if(instructionType === 'RTrap') {
+    <div>
+      <table class="mips-table">
+        <tr>
+          <th colspan="6">31-26</th>
+          <th colspan="5">25-21</th>
+          <th colspan="5">20-16</th>
+          <th colspan="10">15-6</th>
+          <th colspan="6">5-0</th>
+        </tr>
+        <tr>
+          <th colspan="6">Type</th>
+          <th colspan="5">rs</th>
+          <th colspan="5">rt</th>
+          <th colspan="10">code</th>
+          <th colspan="6">funct</th>
+        </tr>
+        <tr>
+          <td colspan="6">Trap R-Type</td>
+          <td colspan="5">{{tableService.convertRegisterToName(parts.rs)}}</td>
+          <td colspan="5">{{tableService.convertRegisterToName(parts.rt)}}</td>
+          <td colspan="10">Code</td>
+          <td colspan="6">{{tableService.converter.convertFunctToName(parts.funct)}}</td>
+        </tr>
+        <tr>
+          <td colspan="6">{{parts.opcode}}</td>
+          <td colspan="5">{{parts.rs}}</td>
+          <td colspan="5">{{parts.rt}}</td>
+          <td colspan="10">{{parts.code}}</td>
+          <td colspan="6">{{parts.funct}}</td>
+        </tr>
+      </table>
+    </div>
+  }
+  @if(instructionType === 'ITrap') {
+    <div>
+      <table class="mips-table">
+        <tr>
+          <th colspan="6">31-26</th>
+          <th colspan="5">25-21</th>
+          <th colspan="5">20-16</th>
+          <th colspan="16">15-0</th>
+        </tr>
+        <tr>
+          <td colspan="6">OpCode</td>
+          <td colspan="5">rs</td>
+          <td colspan="5">{{parts.rtName}}</td>
+          <td colspan="16">immediate</td>
+        </tr>
+        <tr>
+          <td colspan="6">{{parts.opcode}}</td>
+          <td colspan="5">{{parts.rs}}</td>
+          <td colspan="5">{{parts.rtBinary}}</td>
+          <td colspan="16">{{parts.immediate}}</td>
+        </tr>
+      </table>
+    </div>
+  }
