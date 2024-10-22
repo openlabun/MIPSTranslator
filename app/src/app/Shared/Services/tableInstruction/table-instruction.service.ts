@@ -146,6 +146,44 @@ export class TableInstructionService {
     };
   }
 
+  produceRTrapInstruction(instruction: string) {
+    const binaryInstruction: string = this.converter.hexToBinary(this.selectedLineText);
+
+    const result = {
+      opcode: binaryInstruction.slice(0, 6),
+      rs: binaryInstruction.slice(6, 11),
+      rt: binaryInstruction.slice(11, 16),
+      code: binaryInstruction.slice(16, 26), // Code de 10 bits
+      funct: binaryInstruction.slice(26, 32), // Funct de 6 bits
+    };
+
+    console.log("R-Trap Instruction", result); // Verifica los valores aquí
+    return result;
+  }
+  produceITrapInstruction(instruction: string) {
+    const binaryInstruction: string = this.converter.hexToBinary(instruction);
+
+    const rtMap: { [key: string]: string } = {
+      "01000": "tgei",
+      "01001": "tgeiu",
+      "01010": "tlti",
+      "01011": "tltiu",
+      "01100": "teqi",
+      "01110": "tnei"
+    };
+  // Obtenemos el binario de rt y lo mapeamos
+  const rtBinary = binaryInstruction.slice(11, 16); // Obtenemos el valor binario de rt
+  const rtName = rtMap[rtBinary]; // Usamos el mapa para obtener el nombre correspondiente
+
+    return {
+      opcode: binaryInstruction.slice(0, 6),
+      rs: binaryInstruction.slice(6, 11),
+      rtBinary: rtBinary,  // Devolvemos el valor binario de rt
+      rtName: rtName,      // Devolvemos el nombre mapeado
+      immediate: binaryInstruction.slice(16, 32),
+    };
+  }
+
   generateInstructionTable(instruction: string) {
     const binaryInstruction: string = this.converter.hexToBinary(
       this.selectedLineText

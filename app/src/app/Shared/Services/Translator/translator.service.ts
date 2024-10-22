@@ -21,7 +21,7 @@ export class TranslatorService {
       'tgeu': '110001',
       'tlt': '110010',
       'tltu': '110011',
-      'tne': '110110',
+      'tne': '110110',      
       'addu': '100001', // Operaciones Agregadas
       'div': '011010',
       'divu': '011011',
@@ -43,10 +43,10 @@ export class TranslatorService {
   convertOpCodeNameToCode(opcodeName: string): string {
     const opcodeMap: { [key: string]: string } = {
       "add": "000000", "sub": "000000", "slt": "000000", "and": "000000", "or": "000000",
-      'mfhi': "000000", 'mflo': '000000', 'mthi': '000000', 'mtlo': '000000',
-      'teq': '000000', 'tge': '000000', 'tgeu': '000000', 'tlt': '000000', 'tltu': '000000', 
-      'tne': '000000', 'teqi': '000001', 'tgei': '000001', 'tgeiu': '000001', 'tlti': '000001',
-      'tltiu': '000001', 'tnei': '000001',
+      "mfhi": "000000", "mflo": "000000", "mthi": "000000", "mtlo": "000000",
+      "teq": "000000", "tge": "000000", "tgeu": "000000", "tlt": "000000", "tltu": "000000", 
+      "tne": "000000", "teqi": "000001", "tgei": "000001", "tgeiu": "000001", "tlti": "000001",
+      'tltiu': '000001', 'tnei': '000001',      
       "addi": "001000", "lw": "100011", "sw": "101011", "beq": "000100", "bne": "000101",
       "bgtz": "000111", "blez": "000110", "j": "000010", "jal": "000011", "addu": "000000",
       "div": "000000", "divu": "000000", "mult": "000000", "multu": "000000", "nor": "000000",
@@ -66,8 +66,8 @@ export class TranslatorService {
   translateInstructionToHex(instruction: string): string {
     const funcMap: { [key: string]: string } = {
       "add": "100000", "sub": "100010", "slt": "101010", "and": "100100", "or": "100101",
-      'mfhi': '010000', 'mflo': '010010', 'mthi': '010001', 'mtlo': '010011', 'teq': '110100', 'tge': '110000',
-      'tgeu': '110001', 'tlt': '110010', 'tltu': '110011', 'tne': '110110',
+      "mfhi": "010000", "mflo": "010010", "mthi": "010001", "mtlo": "010011", "teq": "110100", "tge": "110000",
+      "tgeu": "110001", "tlt": "110010", "tltu": "110011", "tne": "110110",      
       "addu": "100001", "div": "011010",
       "divu": "011011", "mult": "011000",
       "multu": "011001", "nor": "100111",
@@ -238,7 +238,7 @@ export class TranslatorService {
       "11000": "t8", "11001": "t9", "11010": "k0", "11011": "k1",
       "11100": "gp", "11101": "sp", "11110": "fp", "11111": "ra"
     };
-    return regMap[registerBinary] || 'unknown';
+    return regMap[registerBinary] ? `$${regMap[registerBinary]}` : 'unknown';
   }
 
 
@@ -251,16 +251,16 @@ export class TranslatorService {
       "100101": "or",
       "001000": "jr",
       "001001": "jalr",
-      '010000': 'mfhi', //añadido
-      '010010': 'mflo',
-      '010001': 'mthi',
-      '010011': 'mtlo',
-      '110100': 'teq',
-      '110000': 'tge',
-      '110001': 'tgeu',
-      '110010': 'tlt',
-      '110011': 'tltu',
-      '110110': 'tne',
+      "010000": "mfhi", //añadido
+      "010010": "mflo",
+      "010001": "mthi",
+      "010011": "mtlo",
+      "110100": "teq",
+      "110000": "tge",
+      "110001": "tgeu",
+      "110010": "tlt",
+      "110011": "tltu",
+      "110110": "tne",      
       "100001": "addu",
       "011010": "div",
       "011011": "divu",
@@ -292,7 +292,7 @@ export class TranslatorService {
       "000000": "mfhi", "000000": "mflo", "000000": "mthi", "000000": "mtlo", '000000': 'teq', '000000': 'tge', '000000': 'tgeu', '000000': 'tlt', '000000': 'tltu', '000000': 'tne',
       '000001': 'tgei',
       // @ts-ignore
-      '000001': 'tgeiu', '000001': 'tlti', '000001': 'tltiu', '000001': 'teqi', '000001': 'tnei',
+      '000001': 'tgeiu', '000001': 'tlti', '000001': 'tltiu', '000001': 'teqi', '000001': 'tnei',      
       "001000": "addi",
       "100011": "lw",
       "100000": "lb",  
@@ -330,7 +330,7 @@ export class TranslatorService {
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
+    if (["add", "sub", "slt", "and", "or", "jr", "jalr","mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
         // Instrucción R-type
         const func = binaryInstruction.slice(26, 32);
         const funcMIPS = this.convertFunctToName(func);
@@ -380,7 +380,9 @@ export class TranslatorService {
       } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(opcodeMIPS)) {
         const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
         const rt = binaryInstruction.slice(11, 16); // rt define la operación específica
-  
+
+
+
         const rtMap: { [key: string]: string } = {
           "01000": "tgei",
           "01001": "tgeiu",
@@ -389,12 +391,13 @@ export class TranslatorService {
           "01100": "teqi",
           "01110": "tnei"
         };
-  
+
         const instructionName = rtMap[rt]; // Identificamos la instrucción por el valor de rt
         const immediate = parseInt(binaryInstruction.slice(16, 32), 2); // Obtenemos el inmediato de 16 bits
-  
+
         if (!instructionName || !rs || isNaN(immediate)) return "Invalid Syntax";
-  
+
+
         // Retornamos la instrucción con el formato correcto
         mipsInstruction = instructionName + " " + rs + " " + immediate;
 
