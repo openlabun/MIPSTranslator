@@ -148,6 +148,7 @@ export class TranslatorService {
 
     } else if (["beq", "bne", "bgtz", "blez"].includes(parts[0])) {
       const opcode = this.convertOpCodeNameToCode(parts[0]);
+      if (opcode=="unknown") return `Unknown Opcode for "${parts[0]}"`;     
       const rs = regMap[parts[1]];
       const rt = ["beq", "bne"].includes(parts[0]) ? regMap[parts[2]] : "00000"; // for bgtz/blez, rt is 00000
       const label = parts[parts.length - 1]; //offset
@@ -160,12 +161,23 @@ export class TranslatorService {
 
       return hexInstruction;
     } else if (["j", "jal"].includes(parts[0])) {
-      const address = parseInt(parts[1]);
-      if (isNaN(address)) return "Invalid Syntax";
+      let address = String(parts[1]).trim();
+ 
+      if (address.startsWith("0x") || address.startsWith("0X")) {
+        address = address.substring(2); 
+    }
+
+    const hexPattern = /^[0-9A-Fa-f]+$/;
+    if (!hexPattern.test(address)) {
+        return `Invalid hex address: "${address}".`;
+    }
+
+    const addressValue = parseInt(address, 16); 
+    if (isNaN(addressValue)) return "Invalid address";
 
       const opcode = parts[0] === "j" ? "000010" : "000011";
 
-      binaryInstruction = opcode + (address >>> 0).toString(2).padStart(26, '0');
+      binaryInstruction = opcode + (addressValue >>> 0).toString(2).padStart(26, '0');
     } else if (["jalr"].includes(parts[0])) {
       // Instrucción tipo R para JALR: Opcode 000000 y Funct code 001001
       const rs = regMap[parts[1]]; // Primer operando (registro fuente)
@@ -174,7 +186,7 @@ export class TranslatorService {
       const rt = "00000";
       const shamt = "00000";
       const funct = "001001";
-      if (!rs || !rd) return "Invalid Registers";
+      if (!rs ) return "Missing rs";
       const binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
       const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
 
@@ -187,7 +199,7 @@ export class TranslatorService {
       const shamt = "00000"; // Sin desplazamiento
       const funct = "001000"; // Funct code para jr
 
-      if (!rs) return "Invalid Register";
+      if (!rs) return "Missing rs";
 
       const binaryInstruction = "000000" + rs + rt + rd + shamt + funct;
 
