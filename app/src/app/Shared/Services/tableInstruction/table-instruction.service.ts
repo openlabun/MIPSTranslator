@@ -179,7 +179,7 @@ export class TableInstructionService {
       case '000011':
         return { type: 'J', data: this.produceJInstruction(instruction) };
       default:
-        return { type: 'unknown', data: 'Unknown instruction' };
+        return { type: 'unknown', data: 'Unknown instruction', opCode: opCode };
     }
   }
   decodeInstruction(instruction: string) {
