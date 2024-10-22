@@ -93,7 +93,7 @@ export class TranslatorService {
     const parts = (instruction.split(' '));
 
     const opcode = this.convertOpCodeNameToCode(parts[0]);
-    if (!opcode) return "Unknown Instruction";
+    if (opcode=="unknown") return `Unknown Opcode for "${parts[0]}"`;
 
     let binaryInstruction = opcode;
     if (["add", "sub", "slt", "and", "or", "nor", "addu", "srlv", "subu", "srav", "sllv", "xor"].includes(parts[0])) {
@@ -101,7 +101,9 @@ export class TranslatorService {
       const rd = regMap[parts[1]];
       const rs = regMap[parts[2]];
       const rt = regMap[parts[3]];
-      if (!rd || !rs || !rt) return "Invalid Registers";
+      if (!rd || !rs || !rt) {
+        return `Missing ${!rd ? ' rd' : ''}${!rs ? ' rs' : ''}${!rt ? ' rt' : ''}`;
+    }
       binaryInstruction += rs + rt + rd + "00000" + funcMap[parts[0]];
 
     } else if (["div", "divu", "mult", "multu"].includes(parts[0])) {
@@ -131,7 +133,9 @@ export class TranslatorService {
       const rt = regMap[parts[1]];
       const rs = regMap[parts[2]];
       const immediate = parseInt(parts[3]);
-      if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
+      if (!rt || !rs || isNaN(immediate)) {
+        return `Missing${!rt ? ' rt' : ''}${isNaN(immediate) ? ' immediate (hex)' : ''}${!rs ? ' rs' : ''}`;
+      }
       binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["sll", "srl", "sra"].includes(parts[0])) {
 
