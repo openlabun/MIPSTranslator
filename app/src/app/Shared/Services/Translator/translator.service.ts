@@ -195,7 +195,7 @@ export class TranslatorService {
       "11000": "t8", "11001": "t9", "11010": "k0", "11011": "k1",
       "11100": "gp", "11101": "sp", "11110": "fp", "11111": "ra"
     };
-    return regMap[registerBinary] || 'unknown';
+    return regMap[registerBinary] ? `$${regMap[registerBinary]}` : 'unknown';
   }
 
   
@@ -219,6 +219,11 @@ export class TranslatorService {
     const opcodeMap: { [key: string]: string } = {
     
       "000000": "add",
+      // // @ts-ignore
+      // "000000": "sub", "000000": "slt", "000000": "and", "000000": "or", "000000": "jalr", "000000": "jr", "000000": "addu", "000000": "div", "000000": "divu", "000000": "mult", "000000": "multu", "000000": "nor", "000000": "sll", "000000": "sllv", "000000": "sra", "000000": "srav", "000000": "srl", "000000": "srlv", "000000": "subu", "000000": "xor",
+      // // @ts-ignore
+      // "000000": "mfhi", "000000": "mflo", "000000": "mthi", "000000": "mtlo", '000000': 'teq', '000000': 'tge', '000000': 'tgeu', '000000': 'tlt', '000000': 'tltu', '000000': 'tne',
+      '000001': 'tgei',
       // @ts-ignore
       "000000": "sub", "000000": "slt", "000000": "and", "000000": "or", "000000":"jalr", "000000":"jr",
       "001000": "addi",

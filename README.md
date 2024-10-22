@@ -48,9 +48,9 @@ t4 = 2
 ```
 
 To test (inside the app folder):
-npm install --save-dev jest
-npm install --save-dev jest-environment-jsdom
-npm test
+npm install 
+npm run ng serve
+ 
 
 Augusto Salazar   
 Universidad del Norte 2024   
