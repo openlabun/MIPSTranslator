@@ -108,7 +108,17 @@ export class TranslatorService {
       const rs = regMap[parts[1]];
       const rt = regMap[parts[2]];
       if (!rs || !rt) return "Invalid Registers";
-      binaryInstruction += rs + rt + "00000" + "00000" + funcMap[parts[0]];
+      binaryInstruction += rs + rt + "00000" + "00000" + funcMap[parts[0]];    
+    }else if (["mfhi", "mflo"].includes(parts[0])) {
+      const rd = regMap[parts[1]]; // Registro destino
+      if (!rd) {
+        return "Invalid Registers";
+      }
+      binaryInstruction += "00000" + "00000" + rd + "00000" + funcMap[parts[0]];
+    }else if (["mthi", "mtlo"].includes(parts[0])) {
+      const rs = regMap[parts[1]]; // Registro fuente
+      if (!rs) return "Invalid Registers";
+      binaryInstruction += rs + "00000" + "00000" + "00000" + funcMap[parts[0]];        
     } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(parts[0])) {
       
       const rt = regMap[parts[1]];
@@ -179,6 +189,34 @@ export class TranslatorService {
 
       const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
 
+      return hexInstruction;
+    }else if (["teq", "tge", "tgeu", "tlt", "tltu", "tne"].includes(parts[0])) {
+      const rt = regMap[parts[1]];
+      const rs = regMap[parts[2]];
+      let code = parseInt(parts[3]);
+      if (!rs || !rt) return "Invalid Registers";
+      if (isNaN(code) || code < 0 || code > 1023) return "Invalid Code";
+      const codeBinary = code.toString(2).padStart(10, '0');
+      binaryInstruction += rs + rt + codeBinary + funcMap[parts[0]];
+      const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
+      return hexInstruction;
+    } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(parts[0])) {
+      const opcode = this.convertOpCodeNameToCode(parts[0]);
+      const rtMap: { [key: string]: string } = {
+        "tgei": "01000",
+        "tgeiu": "01001",
+        "tlti": "01010",
+        "tltiu": "01011",
+        "teqi": "01100",
+        "tnei": "01110"
+      };
+      const rs = regMap[parts[1]];
+      const immediate = parseInt(parts[2]);
+      if (!rs || isNaN(immediate)) return "Invalid Syntax";
+      const immediateBinary = (immediate >>> 0).toString(2).padStart(16, '0');
+      const rt = rtMap[parts[0]];
+      const binaryInstruction = opcode + rs + rt + immediateBinary;
+      const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
       return hexInstruction;
     } else {
       return "Unsupported Instruction";

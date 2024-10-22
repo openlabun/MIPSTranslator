@@ -108,6 +108,7 @@ export class TableInstructionService {
       address: binaryInstruction.slice(6, 32),
     };
   }
+  
 
   produceRTrapInstruction(instruction: string) {
     const binaryInstruction: string = this.converter.hexToBinary(this.selectedLineText);
