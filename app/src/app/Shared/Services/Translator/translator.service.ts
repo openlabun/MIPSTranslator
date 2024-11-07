@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { binaryToHex, hexToBinary, formatImmediateHex } from './Utils/conversions';
 
 const instructionMap: { [key: string]: { opcode: string, funct?: string } } = {
   "add": { opcode: "000000", funct: "100000" },
@@ -116,7 +117,7 @@ export class TranslatorService {
 
     let binaryInstruction = opcode;
 
-    if (["add", "sub", "slt", "and", "or", "nor", "addu", "sllv", "srlv", "subu", "srav", "sllv", "xor"].includes(parts[0])) {
+    if (["add", "sub", "slt", "and", "or", "nor", "addu", "srlv", "subu", "srav", "sllv", "xor"].includes(parts[0])) {
       const rd = this.convertRegisterToBinary(parts[1]);
       const rs = this.convertRegisterToBinary(parts[2]);
       const rt = this.convertRegisterToBinary(parts[3]);
@@ -196,7 +197,7 @@ export class TranslatorService {
       return "Unsupported Instruction";
     }
 
-    const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
+    const hexInstruction = binaryToHex(binaryInstruction);
     return hexInstruction;
   }
 
@@ -204,7 +205,7 @@ export class TranslatorService {
     if (hexInstruction.startsWith("0x")) {
       hexInstruction = hexInstruction.substring(2);
     }
-    const binaryInstruction = this.hexToBinary(hexInstruction);
+    const binaryInstruction = hexToBinary(hexInstruction);
     const opcode = binaryInstruction.slice(0, 6);
     const opcodeMIPS = this.convertOpcodeToName(opcode);
     if (!opcodeMIPS) return "Unknown Instruction, opcode null";
@@ -228,7 +229,7 @@ export class TranslatorService {
       } else if (funcMIPS === "jalr") {
         mipsInstruction = "jalr " + rs + " " + rd;
       } else if (["sll", "srl", "sra"].includes(funcMIPS)) {
-        const shamt = this.binaryToHex(binaryInstruction.slice(21, 26));
+        const shamt = formatImmediateHex(binaryInstruction.slice(21, 26));
         mipsInstruction = funcMIPS + " " + rd + " " + rt + " " + shamt;
       } else if (["mult", "div", "multu", "divu"].includes(funcMIPS)) {
         mipsInstruction = funcMIPS + " " + rs + " " + rt;
@@ -237,7 +238,7 @@ export class TranslatorService {
       } else if (["mthi", "mtlo"].includes(funcMIPS)) {
         mipsInstruction = funcMIPS + " " + rs;
       } else if (["tge", "tgeu", "tlt", "tltu", "teq", "tne"].includes(funcMIPS)) {
-        const code = this.binaryToHex(binaryInstruction.slice(16, 26));
+        const code = formatImmediateHex(binaryInstruction.slice(16, 26));
         mipsInstruction = funcMIPS + " " + rt + " " + rs + " " + code;
       }
     } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(opcodeMIPS)) {
@@ -248,25 +249,25 @@ export class TranslatorService {
         "01011": "tltiu", "01100": "teqi", "01110": "tnei"
       };
       const instructionName = rtMap[rt];
-      const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
+      const immediate = formatImmediateHex(binaryInstruction.slice(16, 32));
       if (!instructionName || !rs || !immediate) return "Invalid Syntax";
       mipsInstruction = instructionName + " " + rs + " " + immediate;
     } else if (["lw", "sw", "lb", "lbu", "lh", "lhu", "sb", "sh"].includes(opcodeMIPS)) {
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
-      const offset = this.binaryToHex(binaryInstruction.slice(16, 32));
+      const offset = formatImmediateHex(binaryInstruction.slice(16, 32));
       if (!rt || !rs || !offset) return "Invalid Syntax";
       mipsInstruction += rt + " " + offset + " " + rs;
     } else if (["addi", "addiu", "andi", "ori", "xori"].includes(opcodeMIPS)) {
       const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
-      const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
+      const immediate = formatImmediateHex(binaryInstruction.slice(16, 32));
       if (!rt || !rs || !immediate) return "Invalid Syntax";
       mipsInstruction += rs + " " + rt + " " + immediate;
     } else if (["beq", "bne", "bgtz", "blez"].includes(opcodeMIPS)) {
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rt = ["beq", "bne"].includes(opcodeMIPS) ? this.convertRegisterToName(binaryInstruction.slice(11, 16)) : "00000";
-      const offset = this.binaryToHex(binaryInstruction.slice(16, 32));
+      const offset = formatImmediateHex(binaryInstruction.slice(16, 32));
       if (!rs || !offset) return "Invalid Registers or Syntax";
       if (opcodeMIPS === "bgtz" || opcodeMIPS === "blez") {
         mipsInstruction += rs + " " + offset;
@@ -274,7 +275,7 @@ export class TranslatorService {
         mipsInstruction += rs + " " + rt + " " + offset;
       }
     } else if (["j", "jal"].includes(opcodeMIPS)) {
-      const address = this.binaryToHex(binaryInstruction.slice(6, 32));
+      const address = formatImmediateHex(binaryInstruction.slice(6, 32));
       if (!address) return "Invalid Syntax";
       mipsInstruction += address;
     } else {
@@ -282,28 +283,6 @@ export class TranslatorService {
     }
 
     return mipsInstruction;
-  }
-
-  binaryToHex(binaryString: string): string {
-    while (binaryString.length % 4 !== 0) {
-      binaryString = '0' + binaryString;
-    }
-    let hexString = '';
-    for (let i = 0; i < binaryString.length; i += 4) {
-      const binaryChunk = binaryString.substring(i, i + 4);
-      const hexDigit = parseInt(binaryChunk, 2).toString(16);
-      hexString += hexDigit;
-    }
-    return "0x" + hexString.toUpperCase();
-  }
-
-  hexToBinary(hex: string): string {
-    let binary = '';
-    for (let i = 0; i < hex.length; i++) {
-      let bin = parseInt(hex[i], 16).toString(2);
-      binary += bin.padStart(4, '0');
-    }
-    return binary;
   }
 
   translateHextoMIPS(textInput: string): string {
