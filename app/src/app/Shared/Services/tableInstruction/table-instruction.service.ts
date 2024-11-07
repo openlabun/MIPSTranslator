@@ -203,7 +203,7 @@ export class TableInstructionService {
           rt: parts[3], // e.g., "$t3"
           rd: parts[1], // e.g., "$t1"
           shamt: '0',
-          funct: this.converter.operationToFunctionCode(operation),
+          funct: this.converter.getFunctCode(operation),
         };
         explanation = `This is an R-type instruction where ${details.rd} gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
         break;
