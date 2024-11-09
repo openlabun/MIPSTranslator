@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslatorService } from '../translator.service';
+import { TranslatorService } from '../app/Shared/Services/Translator/translator.service';
+
 
 describe('TranslatorService aritmetic I-type instruction tests', () => {
     let service: TranslatorService;
