@@ -1,5 +1,3 @@
-// src/app/Shared/Utils/conversions.ts
-
 /**
  * Convierte una cadena binaria a su representación hexadecimal.
  * @param binaryString La cadena binaria a convertir.
