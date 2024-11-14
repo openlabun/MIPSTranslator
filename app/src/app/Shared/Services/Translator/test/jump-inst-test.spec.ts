@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslatorService } from '../app/Shared/Services/Translator/translator.service';
+import { TranslatorService } from '../translator.service';
 
 describe('TranslatorService jump instruction tests', () => {
     let service: TranslatorService;
