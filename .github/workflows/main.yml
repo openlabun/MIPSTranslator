@@ -14,7 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:       
+    steps:
+    - name: install dependencies
+      run: npm install
+
+    - name: Run test
+      run: npm run test:ci
+       
     - name: Deploy using ssh
       uses: appleboy/ssh-action@master
       with:
