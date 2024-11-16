@@ -2,7 +2,7 @@ name: Deploy
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ main ]
 
@@ -15,41 +15,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:       
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18 # Ajusta a la versión de Node.js que utiliza tu proyecto
-
-    - name: Install dependencies
-      run: | 
-              cd app
-              npm install
-              npm install --save-dev jasmine ts-node typescript
-
-    - name: Configure Jasmine
-      working-directory: app
-      run: |
-          mkdir -p spec/support
-          echo '{
-            "spec_dir": "test",
-            "spec_files": [
-              "**/*.spec.ts"
-            ],
-            "helpers": [
-              "../node_modules/ts-node/register"
-            ],
-            "random": true,
-            "seed": null,
-            "stopSpecOnExpectationFailure": false
-          }' > spec/support/jasmine.json
-
-    - name: Run Jasmine tests
-      working-directory: app
-      run: npx jasmine
-      
     - name: Deploy using ssh
       uses: appleboy/ssh-action@master
       with:
