@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:22.11.0
 
 # Crea el directorio de trabajo
 RUN mkdir /project
@@ -7,6 +7,7 @@ RUN mkdir /project
 WORKDIR /project
 
 COPY app/ ./
+
 
 # Instala Angular CLI versión 13
 RUN npm install -g @angular/cli@13
