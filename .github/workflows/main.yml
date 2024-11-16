@@ -28,10 +28,10 @@ jobs:
             cd app
             npm install
 
-    - name: Run tests
+    - name: Run Jasmine tests
       run: |
-            cd app
-            npm test --watch=false --browsers=ChromeHeadless
+              cd app
+              npx jasmine
 
     - name: Deploy using ssh
       uses: appleboy/ssh-action@master
