@@ -16,10 +16,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     - name: install dependencies
-      run: npm install
+      run: |
+            cd app
+            npm install
 
     - name: Run test
-      run: npm run test:ci
+      run: |
+            cd app
+            npm run test:ci
        
     - name: Deploy using ssh
       uses: appleboy/ssh-action@master
