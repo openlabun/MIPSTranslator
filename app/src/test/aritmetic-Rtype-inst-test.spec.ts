@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslatorService } from '../translator.service';
+import { TranslatorService } from '../Shared/Services/Translator/translator.service';
 
 describe('TranslatorService aritmetic R-type instructions', () => {
     let service: TranslatorService;
