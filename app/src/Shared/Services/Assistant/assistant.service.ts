@@ -67,7 +67,7 @@ export class AssistantService {
         case 'lhu':
         case 'sb':
         case 'sh':
-          examples.push(`${instruction} ${this.randomRegister()} ${this.randomImmediate()}(${this.randomRegister()})`);
+          examples.push(`${instruction} ${this.randomRegister()} ${this.randomImmediate()} ${this.randomRegister()}`);
           break;
 
         case 'beq':
