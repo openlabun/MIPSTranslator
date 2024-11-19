@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 
-const instructionMap: { [key: string]: { opcode: string, funct?: string } } = {
+export interface Instruction {
+  opcode: string;
+  funct?: string;
+}
+
+export const instructionMap: { [key: string]: Instruction } = {
   "add": { opcode: "000000", funct: "100000" },
   "sub": { opcode: "000000", funct: "100010" },
   "and": { opcode: "000000", funct: "100100" },
@@ -53,7 +58,7 @@ const instructionMap: { [key: string]: { opcode: string, funct?: string } } = {
   "jal": { opcode: "000011" }
 };
 
-const registerMap: { [key: string]: string } = {
+export const registerMap: { [key: string]: string } = {
   "00000": "zero", "00001": "at", "00010": "v0", "00011": "v1",
   "00100": "a0", "00101": "a1", "00110": "a2", "00111": "a3",
   "01000": "t0", "01001": "t1", "01010": "t2", "01011": "t3",
@@ -65,10 +70,12 @@ const registerMap: { [key: string]: string } = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class TranslatorService {
 
+export class TranslatorService {
+  instructionMap = instructionMap;
+  registerMap = registerMap;
   getOpcode(name: string): string {
     return instructionMap[name]?.opcode || 'unknown';
   }
