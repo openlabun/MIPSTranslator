@@ -135,8 +135,9 @@ export class AssistantService {
   }
 
   randomRegister(): string {
-    const registers = Object.values(this.translatorService['registerMap']);
-    return `$${registers[Math.floor(Math.random() * registers.length)]}`;
+    const temporaryRegisters = ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7']; // Solo registros temporales
+    const randomIndex = Math.floor(Math.random() * temporaryRegisters.length);
+    return `$${temporaryRegisters[randomIndex]}`;
   }
 
   randomImmediate(bits: number = 16): number {
