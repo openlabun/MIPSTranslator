@@ -1,0 +1,17 @@
+FROM node:22.11.0 As builder
+
+WORKDIR /usr/src/app
+
+COPY app/package.json ./
+
+COPY app/package-lock.json ./
+
+RUN npm install
+
+COPY app/ .
+
+RUN npm run build --prod
+
+FROM nginx:1.27.4
+
+COPY --from=builder /usr/src/app/dist/SampleApp/ /usr/share/nginx/html
