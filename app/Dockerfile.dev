@@ -1,0 +1,21 @@
+# Use a Node 18 base image (v18.19 or higher)
+FROM node:18
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json first for dependency caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the project files
+COPY . .
+
+# Expose Angular's default port (4200)
+EXPOSE 4200
+
+# Run the Angular development server
+CMD ["npm", "run", "ng", "--", "serve", "--host", "0.0.0.0", "--poll", "2000"]
+
