@@ -2,3 +2,22 @@ html {
  background-color: rgb(246, 246, 248);
 color-scheme: dark;
   }
+
+  /* If your title uses a specific color, e.g. #3c3c3c, use that here: */
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* Match the title color; change #3c3c3c to whatever your title color is */
+  color: #3c3c3c;
+  background-color: #f8f9fa;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000; /* Keep above other elements */
+}
+
+/* Add bottom padding so the footer doesn’t overlap content */
+.page-content {
+  padding-bottom: 60px; /* Adjust if your footer is taller */
+}
