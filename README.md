@@ -18,6 +18,9 @@ To dockerize the app:
 docker build -t mipstranslatori .   
 docker run -d -it -p 5008:4200 --restart unless-stopped --name mipstranslator-app mipstranslatori
 
+docker build -f Dockerfile.dev -t mipstranslatordev .     
+docker run -it --rm -v "$(pwd)/app:/usr/src/app" -p 3000:3000 mipstranslatordev 
+
 MIPS example:
 ```assembly
 addi t0 t0 0x01

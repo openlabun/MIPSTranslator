@@ -1,0 +1,23 @@
+# Use an official Node runtime as a parent image
+FROM node:14
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json first to install dependencies (caching layer)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Install ts-node globally so it's available for nodemon
+RUN npm install -g ts-node
+
+# Copy the rest of the project files (in development, you'll override these with a volume)
+COPY app/ .
+
+# Expose the port your app runs on
+EXPOSE 3000
+
+# Use nodemon with ts-node to run your TypeScript file
+CMD ["npx", "nodemon", "--exec", "ts-node", "server.ts"]
