@@ -34,6 +34,9 @@ docker run -it --rm \
   mipstranslatordev
 
 
+docker run -it --rm -v "C:\desarrollo\proyectosUninorte\MIPSTranslator\app:/usr/src/app" -v /usr/src/app/node_modules -p 4200:4200 mipstranslatordev
+
+
 docker build -t mipstranslatordev .   
 docker run --rm -it -p 5008:4200 -v "$(pwd)/app:/project" mipstranslatordev
 
