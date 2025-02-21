@@ -41,5 +41,5 @@ jobs:
           git status
           docker stop mipstranslator-app
           docker rm mipstranslator-app
-          docker build -f Dockerfile.prod -t mipstranslatori .
-          docker run -d -it -p 5008:80 --restart unless-stopped --name mipstranslator-app mipstranslatori
+          docker build -f Dockerfile.prod -t mipstranslatori . || { echo "Docker build failed"; exit 1; }
+          docker run -d -it -p 5008:80 --restart unless-stopped --name mipstranslator-app mipstranslatori  || { echo "Docker run failed"; exit 1; }

@@ -24,7 +24,7 @@ WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 
 # Copy built Angular files from the previous stage
-COPY --from=build /project/dist/mipstranslator/browser/ .
+COPY --from=build /project/dist/mipsconverter/browser/ .
 
 # Copy a custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
