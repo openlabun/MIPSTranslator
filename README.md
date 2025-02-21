@@ -1,4 +1,4 @@
-MIPS Translator   
+MIPS Converter / Translator   
 This tool is used on the Computer Architecture course at Universidad del Norte. It is used to translate MIPS instructions to Hexadecimal and viceversa. It also has a MIPS simulator that is still under development.
 
 Funcionality:
