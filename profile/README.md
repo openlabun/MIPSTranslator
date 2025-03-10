@@ -1,13 +1,13 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosingenieriauninorte/.github/blob/main/profile/README.md)
 [![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/proyectosingenieriauninorte/.github/blob/main/profile/README.es.md)
 
-# Proyectos Ingeniería - Universidad del Norte
+# Open Lab - Universidad del Norte
 
-Welcome to the **Proyectos Ingeniería** organization of **Universidad del Norte**! This organization hosts repositories of tools and utilities developed by our talented students with the support of our dedicated professors. Our goal is to provide valuable resources that aid in solving common technical tasks, benefiting both the university community and the wider public.
+Welcome to the **Open Lab** organization of **Universidad del Norte**! This organization hosts repositories of tools and utilities developed by our talented students with the support of our dedicated professors. Our goal is to provide valuable resources that aid in solving common technical tasks, benefiting both the university community and the wider public.
 
 ## About Us
 
-**Proyectos Ingeniería** is an initiative of the **Universidad del Norte** aimed at fostering innovation and practical problem-solving. Our students, guided by experienced faculty members, develop tools that address everyday technical challenges. These projects are designed to be useful not only within the university but also for anyone looking for efficient technical solutions.
+**Open Lab** is an initiative of the **Universidad del Norte** aimed at fostering innovation and practical problem-solving. Our students, guided by experienced faculty members, develop tools that address everyday technical challenges. These projects are designed to be useful not only within the university but also for anyone looking for efficient technical solutions.
 
 ## Projects
 
