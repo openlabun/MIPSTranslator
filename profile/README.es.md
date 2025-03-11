@@ -1,12 +1,12 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/proyectosingenieriauninorte/.github/blob/main/profile/README.md)
 
-# Proyectos Ingeniería - Universidad del Norte
+# Open Lab - Universidad del Norte
 
-¡Bienvenido a la organización **Proyectos Ingeniería** de la **Universidad del Norte**! Esta organización alberga repositorios de herramientas y utilidades desarrolladas por nuestros talentosos estudiantes con el apoyo de nuestros dedicados profesores. Nuestro objetivo es proporcionar recursos valiosos que ayuden a resolver tareas técnicas comunes, beneficiando tanto a la comunidad universitaria como al público en general.
+¡Bienvenido a la organización **Open Lab** de la **Universidad del Norte**! Esta organización alberga repositorios de herramientas y utilidades desarrolladas por nuestros talentosos estudiantes con el apoyo de nuestros dedicados profesores. Nuestro objetivo es proporcionar recursos valiosos que ayuden a resolver tareas técnicas comunes, beneficiando tanto a la comunidad universitaria como al público en general.
 
 ## Acerca de Nosotros
 
-**Proyectos Ingeniería** es una iniciativa de la **Universidad del Norte** dirigida a fomentar la innovación y la resolución práctica de problemas. Nuestros estudiantes, guiados por profesores experimentados, desarrollan herramientas que abordan desafíos técnicos cotidianos. Estos proyectos están diseñados para ser útiles no solo dentro de la universidad, sino también para cualquier persona que busque soluciones técnicas eficientes.
+**Open Lab** es una iniciativa de la **Universidad del Norte** dirigida a fomentar la innovación y la resolución práctica de problemas. Nuestros estudiantes, guiados por profesores experimentados, desarrollan herramientas que abordan desafíos técnicos cotidianos. Estos proyectos están diseñados para ser útiles no solo dentro de la universidad, sino también para cualquier persona que busque soluciones técnicas eficientes.
 
 ## Proyectos
 
@@ -30,7 +30,7 @@ Todos nuestros proyectos son de código abierto y se distribuyen bajo la [Licenc
 
 Para cualquier pregunta, sugerencia o comentario, no dudes en contactarnos a [augustosalazar@uninorte.edu.co](mailto:augustosalazar@uninorte.edu.co).
 
-Gracias por visitar **Proyectos Ingeniería**! Esperamos que encuentres nuestras herramientas útiles y esperamos tus contribuciones.
+Gracias por visitar **Open Lab**! Esperamos que encuentres nuestras herramientas útiles y esperamos tus contribuciones.
 
 ---
 
