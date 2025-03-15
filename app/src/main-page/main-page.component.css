@@ -14,7 +14,7 @@
     justify-content: center;
     gap: 5rem;
     margin-top: 75px;
-
+    flex-direction: column;
 }
 
 .input-textbox {
@@ -25,10 +25,9 @@
 
 .translate {
     display: flex;
-    margin-left: 180px;
     flex-direction: column; 
     align-items: center; 
-    gap: 40px; 
+    gap: 20px; 
 }
 
 
