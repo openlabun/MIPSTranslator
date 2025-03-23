@@ -12,8 +12,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5rem;
-    margin-top: 75px;
+    gap: 2rem;
+    margin-top: 60px;
     flex-direction: row;
 }
 
@@ -29,7 +29,7 @@
     align-items: center; 
     gap: 15px; 
     justify-content: flex-start; /* Alineación vertical superior */
-    height: 100%;
+    height: calc(11 * 40px);
 }
 
 .translate {
@@ -57,12 +57,12 @@
     justify-content: flex-start; /* Alineación vertical superior */
     align-items: center;
     gap: 20px;
-    max-height: calc(12 * 40px); /* Altura máxima para 12 filas (aproximadamente 40px por fila) */
+    height: calc(11 * 40px); /* Altura máxima para 12 filas (aproximadamente 40px por fila) */
     overflow-y: auto; /* Habilita el scroll vertical */
 }
 
 .control-stack {
-    width: 80%;
+    width: 70%;
     border-collapse: collapse;
     border: 2px solid #266478;
     text-align: center;
@@ -102,4 +102,10 @@
 .control-stack tr:hover {
     background-color: #bba4e6; /* Color de hover con menor intensidad */
     color: #ffffff; /* Cambia el color de la letra para mejor visualización */
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Cambia a fila en pantallas móviles */
+    }
 }
