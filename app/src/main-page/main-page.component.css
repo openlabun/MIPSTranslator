@@ -64,7 +64,8 @@
 .control-stack {
     width: 70%;
     border-collapse: collapse;
-    border: 2px solid #741ce7d6;
+    border: 5px #7d2ae8;
+    box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.96);
     text-align: center;
     font-family: "Nunito", sans-serif;
     font-size: 18px;
@@ -74,7 +75,7 @@
 
 .control-stack th,
 .control-stack td {
-    border: 2px solid #741ce7d6;
+    /* border: 2px solid #741ce7d6; */
     padding: 10px;
     text-align: left;
     width: 20rem;

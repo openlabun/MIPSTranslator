@@ -42,7 +42,8 @@ export class MainPageComponent {
   private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
   isHexToMIPS: boolean = false;
   tableManager = inject(TableInstructionService);
-  selectedInstruction: string = ''; // ✅ Instrucción seleccionada para mostrar la tabla
+  selectedInstruction: string = '';
+  isValidInstruction: boolean = true;
   translations: Translation[] = [];
 
   onTableValueChange(value: string): void {
@@ -99,7 +100,7 @@ export class MainPageComponent {
     let MIPS = '';
     let HEX = '';
 
-    if (this.inputText === '') return
+    if (this.inputText === '' || !this.isValidInstruction ) return
     
     if (this.isHexToMIPS) {
       
@@ -132,6 +133,8 @@ export class MainPageComponent {
     } else if (isMIPS) {
       this.isHexToMIPS = false;
       this.inputManagerIsHexToMips.setValue(false);
+    } else {
+      this.isValidInstruction = false;
     }
   }
 }
