@@ -90,6 +90,7 @@ export class MainPageComponent {
           mips: MIPS,
           hex: HEX
         });
+        this.parameter += HEX + '\n';
       }
       
     });
@@ -103,12 +104,12 @@ export class MainPageComponent {
     if (this.isHexToMIPS) {
       
       this.output = this.translator.translateHextoMIPS(this.inputText);
-      this.parameter = this.inputText;
+      this.parameter += this.inputText + '\n';
       MIPS = this.output;
       HEX = this.inputText;
     } else {
       this.output = this.translator.translateMIPStoHex(this.inputText);
-      this.parameter = this.output
+      this.parameter += this.output + '\n'; 
 
       MIPS = this.inputText;
       HEX = this.output;
