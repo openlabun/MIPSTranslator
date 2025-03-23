@@ -330,4 +330,23 @@ export class TranslatorService {
     const formattedInstructions: string = translatedInstructions.join('\n');
     return formattedInstructions;
   }
+
+  isValidHex(text: string): boolean {
+    return /^[0-9A-Fa-f\s]+$/.test(text);
+  }
+
+  isValidMIPS(text: string): boolean {
+    const instructions: string[] = text.trim().split('\n');
+
+    for (let i = 0; i < instructions.length; i++) {
+      const instruction = instructions[i].trim();
+      const parts = instruction.split(' ');
+      const opcode = parts[0];
+      if (!instructionMap[opcode]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }

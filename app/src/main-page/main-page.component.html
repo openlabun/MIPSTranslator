@@ -1,18 +1,34 @@
-
 <p class="title">MIPS CONVERTER</p>
 <section class="container">
-    <div class="input-textbox">
-        <app-textbox (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 
+    <div class="input-container">
+        <div class="input-textbox">
+            <app-textbox (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 
+        </div>
+        <div class = "translate">
+            <!-- <app-switch (toggleChange)="onToggle($event)"></app-switch>  -->
+            <app-translate-button (click)="onTranslate()"></app-translate-button> 
+            <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
+        </div>
     </div>
-
-    <div class="output-textbox">
+        <!-- <div class="output-textbox">
         <app-texbox-output [outputText]="output"></app-texbox-output>
-    </div>
-    <div class = "translate">
-        <!-- <app-switch (toggleChange)="onToggle($event)"></app-switch>  -->
-        <app-translate-button (click)="onTranslate()"></app-translate-button> 
-        <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
-    </div>
+    </div> -->
+    <section class="control-stack-container">
+        <table class="control-stack">
+            <thead>
+                <tr>
+                    <th>MIPS</th>
+                    <th>HEX</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let trans of translations">
+                    <td (click)="onInstructionClick(trans.mips)">{{ trans.mips }}</td>
+                    <td>{{ trans.hex }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 </section>
 <section class = "instruction-table">
     <app-instruction-table></app-instruction-table>
@@ -21,5 +37,5 @@
 </section>
 
 
-    
+
 
