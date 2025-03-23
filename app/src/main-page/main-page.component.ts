@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TextboxComponent } from './textbox/textbox.component';
+import { CommonModule } from '@angular/common';
 import { TranslateButtonComponent } from './translate-button/translate-button.component';
 import { SwitchComponent } from './switch/switch.component';
 import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
@@ -10,6 +11,10 @@ import { FormInputManagerService } from '../Shared/Services/FormInputManager/for
 import { InstructionTableComponent } from './instruction-table/instruction-table.component';
 import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
 
+interface Translation {
+  mips: string;
+  hex: string;
+}
 
 @Component({
   selector: 'app-main-page',
@@ -17,6 +22,7 @@ import { TableInstructionService } from '../Shared/Services/tableInstruction/tab
   imports: [
     TextboxComponent,
     TranslateButtonComponent,
+    CommonModule,
     SwitchComponent,
     TexboxOutputComponent,
     RamdropComponent,
@@ -36,6 +42,8 @@ export class MainPageComponent {
   private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
   isHexToMIPS: boolean = false;
   tableManager = inject(TableInstructionService);
+  selectedInstruction: string = ''; // ✅ Instrucción seleccionada para mostrar la tabla
+  translations: Translation[] = [];
 
   onTableValueChange(value: string): void {
     this.tableManager.updateSelectedLineText(value);
@@ -52,36 +60,77 @@ export class MainPageComponent {
 
   }
 
+  onInstructionClick(instruction: string){
+    this.inputText=instruction
+    this.detectInstructionType(instruction);
+    
+    let output = instruction;
+
+    if (output !== this.selectedInstruction) {
+      this.selectedInstruction = output;
+      this.onTableValueChange(output);  // Llama al método con la instrucción
+    }
+  }
+
   onInput(input: string): void {
     this.inputText = input;
-    
+    this.detectInstructionType(input);
   }
   onTextFile(textFile: Promise<string[]>): void {
     
     textFile.then((instructions) => {
-      
-      if (this.isHexToMIPS) {
-        
-        this.inputManager.setValue(instructions[0]) ;
-        this.output = instructions[1];
-      } else {
-        this.output = instructions[0];
-        this.inputManager.setValue(instructions[1]) ;
+      const HEXs = instructions[0].split('\n');
+      const MIPSs = instructions[1].split('\n');
+
+      for (let i = 0; i < HEXs.length; i++) {
+        const HEX = HEXs[i];
+        const MIPS = MIPSs[i];
+
+        this.translations.push({
+          mips: MIPS,
+          hex: HEX
+        });
       }
       
     });
   }
   onTranslate(): void {
+    let MIPS = '';
+    let HEX = '';
+
+    if (this.inputText === '') return
+    
     if (this.isHexToMIPS) {
       
       this.output = this.translator.translateHextoMIPS(this.inputText);
       this.parameter = this.inputText;
+      MIPS = this.output;
+      HEX = this.inputText;
     } else {
       this.output = this.translator.translateMIPStoHex(this.inputText);
       this.parameter = this.output
+
+      MIPS = this.inputText;
+      HEX = this.output;
     }
+
+    // Agregar la traducción a la lista de traducciones
+    this.translations.push({
+      mips: MIPS, // resultado MIPS
+      hex: HEX // resultado HEX
+    });
   }
   
- 
-  
+  detectInstructionType(input: string): void {
+    const isHEX = this.translator.isValidHex(input);
+    const isMIPS = this.translator.isValidMIPS(input);
+
+    if (isHEX) {
+      this.isHexToMIPS = true;
+      this.inputManagerIsHexToMips.setValue(true);
+    } else if (isMIPS) {
+      this.isHexToMIPS = false;
+      this.inputManagerIsHexToMips.setValue(false);
+    }
+  }
 }
