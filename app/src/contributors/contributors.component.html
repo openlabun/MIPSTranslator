@@ -1,0 +1,15 @@
+@if (!errorMsg) {
+<div class="contributors-container">
+  @for (c of contributors; track c.login) {
+  <div class="contributor" (click)="openProfile(c.html_url)">
+    <img [src]="c.avatar_url" [alt]="c.login" title="{{ c.login }}">
+    <p>{{ c.login }}</p>
+  </div>
+  }
+</div>
+} @else {
+<p style="color: red;">
+  Unable to load contributors.
+  {{ errorMsg }}
+</p>
+}
