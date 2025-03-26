@@ -24,6 +24,10 @@ describe('TranslatorService jump instruction tests', () => {
             const result = service.translateInstructionToHex('jalr t1');
             expect(result).toEqual('0120F809');
         });
+        it('should translate "jalr t2 t1" to hex', () => {
+            const result = service.translateInstructionToHex('jalr t2 t1');
+            expect(result).toEqual('01205009');
+        });
         it('should translate "jr t1" to hex', () => {
             const result = service.translateInstructionToHex('jr t1');
             expect(result).toEqual('01200008');
@@ -35,14 +39,17 @@ describe('TranslatorService jump instruction tests', () => {
             const result = service.translateInstructionToMIPS('08000400');
             expect(result).toEqual('j 0x0000400');
         });
-
         it('should translate "0C000800" to mips', () => {
             const result = service.translateInstructionToMIPS('0C000800');
             expect(result).toEqual('jal 0x0000800');
         });
         it('should translate "0120F809" to mips', () => {
             const result = service.translateInstructionToMIPS('0120F809');
-            expect(result).toEqual('jalr $t1 $ra');
+            expect(result).toEqual('jalr $t1');
+        });
+        it('should translate "01205009" to mips', () => {
+            const result = service.translateInstructionToMIPS('01205009');
+            expect(result).toEqual('jalr $t2 $t1');
         });
         it('should translate "01200008" to mips', () => {
             const result = service.translateInstructionToMIPS('01200008');
