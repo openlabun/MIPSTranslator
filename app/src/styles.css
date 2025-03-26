@@ -1,21 +1,86 @@
-html {
- background-color: rgb(246, 246, 248);
-color-scheme: dark;
+:root {
+  color-scheme: light dark;
+
+  --safe-area-inset-top: 0px;
+  --safe-area-inset-right: 0px;
+  --safe-area-inset-left: 0px;
+
+  @supports (top: constant(safe-area-inset-top)) {
+    --safe-area-inset-top: constant(safe-area-inset-top);
+    --safe-area-inset-right: constant(safe-area-inset-right);
+    --safe-area-inset-left: constant(safe-area-inset-left);
   }
 
-  /* If your title uses a specific color, e.g. #3c3c3c, use that here: */
-.fixed-footer {
-  
-  
-  width: 100%;
-  color: #266478;
-  background-color: #f8f9fa;
-  text-align: center;
-  padding: 10px 0;
-  z-index: 1000; /* Keep above other elements */
+  @supports (top: env(safe-area-inset-top)) {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-right: env(safe-area-inset-right);
+    --safe-area-inset-left: env(safe-area-inset-left);
+  }
 }
 
-/* Add bottom padding so the footer doesn’t overlap content */
-.page-content {
-  padding-bottom: 60px; /* Adjust if your footer is taller */
+@media (prefers-color-scheme: light) {
+  :root {
+    --accent: rgb(38, 100, 120);
+    --primary-background: rgb(255, 255, 255);
+    --secondary-background: rgb(240, 240, 240);
+    --primary-foreground: rgba(0, 0, 0, 0.87);
+    --secondary-foreground: rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: rgb(147, 200, 209);
+    --primary-background: rgb(29, 29, 29);
+    --secondary-background: rgb(0, 0, 0);
+    --primary-foreground: rgba(255, 255, 255, 0.87);
+    --secondary-foreground: rgba(255, 255, 255, 0.6);
+  }
+}
+
+html {
+  background-color: rgb(246, 246, 248);
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  color: var(--primary-foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+
+main,
+footer {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-left: 24px;
+  padding-left: max(24px, var(--safe-area-inset-left));
+  padding-right: 24px;
+  padding-right: max(24px, var(--safe-area-inset-right));
+}
+
+main {
+  display: block;
+  padding-top: 32px;
+  padding-top: max(32px, var(--safe-area-inset-top));
+}
+
+footer {
+  background-color: var(--secondary-background);
+  color: var(--accent);
+  padding-top: 12px;
+  text-align: center;
+}
+
+hr {
+  border-width: 1px 0 0 0;
+  border-top: 1px solid var(--secondary-foreground);
 }

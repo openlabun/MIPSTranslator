@@ -1,0 +1,5 @@
+.pageroot-layout {
+  display: grid;
+  grid-template-rows: 1fr min-content;
+  height: 100vh;
+}
