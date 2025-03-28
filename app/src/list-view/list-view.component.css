@@ -1,0 +1,65 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  --list-view-padding: 0;
+
+  --list-view-item-background: transparent;
+  --list-view-item-foreground: var(--primary-foreground);
+  --list-view-item-padding: 4px;
+
+  --list-view-item-focus-background: var(--divider);
+  --list-view-item-focus-foreground: var(--primary-foreground);
+  --list-view-item-focus-border-color: var(--primary-foreground);
+  --list-view-item-focus-border-thickness: 2px;
+
+  --list-view-item-hover-background: var(--secondary-foreground);
+  --list-view-item-hover-foreground: var(--primary-foreground);
+  --list-view-item-pressed-background: var(--accent);
+  --list-view-item-pressed-foreground: var(--on-accent);
+
+  --list-view-item-selected-background: var(--divider);
+  --list-view-item-selected-foreground: var(--primary-foreground);
+}
+
+ul {
+  flex: 1 1 1px;
+  list-style: none;
+  margin: 0;
+  overflow-y: auto;
+  padding: var(--list-view-padding);
+  position: relative;
+}
+
+ul:focus {
+  outline: none;
+}
+
+ul>li {
+  background: var(--list-view-item-background);
+  color: var(--list-view-item-foreground);
+  margin: 0;
+  padding: var(--list-view-item-padding);
+}
+
+ul:focus>li.focused {
+  background: var(--list-view-item-focus-background);
+  color: var(--list-view-item-focus-foreground);
+  outline: var(--list-view-item-focus-border-thickness) solid var(--list-view-item-focus-border-color);
+}
+
+ul>li:hover {
+  background: var(--list-view-item-hover-background);
+  color: var(--list-view-item-hover-foreground);
+}
+
+ul>li:active {
+  background: var(--list-view-item-pressed-background);
+  color: var(--list-view-item-pressed-foreground);
+}
+
+ul>li[aria-selected=true] {
+  background: var(--list-view-item-selected-background);
+  color: var(--list-view-item-selected-foreground);
+}
