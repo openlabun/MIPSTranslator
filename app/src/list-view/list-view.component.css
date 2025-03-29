@@ -9,18 +9,17 @@
   --list-view-item-foreground: var(--primary-foreground);
   --list-view-item-padding: 4px;
 
-  --list-view-item-focus-background: var(--divider);
-  --list-view-item-focus-foreground: var(--primary-foreground);
-  --list-view-item-focus-border-color: var(--primary-foreground);
+  --list-view-item-focus-border-color: var(--focus);
   --list-view-item-focus-border-thickness: 2px;
 
-  --list-view-item-hover-background: var(--secondary-foreground);
+  --list-view-item-hover-background: var(--list-hover);
   --list-view-item-hover-foreground: var(--primary-foreground);
-  --list-view-item-pressed-background: var(--accent);
-  --list-view-item-pressed-foreground: var(--on-accent);
+  --list-view-item-pressed-background: var(--list-press);
 
-  --list-view-item-selected-background: var(--divider);
+  --list-view-item-selected-background: var(--list-selection);
   --list-view-item-selected-foreground: var(--primary-foreground);
+  --list-view-item-selected-hover-background: var(--list-selection-hover);
+  --list-view-item-selected-pressed-background: var(--list-selection-press);
 }
 
 ul {
@@ -43,10 +42,11 @@ ul>li {
   padding: var(--list-view-item-padding);
 }
 
+
 ul:focus>li.focused {
-  background: var(--list-view-item-focus-background);
   color: var(--list-view-item-focus-foreground);
   outline: var(--list-view-item-focus-border-thickness) solid var(--list-view-item-focus-border-color);
+  outline-offset: calc(-1 * var(--list-view-item-focus-border-thickness));
 }
 
 ul>li:hover {
@@ -56,10 +56,17 @@ ul>li:hover {
 
 ul>li:active {
   background: var(--list-view-item-pressed-background);
-  color: var(--list-view-item-pressed-foreground);
 }
 
 ul>li[aria-selected=true] {
   background: var(--list-view-item-selected-background);
   color: var(--list-view-item-selected-foreground);
+}
+
+ul>li[aria-selected=true]:hover {
+  background: var(--list-view-item-selected-hover-background);
+}
+
+ul>li[aria-selected=true]:active {
+  background: var(--list-view-item-selected-pressed-background);
 }

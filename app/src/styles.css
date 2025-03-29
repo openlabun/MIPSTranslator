@@ -20,25 +20,45 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --accent: rgb(38, 100, 120);
+    --accent-rgb: 38, 100, 120;
+
+    --accent: rgb(var(--accent-rgb));
     --on-accent: rgb(255, 255, 255);
     --divider: rgba(38, 100, 120, 0.4);
     --primary-background: rgb(255, 255, 255);
     --secondary-background: rgb(240, 240, 240);
     --primary-foreground: rgba(0, 0, 0, 0.87);
     --secondary-foreground: rgba(0, 0, 0, 0.6);
+
+    --focus: rgb(0, 0, 0);
+
+    --list-hover: rgba(0, 0, 0, 0.1);
+    --list-press: rgba(0, 0, 0, 0.2);
+    --list-selection: rgba(var(--accent-rgb), 0.6);
+    --list-selection-hover: rgba(var(--accent-rgb), 0.8);
+    --list-selection-press: rgba(var(--accent-rgb), 0.9);
   }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --accent: rgb(147, 200, 209);
+    --accent-rgb: 147, 200, 209;
+
+    --accent: rgb(var(--accent-rgb));
     --on-accent: rgb(0, 0, 0);
-    --divider: rgba(147, 200, 209, 0.4);
+    --divider: rgba(var(--accent-rgb), 0.4);
     --primary-background: rgb(29, 29, 29);
     --secondary-background: rgb(0, 0, 0);
     --primary-foreground: rgba(255, 255, 255, 0.87);
     --secondary-foreground: rgba(255, 255, 255, 0.6);
+
+    --focus: rgb(255, 255, 255);
+
+    --list-hover: rgba(255, 255, 255, 0.1);
+    --list-press: rgba(255, 255, 255, 0.2);
+    --list-selection: rgba(var(--accent-rgb), 0.6);
+    --list-selection-hover: rgba(var(--accent-rgb), 0.8);
+    --list-selection-press: rgba(var(--accent-rgb), 0.9);
   }
 }
 
@@ -69,4 +89,10 @@ h3 {
 hr {
   border-width: 1px 0 0 0;
   border-top: 1px solid var(--divider);
+}
+
+p[secondary] {
+  color: var(--secondary-foreground);
+  font-size: smaller;
+  margin: 0;
 }

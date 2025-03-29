@@ -136,25 +136,21 @@ export class ListViewComponent {
   }
 
   onListFocused(e: FocusEvent) {
-    const elm = e.target;
-    if (elm instanceof HTMLUListElement) {
-      const fc = elm.firstChild;
-      if (fc instanceof HTMLElement) {
-        this.setFocus(fc);
-      }
+    const elm = e.currentTarget as HTMLUListElement;
+    const fc = elm.firstElementChild;
+
+    if (fc instanceof HTMLLIElement) {
+      this.setFocus(fc);
     }
   }
 
   onListKeyDown(e: KeyboardEvent) {
-    const parent = e.target;
-    if (!(parent instanceof HTMLUListElement)) {
-      return;
-    }
+    const parent = e.currentTarget as HTMLUListElement;
+    const elm = (this.getFocusedElement() ??
+      parent.firstElementChild) as HTMLElement | null;
 
-    let elm = this.getFocusedElement();
-    if (!(elm instanceof HTMLLIElement)) {
-      elm = parent.firstElementChild as HTMLLIElement;
-      this.setFocus(elm);
+    if (!elm) {
+      return;
     }
 
     if (!e.repeat && (e.key === 'Enter' || e.key === ' ')) {
