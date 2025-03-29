@@ -74,9 +74,11 @@ export class MainPageComponent {
   }
 
   onInput(input: string): void {
+    this.isValidInstruction = true;
     this.inputText = input;
     this.detectInstructionType(input);
   }
+  
   onTextFile(textFile: Promise<string[]>): void {
     
     textFile.then((instructions) => {
