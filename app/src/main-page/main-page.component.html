@@ -1,6 +1,17 @@
-<h1>MIPS CONVERTER</h1>
+<ng-template #instructionTemplate let-item>
+  {{ toAsm(item) }}
+  <p secondary>0x{{ toHex(item) }}</p>
+</ng-template>
 
 <section class="root-panel">
-  <textarea class="instruction-input"></textarea>
-  <textarea class="instruction-output"></textarea>
+  <h1>MIPS CONVERTER</h1>
+  <section class="content-panel">
+    <textarea type="text" (input)="onInputUpdated($event)" placeholder="Write instructions here..."></textarea>
+
+    <hr vertical>
+
+    <app-list-view [singleSelectionFollowsFocus]="false" [itemsSource]="instructions"
+      [dataTemplate]="instructionTemplate" (selectionChanged)="onInstructionSelected($event)"></app-list-view>
+    <textarea class="instruction-detail"></textarea>
+  </section>
 </section>

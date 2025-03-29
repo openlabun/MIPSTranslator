@@ -88,39 +88,47 @@ export class TranslatorService {
       .toUpperCase()}`;
   }
 
-  translateInstructionToHex(instruction: string): string {
-    try {
-      const parsed = parsePartialInstruction(instruction);
-      const hex = encodeInstruction(parsed as DecodedInstruction);
+  toAsm(instruction: DecodedInstruction): string {
+    if (isReg(instruction)) {
+      if (
+        instruction.funct === FunctionCode.jalr &&
+        instruction.rd !== Register.ra
+      ) {
+        return this.makeRDisplay(instruction, 'rd', 'rs');
+      }
 
-      return hex.toString(16).toUpperCase().padStart(8, '0');
+      const args = getRequiredFunctArguments(instruction.funct);
+      return this.makeRDisplay(instruction, ...args);
+    } else if (isImm(instruction)) {
+      const args = getRequiredImmArguments(instruction.op);
+      return this.makeIDisplay(instruction, ...args);
+    } else if (isJump(instruction)) {
+      return this.makeJDisplay(instruction);
+    }
+    throw new TypeError('The provided instruction is not valid.');
+  }
+
+  toHex(instruction: DecodedInstruction): string {
+    const hex = encodeInstruction(instruction);
+    return hex.toString(16).toUpperCase().padStart(8, '0');
+  }
+
+  translateInstructionToHex(instruction: string): string {
+    const inst = parsePartialInstruction(instruction) as DecodedInstruction;
+    try {
+      return this.toHex(inst);
     } catch {
       return 'Unsupported Instruction';
     }
   }
 
   translateInstructionToMIPS(hexInstruction: string): string {
-    if (hexInstruction.startsWith('0x')) {
-      hexInstruction = hexInstruction.slice(2);
-    }
-
     const inst = parsePartialInstruction(hexInstruction) as DecodedInstruction;
-
-    if (isReg(inst)) {
-      if (inst.funct === FunctionCode.jalr && inst.rd !== Register.ra) {
-        return this.makeRDisplay(inst, 'rd', 'rs');
-      }
-
-      const args = getRequiredFunctArguments(inst.funct);
-      return this.makeRDisplay(inst, ...args);
-    } else if (isImm(inst)) {
-      const args = getRequiredImmArguments(inst.op);
-      return this.makeIDisplay(inst, ...args);
-    } else if (isJump(inst)) {
-      return this.makeJDisplay(inst);
+    try {
+      return this.toAsm(inst);
+    } catch {
+      return 'Unsupported Instruction';
     }
-
-    return 'Unsupported Instruction';
   }
 
   binaryToHex(binaryString: string): string {

@@ -1,12 +1,46 @@
+app-list-view {
+  --list-view-padding: 4px 0;
+  --list-view-item-padding: 2px 4px;
+}
+
+.root-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  height: 100%;
+}
+
+.content-panel {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr 2fr;
+  gap: 4px;
+}
+
 h1 {
   color: var(--accent);
   font-family: monospace, monospace;
   font-weight: bold;
-  line-height: normal;
-  margin: 0;
 }
 
-.instruction-input {
-  height: 100%;
+app-list-view,
+textarea {
+  background: var(--secondary-background);
+  border: 2px solid var(--divider);
   font-family: monospace, monospace;
+  font-size: large;
+  margin: 0;
+  line-height: 1em;
+  resize: none;
+}
+
+textarea {
+  padding: 4px;
+}
+
+hr[vertical] {
+  border-width: 0 1px 0 0;
+  border-right: 1px solid var(--divider);
+  height: calc(100% - 4px);
+  margin-top: auto;
+  margin-bottom: auto;
 }
