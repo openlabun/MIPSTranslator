@@ -63,7 +63,7 @@
 }
 
 html {
-  background-color: rgb(246, 246, 248);
+  background: var(--primary-background);
   box-sizing: border-box;
 }
 
@@ -84,6 +84,10 @@ h1,
 h2,
 h3 {
   margin: 0;
+}
+
+h1 {
+  font-size: 2em;
 }
 
 hr {
