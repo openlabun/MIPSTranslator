@@ -42,9 +42,7 @@ ul>li {
   padding: var(--list-view-item-padding);
 }
 
-
-ul:focus>li.focused {
-  color: var(--list-view-item-focus-foreground);
+li.focused:focus {
   outline: var(--list-view-item-focus-border-thickness) solid var(--list-view-item-focus-border-color);
   outline-offset: calc(-1 * var(--list-view-item-focus-border-thickness));
 }

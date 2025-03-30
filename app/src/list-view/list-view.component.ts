@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   input,
   output,
   TemplateRef,
@@ -40,9 +41,11 @@ export class ListViewComponent {
   itemsSource = input<unknown[]>();
   dataTemplate = input<TemplateRef<unknown>>();
 
-  onItemClick(e: Event, item: unknown) {
-    if (this.canUpdateSelection('click')) {
-      this.select(e.currentTarget as HTMLElement, item);
+  private clickChild(elm: HTMLElement, item: unknown, updateFocus: boolean) {
+    const selected = updateFocus ? this.setFocus(elm, false) : false;
+
+    if (!selected && this.canUpdateSelection('click')) {
+      this.select(elm, item);
     }
 
     if (this.isItemClickEnabled()) {
@@ -50,22 +53,33 @@ export class ListViewComponent {
     }
   }
 
+  onItemClick(e: Event, item: unknown) {
+    const sender = e.currentTarget as HTMLElement;
+    this.clickChild(sender, item, true);
+  }
+
   // Template setup
-  private readonly _list = viewChild.required<HTMLUListElement>('root');
-  private currentFocus: string = '';
-  private currentSelection: string = '';
+  private readonly _list =
+    viewChild.required<ElementRef<HTMLUListElement>>('root');
+  private get root() {
+    return this._list().nativeElement;
+  }
 
-  private scrollIntoView(e: HTMLElement) {
-    const scrollBottom = this._list().clientHeight + this._list().scrollTop;
-    const elementBottom = e.offsetTop + e.offsetHeight;
+  private currentFocus: number = -1;
+  private currentSelection: number = -1;
 
-    if (elementBottom > scrollBottom) {
-      this._list().scrollTop = elementBottom - this._list().clientHeight;
-    } else if (e.offsetTop < this._list().scrollTop) {
-      this._list().scrollTop = e.offsetTop;
+  private get focusedElement() {
+    if (this.currentFocus != -1) {
+      return this.root.children.item(this.currentFocus) as HTMLElement;
     }
+    return null;
+  }
 
-    e.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  private get selectedElement() {
+    if (this.currentSelection != -1) {
+      return this.root.children.item(this.currentSelection) as HTMLElement;
+    }
+    return null;
   }
 
   private canUpdateSelection(currentEvent: 'focus' | 'click') {
@@ -85,16 +99,17 @@ export class ListViewComponent {
   }
 
   private deselect(e: Element) {
+    this.currentSelection = -1;
     e.removeAttribute('aria-selected');
   }
 
   private select(e: Element, item: unknown) {
-    const prev = this.getSelectedElement();
+    const prev = this.selectedElement;
     if (prev) {
       this.deselect(prev);
     }
 
-    this.currentSelection = e.id;
+    this.currentSelection = Number(e.id);
     e.setAttribute('aria-selected', 'true');
     this.selectionChanged.emit({
       sender: this,
@@ -102,59 +117,55 @@ export class ListViewComponent {
     });
   }
 
-  private getFocusedElement() {
-    if (this.currentFocus) {
-      return document.getElementById(this.currentFocus);
-    }
-    return null;
-  }
-
-  private getSelectedElement() {
-    if (this.currentSelection) {
-      return document.getElementById(this.currentSelection);
-    }
-    return null;
-  }
-
   private removeFocus(e: HTMLElement) {
+    this.currentFocus = -1;
     e.classList.remove('focused');
   }
 
-  private setFocus(e: HTMLElement) {
-    const prev = this.getFocusedElement();
-    if (prev) {
+  private setFocus(e: HTMLElement, addFocusVisual: boolean = true): boolean {
+    const prev = this.focusedElement;
+    if (prev instanceof HTMLElement) {
       this.removeFocus(prev);
     }
 
-    this.currentFocus = e.id;
-    e.classList.add('focused');
-    this.scrollIntoView(e);
+    this.currentFocus = Number(e.id);
+    if (addFocusVisual) {
+      e.classList.add('focused');
+    }
+
+    this.root.setAttribute('aria-activedescendant', e.id);
+    e.focus();
 
     if (this.canUpdateSelection('focus')) {
-      this.select(e, this.itemsSource()![Number(e.id)]);
+      this.select(e, this.itemsSource()![this.currentFocus]);
+      return true;
     }
+    return false;
   }
 
-  onListFocused(e: FocusEvent) {
-    const elm = e.currentTarget as HTMLUListElement;
-    const fc = elm.firstElementChild;
+  onListFocused() {
+    const elm = this.selectedElement;
+    if (elm) {
+      this.setFocus(elm);
+      return;
+    }
 
+    const fc = this.root.firstElementChild;
     if (fc instanceof HTMLLIElement) {
       this.setFocus(fc);
     }
   }
 
   onListKeyDown(e: KeyboardEvent) {
-    const parent = e.currentTarget as HTMLUListElement;
-    const elm = (this.getFocusedElement() ??
-      parent.firstElementChild) as HTMLElement | null;
+    const elm = (this.focusedElement ??
+      this.root.firstElementChild) as HTMLElement | null;
 
     if (!elm) {
       return;
     }
 
     if (!e.repeat && (e.key === 'Enter' || e.key === ' ')) {
-      elm.click();
+      this.clickChild(elm, this.itemsSource()![this.currentFocus], false);
       e.preventDefault();
       return;
     }
