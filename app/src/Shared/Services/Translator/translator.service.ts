@@ -19,10 +19,36 @@ import {
   ImmediateInstructionOpcode,
   JumpInstructionOpcode,
   KnownInstructionOpcode,
+  RegisterInstructionOpcode,
 } from '../../lib/mips/op';
 import { parsePartialInstruction } from '../../lib/mips/parse';
 import { Register } from '../../lib/mips/reg';
 import { inEnum } from '../../lib/util/enum';
+
+export type ParsingStage = 'operation' | 'args' | 'complete';
+
+export type ParsingResultBase = {
+  missing: string[];
+};
+
+export type OperationStageResult = ParsingResultBase & {
+  stage: 'operation';
+};
+
+export type ArgsStageResult = ParsingResultBase & {
+  stage: 'args';
+  instruction: Partial<DecodedInstruction>;
+};
+
+export type CompleteResult = ParsingResultBase & {
+  stage: 'complete';
+  instruction: DecodedInstruction;
+};
+
+export type ParsingResult =
+  | OperationStageResult
+  | ArgsStageResult
+  | CompleteResult;
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +70,54 @@ export class TranslatorService {
     }
 
     return 'unknown';
+  }
+
+  tryParse(instruction: string): ParsingResult {
+    const inst = parsePartialInstruction(instruction);
+    if (!('op' in inst) || inst.op === undefined) {
+      return { stage: 'operation', missing: ['op'] };
+    }
+
+    if (inst.op === RegisterInstructionOpcode.REG) {
+      if ('rs' in inst && 'rt' in inst && 'rd' in inst && 'shamt' in inst) {
+        return {
+          stage: 'complete',
+          instruction: inst as DecodedInstruction,
+          missing: [],
+        };
+      }
+
+      return {
+        stage: 'args',
+        instruction: inst,
+        missing: getRequiredFunctArguments(inst.funct!),
+      };
+    }
+
+    if (inEnum(inst.op, ImmediateInstructionOpcode)) {
+      if ('rs' in inst && 'rt' in inst && 'imm' in inst) {
+        return {
+          stage: 'complete',
+          instruction: inst as DecodedInstruction,
+          missing: [],
+        };
+      }
+
+      return {
+        stage: 'args',
+        instruction: inst,
+        missing: getRequiredImmArguments(inst.op as ImmediateInstructionOpcode),
+      };
+    }
+
+    if (inEnum(inst.op, JumpInstructionOpcode) && 'imm' in inst) {
+      return {
+        stage: 'complete',
+        instruction: inst as DecodedInstruction,
+        missing: [],
+      };
+    }
+    return { stage: 'args', instruction: inst, missing: ['imm'] };
   }
 
   private makeRDisplay(
