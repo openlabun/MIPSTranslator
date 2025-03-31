@@ -1,78 +1,60 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
+import {
+  AutoSuggestBoxComponent,
+  QuerySubmittedEvent,
+} from '../auto-suggest-box/auto-suggest-box.component';
 import {
   ListViewComponent,
   SelectionChangedEvent,
 } from '../list-view/list-view.component';
+import { MipsDetailComponent } from '../mips-detail/mips-detail.component';
 import { DecodedInstruction } from '../Shared/lib/mips/instruction';
-import { parsePartialInstruction } from '../Shared/lib/mips/parse';
-import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
-import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
+import { AssistantService } from '../Shared/Services/Assistant/assistant.service';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
-import { InstructionTableComponent } from './instruction-table/instruction-table.component';
-import { RamdropComponent } from './ramdrop/ramdrop.component';
-import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
-import { SwitchComponent } from './switch/switch.component';
-import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
-import { TextboxComponent } from './textbox/textbox.component';
-import { TranslateButtonComponent } from './translate-button/translate-button.component';
 
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [
-    ListViewComponent,
-    TextboxComponent,
-    TranslateButtonComponent,
-    SwitchComponent,
-    TexboxOutputComponent,
-    RamdropComponent,
-    SaveRamButtonComponent,
-    InstructionTableComponent,
-  ],
+  imports: [AutoSuggestBoxComponent, ListViewComponent, MipsDetailComponent],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
-  private inputTimeout: ReturnType<typeof setTimeout> | null = null;
+  private readonly assistant = inject(AssistantService);
+  private readonly translator = inject(TranslatorService);
 
   readonly instructions: Partial<DecodedInstruction>[] = [];
+  readonly suggestions: string[] = [];
 
-  inputText: string = '';
-  output: string = '';
-  parameter: string = '';
-  private translator = inject(TranslatorService);
-  private inputManager = inject(FormInputManagerService).inputApp;
-  private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
-  isHexToMIPS: boolean = false;
-  tableManager = inject(TableInstructionService);
+  textInput = model<string>('');
+  selected: DecodedInstruction | undefined = undefined;
 
-  private processCommit(event: Event) {
-    const target = event.target as HTMLTextAreaElement;
-    const val = target.value.trim();
-    const input = val.split('\n');
-
-    this.instructions.splice(0, this.instructions.length);
-    for (const inst of input) {
-      const trimmed = inst.trim();
-      if (trimmed) {
-        const decoded = parsePartialInstruction(trimmed);
-        this.instructions.push(decoded);
-      }
+  onInputUpdated(newValue: string) {
+    this.suggestions.splice(0, this.suggestions.length);
+    if (newValue) {
+      this.suggestions.push(...this.assistant.getSuggestions(newValue));
     }
   }
 
-  onInputUpdated(event: Event) {
-    // Delay processing for the instruction pile...
-    if (this.inputTimeout != null) {
-      clearTimeout(this.inputTimeout);
+  onInputSubmitted(e: QuerySubmittedEvent) {
+    if (e.chosenSuggestion) {
+      this.suggestions.splice(0, this.suggestions.length);
+      this.textInput.set(e.chosenSuggestion);
+      return;
     }
-    this.inputTimeout = setTimeout(() => this.processCommit(event), 600);
 
-    // ... and immediately process suggestions (TODO)
+    this.textInput.set('');
+    const parsed = this.translator.tryParse(e.queryText);
+
+    if (parsed.stage === 'complete') {
+      this.instructions.push(parsed.instruction);
+      return;
+    }
+    alert('Invalid input');
   }
 
   onInstructionSelected(args: SelectionChangedEvent) {
-    console.log(args.selectedItem);
+    this.selected = args.selectedItem as DecodedInstruction;
   }
 
   toAsm(instruction: Partial<DecodedInstruction>) {
@@ -81,42 +63,5 @@ export class MainPageComponent {
 
   toHex(instruction: Partial<DecodedInstruction>) {
     return this.translator.toHex(instruction as DecodedInstruction);
-  }
-
-  onTableValueChange(value: string): void {
-    this.tableManager.updateSelectedLineText(value);
-  }
-
-  // Manejadores de eventos
-  onToggle(isChecked: boolean): void {
-    this.isHexToMIPS = isChecked;
-    this.inputManagerIsHexToMips.setValue(isChecked);
-    let draft = this.inputManager.value;
-    this.inputManager.setValue(this.output);
-    this.output = draft;
-  }
-
-  onInput(input: string): void {
-    this.inputText = input;
-  }
-  onTextFile(textFile: Promise<string[]>): void {
-    textFile.then((instructions) => {
-      if (this.isHexToMIPS) {
-        this.inputManager.setValue(instructions[0]);
-        this.output = instructions[1];
-      } else {
-        this.output = instructions[0];
-        this.inputManager.setValue(instructions[1]);
-      }
-    });
-  }
-  onTranslate(): void {
-    if (this.isHexToMIPS) {
-      this.output = this.translator.translateHextoMIPS(this.inputText);
-      this.parameter = this.inputText;
-    } else {
-      this.output = this.translator.translateMIPStoHex(this.inputText);
-      this.parameter = this.output;
-    }
   }
 }

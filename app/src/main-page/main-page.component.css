@@ -12,7 +12,8 @@ app-list-view {
 
 .content-panel {
   display: grid;
-  grid-template-columns: 1fr 1px 1fr 2fr;
+  grid-template-columns: 1fr 1px 2fr;
+  grid-template-rows: auto 1px 2fr;
   gap: 4px;
 }
 
@@ -23,13 +24,13 @@ h1 {
 }
 
 app-list-view,
-textarea {
+app-mips-detail {
   background: var(--secondary-background);
   border: 2px solid var(--divider);
   font-family: monospace, monospace;
   font-size: large;
+  line-height: 1.15;
   margin: 0;
-  line-height: 1em;
   resize: none;
 }
 
@@ -37,10 +38,6 @@ textarea {
   padding: 4px;
 }
 
-hr[vertical] {
-  border-width: 0 1px 0 0;
-  border-right: 1px solid var(--divider);
-  height: calc(100% - 4px);
-  margin-top: auto;
-  margin-bottom: auto;
+app-mips-detail {
+  padding: 8px;
 }
