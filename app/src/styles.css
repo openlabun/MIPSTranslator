@@ -93,6 +93,15 @@ h1 {
 hr {
   border-width: 1px 0 0 0;
   border-top: 1px solid var(--divider);
+  margin: 0;
+}
+
+hr[vertical] {
+  border-width: 0 1px 0 0;
+  border-right: 1px solid var(--divider);
+  height: calc(100% - 4px);
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 p[secondary] {
