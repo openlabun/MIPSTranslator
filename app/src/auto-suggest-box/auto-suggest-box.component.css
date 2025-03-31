@@ -1,0 +1,24 @@
+input {
+  border: 2px solid var(--divider);
+  width: 100%;
+}
+
+app-list-view,
+input {
+  background: var(--secondary-background);
+  font-family: monospace, monospace;
+  font-size: large;
+  line-height: 1.15;
+  margin: 0;
+}
+
+#suggestionFlyout:not([open]) {
+  visibility: hidden;
+}
+
+#suggestionFlyout {
+  background: var(--secondary-background);
+  border: 2px solid var(--accent);
+  position: absolute;
+  z-index: 1;
+}
