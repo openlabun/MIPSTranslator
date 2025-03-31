@@ -1,8 +1,9 @@
 <ng-template #defaultTemplate let-item>{{ item }}</ng-template>
 
-<ul #root tabindex="0" (focus)="onListFocused()" (keydown)="onListKeyDown($event)" role="listbox">
+<ul #root tabindex="0" (click)="onListClick($event)" (focus)="onListFocus()" (keydown)="onListKeyDown($event)"
+  role="listbox">
   @for (item of itemsSource() || []; let i = $index; track i) {
-  <li tabindex="-1" role="option" [attr.id]="i" (click)="onItemClick($event, item)">
+  <li role="option" [attr.id]="i">
     <ng-container [ngTemplateOutlet]="dataTemplate() || defaultTemplate"
       [ngTemplateOutletContext]="{ $implicit: item, index: i }">
     </ng-container>
