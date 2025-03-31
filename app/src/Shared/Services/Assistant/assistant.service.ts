@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   allowsImmediateLabel,
   getRequiredArguments,
@@ -8,16 +8,17 @@ import {
   ImmediateInstructionOpcode,
   JumpInstructionOpcode,
 } from '../../lib/mips/op';
-import { FormInputManagerService } from '../FormInputManager/form-input-manager.service';
-import { TranslatorService } from '../Translator/translator.service';
+
+const knownInstructions = Object.keys({
+  ...ImmediateInstructionOpcode,
+  ...JumpInstructionOpcode,
+  ...FunctionCode,
+}).filter((k) => typeof k === 'string');
 
 @Injectable({
   providedIn: 'root',
 })
 export class AssistantService {
-  translatorService = inject(TranslatorService);
-  inputManager = inject(FormInputManagerService); // Inyección del servicio
-
   constructor() {}
 
   getSuggestions(value: string): string[] {
@@ -26,11 +27,7 @@ export class AssistantService {
     const firstWord = lowerValue.split(' ')[0];
 
     // Filtrar instrucciones que coincidan
-    const filteredInstructions = Object.keys({
-      ...ImmediateInstructionOpcode,
-      ...JumpInstructionOpcode,
-      ...FunctionCode,
-    }).filter((instruction) =>
+    const filteredInstructions = knownInstructions.filter((instruction) =>
       hasSpace ? instruction === firstWord : instruction.startsWith(firstWord)
     );
 
@@ -39,13 +36,13 @@ export class AssistantService {
       this.generateRandomExamples(instruction)
     );
 
-    return examples.flat().filter((example) => example.includes(firstWord));
+    return examples.flat();
   }
 
   generateRandomExamples(instruction: string): string[] {
     const args = getRequiredArguments(instruction);
     if (!args) {
-      return [`${instruction} (Sin ejemplo disponible)`];
+      return [];
     }
 
     const examples: string[] = [];
