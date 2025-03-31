@@ -1,0 +1,25 @@
+app-list-view {
+  --list-view-item-padding: 2px 4px;
+}
+
+h2,
+p:not([secondary]) {
+  color: var(--accent);
+}
+
+.instruction-structure {
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  grid-template-rows: auto auto;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.instruction-structure>div {
+  background-color: var(--primary-background);
+  border: 1px solid var(--accent);
+}
+
+.instruction-structure>div:not(:nth-last-child(2)) {
+  border-right: 0;
+}
