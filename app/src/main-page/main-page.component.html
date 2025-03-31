@@ -14,8 +14,10 @@
     <app-list-view style="grid-column: 1; grid-row: 3;" [singleSelectionFollowsFocus]="false"
       [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
       (selectionChanged)="onInstructionSelected($event)"></app-list-view>
+    <button (click)="downloadRam()" style="grid-column: 1; grid-row: 4;" [disabled]="instructions.length === 0">Save to
+      RAM</button>
 
-    <hr vertical style="grid-column: 2; grid-row: 1 / span 3;">
+    <hr vertical style="grid-column: 2; grid-row: 1 / span 4;">
 
     <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 3;"></app-mips-detail>
   </section>

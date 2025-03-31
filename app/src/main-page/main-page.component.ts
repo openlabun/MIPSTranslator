@@ -23,7 +23,7 @@ export class MainPageComponent {
   private readonly assistant = inject(AssistantService);
   private readonly translator = inject(TranslatorService);
 
-  readonly instructions: Partial<DecodedInstruction>[] = [];
+  readonly instructions: DecodedInstruction[] = [];
   readonly suggestions: string[] = [];
 
   textInput = model<string>('');
@@ -57,11 +57,35 @@ export class MainPageComponent {
     this.selected = args.selectedItem as DecodedInstruction;
   }
 
-  toAsm(instruction: Partial<DecodedInstruction>) {
-    return this.translator.toAsm(instruction as DecodedInstruction);
+  toAsm(instruction: DecodedInstruction) {
+    return this.translator.toAsm(instruction);
   }
 
-  toHex(instruction: Partial<DecodedInstruction>) {
-    return this.translator.toHex(instruction as DecodedInstruction);
+  toHex(instruction: DecodedInstruction) {
+    return this.translator.toHex(instruction);
+  }
+
+  downloadRam() {
+    const hexInstructions = this.instructions
+      .map((i) => this.toHex(i))
+      .join(' ');
+
+    // Check if hexInstructions is empty
+    if (!hexInstructions) {
+      return;
+    }
+
+    // Create a Blob with the hex instructions
+    const blob = new Blob([`v2.0 raw\n${hexInstructions}`], {
+      type: 'text/plain',
+    });
+
+    // Create a temporary anchor element to trigger the download
+    const anchor = document.createElement('a');
+    anchor.download = 'mips_instructions.hex';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.click();
+
+    window.URL.revokeObjectURL(anchor.href);
   }
 }

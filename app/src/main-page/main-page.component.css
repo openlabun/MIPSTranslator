@@ -13,7 +13,7 @@ app-list-view {
 .content-panel {
   display: grid;
   grid-template-columns: 1fr 1px 2fr;
-  grid-template-rows: auto 1px 2fr;
+  grid-template-rows: auto 1px 2fr auto;
   gap: 4px;
 }
 
@@ -24,7 +24,8 @@ h1 {
 }
 
 app-list-view,
-app-mips-detail {
+app-mips-detail,
+button {
   background: var(--secondary-background);
   border: 2px solid var(--divider);
   font-family: monospace, monospace;
