@@ -1,8 +1,4 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
   --list-view-padding: 0;
 
   --list-view-item-background: transparent;
@@ -22,49 +18,45 @@
   --list-view-item-selected-pressed-background: var(--list-selection-press);
 }
 
-ul {
-  flex: 1 1 1px;
-  list-style: none;
-  margin: 0;
+[role="listbox"] {
   overflow-y: auto;
   padding: var(--list-view-padding);
-  position: relative;
 }
 
-ul:focus {
+[role="listbox"]:focus {
   outline: none;
 }
 
-ul>li {
+[role="listbox"]>[role="option"] {
   background: var(--list-view-item-background);
   color: var(--list-view-item-foreground);
   margin: 0;
   padding: var(--list-view-item-padding);
 }
 
-ul:focus>li.focused {
+[role="listbox"]:focus>[role="option"].focused {
   outline: var(--list-view-item-focus-border-thickness) solid var(--list-view-item-focus-border-color);
   outline-offset: calc(-1 * var(--list-view-item-focus-border-thickness));
 }
 
-ul>li:hover {
+[role="listbox"]>[role="option"]:hover {
   background: var(--list-view-item-hover-background);
   color: var(--list-view-item-hover-foreground);
 }
 
-ul>li:active {
+[role="listbox"]>[role="option"]:active {
   background: var(--list-view-item-pressed-background);
 }
 
-ul>li[aria-selected=true] {
+[role="listbox"]>[role="option"][aria-selected=true] {
   background: var(--list-view-item-selected-background);
   color: var(--list-view-item-selected-foreground);
 }
 
-ul>li[aria-selected=true]:hover {
+[role="listbox"]>[role="option"][aria-selected=true]:hover {
   background: var(--list-view-item-selected-hover-background);
 }
 
-ul>li[aria-selected=true]:active {
+[role="listbox"]>[role="option"][aria-selected=true]:active {
   background: var(--list-view-item-selected-pressed-background);
 }

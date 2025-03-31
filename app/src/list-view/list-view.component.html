@@ -1,12 +1,12 @@
 <ng-template #defaultTemplate let-item>{{ item }}</ng-template>
 
-<ul #root tabindex="0" (click)="onListClick($event)" (focus)="onListFocus()" (keydown)="onListKeyDown($event)"
+<div #root tabindex="0" (click)="onListClick($event)" (focus)="onListFocus()" (keydown)="onListKeyDown($event)"
   role="listbox">
   @for (item of itemsSource() || []; let i = $index; track i) {
-  <li role="option" [attr.id]="i">
+  <div role="option" [attr.id]="i">
     <ng-container [ngTemplateOutlet]="dataTemplate() || defaultTemplate"
       [ngTemplateOutletContext]="{ $implicit: item, index: i }">
     </ng-container>
-  </li>
+  </div>
   }
-</ul>
+</div>

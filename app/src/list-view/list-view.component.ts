@@ -90,8 +90,7 @@ export class ListViewComponent {
   }
 
   // Template setup
-  private readonly _list =
-    viewChild.required<ElementRef<HTMLUListElement>>('root');
+  private readonly _list = viewChild.required<ElementRef<HTMLElement>>('root');
   private get root() {
     return this._list().nativeElement;
   }
