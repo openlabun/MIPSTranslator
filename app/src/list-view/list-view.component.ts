@@ -199,18 +199,23 @@ export class ListViewComponent {
       return;
     }
 
+    let keyMovesFocus = true;
+    let moveFocusTo: Element | null = null;
+
     if (e.key === 'ArrowUp') {
-      const prev = elm.previousElementSibling;
-      if (prev instanceof HTMLElement) {
-        this.setFocus(prev);
-        e.preventDefault();
-      }
+      moveFocusTo = elm.previousElementSibling;
     } else if (e.key === 'ArrowDown') {
-      const next = elm.nextElementSibling;
-      if (next instanceof HTMLElement) {
-        this.setFocus(next);
-        e.preventDefault();
-      }
+      moveFocusTo = elm.nextElementSibling;
+    } else {
+      keyMovesFocus = false;
+    }
+
+    if (moveFocusTo instanceof HTMLElement) {
+      this.setFocus(moveFocusTo);
+      e.preventDefault();
+    } else if (keyMovesFocus) {
+      this.scrollIntoView(elm);
+      e.preventDefault();
     }
   }
 }
