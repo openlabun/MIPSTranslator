@@ -1,9 +1,11 @@
 <ng-template #defaultTemplate let-item>{{ item }}</ng-template>
 
-<input #inputBox type="text" [(ngModel)]="text" (focus)="onInputFocus()" (blur)="onInputFocusLost($event)"
-  (keydown)="onInputKeyDown($event)">
+<section class="root">
+  <input #inputBox type="text" [(ngModel)]="text" (focus)="onInputFocus()" (blur)="onInputFocusLost($event)"
+    (keydown)="onInputKeyDown($event)">
 
-<div #suggestionFlyout id="suggestionFlyout">
-  <app-list-view #suggestionList [isItemClickEnabled]="true" (itemClick)="onSuggestionPicked($event)"
-    [itemsSource]="suggestions()"></app-list-view>
-</div>
+  <div #suggestionFlyout class="flyout" [attr.open]="show && suggestions().length > 0">
+    <app-list-view #suggestionList [isItemClickEnabled]="true" (itemClick)="onSuggestionPicked($event)"
+      [itemsSource]="suggestions()"></app-list-view>
+  </div>
+</section>

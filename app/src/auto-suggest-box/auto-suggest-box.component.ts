@@ -27,10 +27,17 @@ export type QuerySubmittedEvent = {
   styleUrl: './auto-suggest-box.component.css',
 })
 export class AutoSuggestBoxComponent {
+  private focused: boolean = false;
+
   suggestions = input.required<string[]>();
   text = model<string>('');
 
+  show = false;
   querySubmitted = output<QuerySubmittedEvent>();
+
+  constructor() {
+    this.text.subscribe(() => this.onTextUpdated());
+  }
 
   private readonly _inputBox =
     viewChild.required<ElementRef<HTMLInputElement>>('inputBox');
@@ -50,11 +57,18 @@ export class AutoSuggestBoxComponent {
     return this._list();
   }
 
+  onTextUpdated() {
+    if (this.focused) {
+      this.show = true;
+    }
+  }
+
   onInputFocus() {
-    this.suggestionFlyout.toggleAttribute('open', true);
+    this.focused = true;
   }
 
   onInputFocusLost(e: FocusEvent) {
+    this.focused = false;
     const newFocus = e.relatedTarget;
     if (
       newFocus instanceof HTMLElement &&
@@ -62,7 +76,7 @@ export class AutoSuggestBoxComponent {
     ) {
       return;
     }
-    this.suggestionFlyout.toggleAttribute('open', false);
+    this.show = false;
   }
 
   onSuggestionPicked(e: ItemClickEvent) {
@@ -75,8 +89,8 @@ export class AutoSuggestBoxComponent {
 
   onInputKeyDown(e: KeyboardEvent) {
     // Removes the flyout from tab order before it's gone due to focus loss
-    if (e.key === 'Tab') {
-      this.suggestionFlyout.toggleAttribute('open', false);
+    if (e.key === 'Escape' || e.key === 'Tab') {
+      this.show = false;
       return;
     }
 
@@ -84,7 +98,9 @@ export class AutoSuggestBoxComponent {
       return;
     }
 
-    this.suggestionList.onListKeyDown(e);
+    // If Enter is pressed and no suggestion is focused, we don't want to pick a
+    // suggestion
+    this.suggestionList.onListKeyDown(e, e.key === 'Enter');
     if (e.defaultPrevented) {
       return;
     }

@@ -186,8 +186,10 @@ export class ListViewComponent {
     }
   }
 
-  onListKeyDown(e: KeyboardEvent) {
-    const elm = this.focusedElement ?? this.firstChild;
+  onListKeyDown(e: KeyboardEvent, ignoreIfNoneFocused: boolean = false) {
+    const elm =
+      this.focusedElement ?? (ignoreIfNoneFocused ? null : this.firstChild);
+
     if (!elm) {
       return;
     }
