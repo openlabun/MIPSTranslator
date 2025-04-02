@@ -19,7 +19,7 @@
 }
 
 [role="listbox"] {
-  overflow-y: auto;
+  height: 100%;
   padding: var(--list-view-padding);
 }
 
