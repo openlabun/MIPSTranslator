@@ -1,20 +1,24 @@
 app-list-view {
+  overflow-y: auto;
   --list-view-padding: 4px 0;
   --list-view-item-padding: 2px 4px;
 }
 
-.root-panel {
+main {
   display: grid;
-  grid-template-rows: auto 1fr;
   gap: 8px;
-  height: 100%;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 32px;
+  padding-top: max(32px, var(--safe-area-inset-top));
 }
 
 .content-panel {
   display: grid;
-  grid-template-columns: 1fr 1px 2fr;
-  grid-template-rows: auto 1px 2fr auto;
   gap: 4px;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 2fr);
+  grid-template-rows: auto 1px minmax(0, 1fr) auto;
 }
 
 h1 {
@@ -41,4 +45,27 @@ textarea {
 
 app-mips-detail {
   padding: 8px;
+}
+
+.root-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 12px;
+  height: 100vh;
+}
+
+main,
+footer {
+  width: 100%;
+  padding-left: 24px;
+  padding-left: max(24px, var(--safe-area-inset-left));
+  padding-right: 24px;
+  padding-right: max(24px, var(--safe-area-inset-right));
+}
+
+footer {
+  background-color: var(--secondary-background);
+  color: var(--accent);
+  padding-top: 12px;
+  text-align: center;
 }

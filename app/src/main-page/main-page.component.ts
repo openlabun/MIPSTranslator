@@ -10,6 +10,7 @@ import {
   AutoSuggestBoxComponent,
   QuerySubmittedEvent,
 } from '../auto-suggest-box/auto-suggest-box.component';
+import { ContributorsComponent } from '../contributors/contributors.component';
 import {
   ListViewComponent,
   SelectionChangedEvent,
@@ -59,6 +60,7 @@ type DecodeResult = DecodeSuccess | DecodeFailure;
   standalone: true,
   imports: [
     AutoSuggestBoxComponent,
+    ContributorsComponent,
     ListViewComponent,
     MipsDetailComponent,
     ReactiveFormsModule,

@@ -4,27 +4,43 @@
 </ng-template>
 
 <section class="root-panel">
-  <h1>MIPS CONVERTER</h1>
-  <section class="content-panel">
-    <app-auto-suggest-box [(text)]="textInput" [suggestions]="suggestions" (querySubmitted)="onInputSubmitted($event)"
-      (textChange)="onInputUpdated($event)"></app-auto-suggest-box>
+  <main>
+    <h1>MIPS CONVERTER</h1>
+    <section class="content-panel">
+      <app-auto-suggest-box [(text)]="textInput" [suggestions]="suggestions" (querySubmitted)="onInputSubmitted($event)"
+        (textChange)="onInputUpdated($event)"></app-auto-suggest-box>
 
-    <hr style="grid-column: 1; grid-row: 2;">
+      <hr style="grid-column: 1; grid-row: 2;">
 
-    <app-list-view style="grid-column: 1; grid-row: 3;" [singleSelectionFollowsFocus]="false"
-      [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
-      (selectionChanged)="onInstructionSelected($event)"></app-list-view>
+      <app-list-view style="grid-column: 1; grid-row: 3;" [singleSelectionFollowsFocus]="false"
+        [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
+        (selectionChanged)="onInstructionSelected($event)"></app-list-view>
 
-    <button (click)="downloadRam()" style="grid-column: 1; grid-row: 4;" [disabled]="instructions.length === 0">Save to
-      RAM</button>
+      <button (click)="downloadRam()" style="grid-column: 1; grid-row: 4;" [disabled]="instructions.length === 0">Save
+        to
+        RAM</button>
 
-    <hr vertical style="grid-column: 2; grid-row: 1 / span 4;">
+      <hr vertical style="grid-column: 2; grid-row: 1 / span 4;">
 
-    <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 3;"></app-mips-detail>
+      <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 3;"></app-mips-detail>
 
-    <input #fileInput type="file" (change)="onRamUpload($event)" style="visibility: hidden;">
-    <button style="grid-column: 3; grid-row: 4;" (click)="fileInput.click()">
-      Load RAM (you can also drop it anywhere on the page)
-    </button>
-  </section>
+      <input #fileInput type="file" (change)="onRamUpload($event)" style="visibility: hidden;">
+      <button style="grid-column: 3; grid-row: 4;" (click)="fileInput.click()">
+        Load RAM (you can also drop it anywhere on the page)
+      </button>
+    </section>
+  </main>
+
+  <footer>
+    <h3>
+      This is an open-source project by
+      <a href="https://github.com/proyectosingenieriauninorte/MIPSTranslator" target="_blank">
+        Proyectos Ingenieria Uninorte
+      </a>
+    </h3>
+
+    <hr>
+
+    <app-contributors></app-contributors>
+  </footer>
 </section>
