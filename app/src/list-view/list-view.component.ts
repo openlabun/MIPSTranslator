@@ -209,7 +209,7 @@ export class ListViewComponent {
     }
 
     if (i !== -1) {
-      this.moveFocusTo(0, { scrollIntoView: false });
+      this.moveFocusTo(i, { scrollIntoView: false });
     }
   }
 
