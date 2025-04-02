@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   input,
+  model,
   output,
   TemplateRef,
   viewChild,
@@ -20,9 +21,11 @@ export type SelectionChangedEvent = {
   selectedItem: unknown;
 };
 
+type ChangeSource = 'click' | 'focus' | 'selection';
 type SetFocusOptions = {
   addFocusVisual?: boolean;
   scrollIntoView?: boolean;
+  sourceEvent?: ChangeSource;
 };
 
 @Component({
@@ -33,18 +36,58 @@ type SetFocusOptions = {
   styleUrl: './list-view.component.css',
 })
 export class ListViewComponent {
+  private currentFocus: number = -1;
+
   // Selection
-  selectionMode = input<SelectionMode>('single');
-  singleSelectionFollowsFocus = input<boolean>(true);
-  selectionChanged = output<SelectionChangedEvent>();
+  readonly selectionMode = input<SelectionMode>('single');
+  readonly singleSelectionFollowsFocus = input<boolean>(true);
+  readonly selectedIndex = model<number>(-1);
+  readonly selectionChanged = output<SelectionChangedEvent>();
 
   // Click
-  isItemClickEnabled = input<boolean>(false);
-  itemClick = output<ItemClickEvent>();
+  readonly isItemClickEnabled = input<boolean>(false);
+  readonly itemClick = output<ItemClickEvent>();
 
   // Items
-  itemsSource = input<unknown[]>();
-  dataTemplate = input<TemplateRef<unknown>>();
+  readonly itemsSource = input.required<unknown[]>();
+  readonly dataTemplate = input<TemplateRef<unknown>>();
+
+  constructor() {
+    this.selectedIndex.subscribe(this.onSelectedIndexChanged.bind(this));
+  }
+
+  private onSelectedIndexChanged(value: number) {
+    const items = this.itemsSource();
+    if (value >= items.length || value < -1) {
+      throw new RangeError('The provided index is not valid.');
+    }
+
+    const prev = this.root.querySelector<HTMLElement>(':scope>[aria-selected]');
+    if (prev) {
+      prev.removeAttribute('aria-selected');
+    }
+
+    if (value !== -1) {
+      const elm = this.selectedContainer!;
+      this.moveFocusTo(value, { sourceEvent: 'selection' });
+      elm.setAttribute('aria-selected', 'true');
+
+      this.selectionChanged.emit({
+        sender: this,
+        selectedItem: items[value],
+      });
+    } else {
+      const focus = this.focusedContainer;
+      if (focus) {
+        this.removeFocus(focus);
+      }
+
+      this.selectionChanged.emit({
+        sender: this,
+        selectedItem: null,
+      });
+    }
+  }
 
   private scrollIntoView(e: HTMLElement) {
     const scrollBottom = this.root.clientHeight + this.root.scrollTop;
@@ -59,14 +102,11 @@ export class ListViewComponent {
     e.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
 
-  private clickChild(elm: HTMLElement, item: unknown, updateFocus: boolean) {
-    const selected = updateFocus
-      ? this.setFocus(elm, { addFocusVisual: false })
-      : false;
-
-    if (!selected && this.canUpdateSelection('click')) {
-      this.select(elm, item);
-    }
+  private clickChild(elm: HTMLElement, item: unknown) {
+    this.moveFocusTo(Number(elm.id), {
+      addFocusVisual: false,
+      sourceEvent: 'click',
+    });
 
     if (this.isItemClickEnabled()) {
       this.itemClick.emit({ sender: this, clickedItem: item });
@@ -84,7 +124,7 @@ export class ListViewComponent {
       }
 
       if (item) {
-        this.clickChild(item, this.itemsSource()![Number(item.id)], true);
+        this.clickChild(item, this.itemsSource()![Number(item.id)]);
       }
     }
   }
@@ -95,35 +135,30 @@ export class ListViewComponent {
     return this._list().nativeElement;
   }
 
-  private currentFocus: number = -1;
-  private currentSelection: number = -1;
-
-  private get focusedElement() {
-    if (this.currentFocus != -1) {
-      return this.root.children.item(this.currentFocus) as HTMLElement;
-    }
-    return null;
+  private get focusedContainer() {
+    return this.root.children.item(this.currentFocus) as HTMLElement | null;
   }
 
-  private get selectedElement() {
-    if (this.currentSelection != -1) {
-      return this.root.children.item(this.currentSelection) as HTMLElement;
-    }
-    return null;
+  private get selectedContainer() {
+    return this.root.children.item(this.selectedIndex()) as HTMLElement | null;
   }
 
-  private get firstChild() {
+  private get firstContainer() {
     return this.root.firstElementChild as HTMLElement | null;
   }
 
-  private canUpdateSelection(currentEvent: 'focus' | 'click') {
+  private canUpdateSelection(on: ChangeSource) {
+    if (on === 'selection') {
+      return false;
+    }
+
     const mode = this.selectionMode();
     if (mode === 'none') {
       return false;
     }
 
     if (
-      currentEvent === 'focus' &&
+      on === 'focus' &&
       mode === 'single' &&
       !this.singleSelectionFollowsFocus()
     ) {
@@ -132,91 +167,88 @@ export class ListViewComponent {
     return true;
   }
 
-  private deselect(elm: Element) {
-    this.currentSelection = -1;
-    elm.removeAttribute('aria-selected');
-  }
-
-  private select(elm: Element, item: unknown) {
-    const prev = this.selectedElement;
-    if (prev) {
-      this.deselect(prev);
-    }
-
-    this.currentSelection = Number(elm.id);
-    elm.setAttribute('aria-selected', 'true');
-    this.selectionChanged.emit({
-      sender: this,
-      selectedItem: item,
-    });
+  private select(elm: Element) {
+    this.selectedIndex.set(Number(elm.id));
   }
 
   private removeFocus(elm: HTMLElement) {
     this.currentFocus = -1;
+    this.root.removeAttribute('aria-activedescendant');
     elm.classList.remove('focused');
   }
 
-  private setFocus(elm: HTMLElement, options?: SetFocusOptions): boolean {
-    const prev = this.focusedElement;
-    if (prev instanceof HTMLElement) {
-      this.removeFocus(prev);
+  private moveFocusTo(index: number, options?: SetFocusOptions): boolean {
+    if (index !== this.currentFocus) {
+      this.focusedContainer?.classList.remove('focused');
+      this.currentFocus = index;
+      this.root.setAttribute('aria-activedescendant', String(index));
     }
 
-    this.currentFocus = Number(elm.id);
-    if (options?.addFocusVisual ?? true) {
-      elm.classList.add('focused');
+    const to = this.focusedContainer;
+    if (to) {
+      if (options?.addFocusVisual ?? true) {
+        to.classList.add('focused');
+      }
+      if (options?.scrollIntoView ?? true) {
+        this.scrollIntoView(to);
+      }
+
+      if (this.canUpdateSelection(options?.sourceEvent ?? 'focus')) {
+        this.select(to);
+        return true;
+      }
     }
 
-    this.root.setAttribute('aria-activedescendant', elm.id);
-    if (options?.scrollIntoView ?? true) {
-      this.scrollIntoView(elm);
-    }
-
-    if (this.canUpdateSelection('focus')) {
-      this.select(elm, this.itemsSource()![this.currentFocus]);
-      return true;
-    }
     return false;
   }
 
   onListFocus() {
-    const elm = this.selectedElement ?? this.root.firstElementChild;
-    if (elm instanceof HTMLElement) {
-      this.setFocus(elm, { scrollIntoView: false });
+    let i = this.selectedIndex();
+    if (i === -1 && this.itemsSource().length !== 0) {
+      i = 0;
+    }
+
+    if (i !== -1) {
+      this.moveFocusTo(0, { scrollIntoView: false });
     }
   }
 
-  onListKeyDown(e: KeyboardEvent, ignoreIfNoneFocused: boolean = false) {
-    const elm =
-      this.focusedElement ?? (ignoreIfNoneFocused ? null : this.firstChild);
+  onListKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (!e.repeat) {
+        const item = this.focusedContainer;
+        if (item) {
+          this.clickChild(item, this.itemsSource()![this.currentFocus]);
+          e.preventDefault();
+        }
+      }
+      return;
+    }
 
+    const elm = this.focusedContainer ?? this.firstContainer;
     if (!elm) {
       return;
     }
 
-    if (!e.repeat && (e.key === 'Enter' || e.key === ' ')) {
-      this.clickChild(elm, this.itemsSource()![this.currentFocus], false);
-      e.preventDefault();
-      return;
-    }
-
     let keyMovesFocus = true;
-    let moveFocusTo: Element | null = null;
+    let newFocus = this.currentFocus;
 
     if (e.key === 'ArrowUp') {
-      moveFocusTo = elm.previousElementSibling;
+      newFocus--;
     } else if (e.key === 'ArrowDown') {
-      moveFocusTo = elm.nextElementSibling;
+      newFocus++;
     } else {
       keyMovesFocus = false;
     }
 
-    if (moveFocusTo instanceof HTMLElement) {
-      this.setFocus(moveFocusTo);
+    if (keyMovesFocus) {
       e.preventDefault();
-    } else if (keyMovesFocus) {
-      this.scrollIntoView(elm);
-      e.preventDefault();
+
+      if (newFocus >= 0 && newFocus < this.itemsSource().length) {
+        this.moveFocusTo(newFocus);
+      } else {
+        this.scrollIntoView(elm);
+      }
     }
   }
 }
