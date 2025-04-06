@@ -130,4 +130,15 @@ export class AutoSuggestBoxComponent {
       return;
     }
   }
+  onSubmitClick() {
+    this.querySubmitted.emit({
+      sender: this,
+      queryText: this.text(),
+      chosenSuggestion:
+        this.currentSelection === -1
+          ? undefined
+          : this.suggestions()[this.currentSelection],
+    });
+  }
+  
 }

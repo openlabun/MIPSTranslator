@@ -69,3 +69,29 @@ footer {
   padding-top: 12px;
   text-align: center;
 }
+
+.danger-button {
+  background: var(--secondary-background);
+  border: 2px solid #e74c3c;
+  color: #e74c3c;
+}
+
+.danger-button:hover:not(:disabled) {
+  background: #e74c3c;
+  color: white;
+}
+
+.danger-button:disabled {
+  border-color: var(--disabled-color, #95a5a6);
+  color: var(--disabled-color, #95a5a6);
+}
+
+footer {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+footer.ng-leave-active,
+footer.ng-enter {
+  opacity: 0;
+}

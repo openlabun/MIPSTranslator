@@ -6,6 +6,8 @@ import {
   model,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
 import {
   AutoSuggestBoxComponent,
   QuerySubmittedEvent,
@@ -24,9 +26,7 @@ function onDragEnter(e: DragEvent) {
   e.preventDefault();
   const dt = e.dataTransfer;
 
-  if (!dt) {
-    return;
-  }
+  if (!dt) return;
 
   if (dt.items.length === 1 && dt.items[0].kind === 'file') {
     dt.dropEffect = 'copy';
@@ -59,6 +59,7 @@ type DecodeResult = DecodeSuccess | DecodeFailure;
   selector: 'app-main-page',
   standalone: true,
   imports: [
+    CommonModule,
     AutoSuggestBoxComponent,
     ContributorsComponent,
     ListViewComponent,
@@ -68,8 +69,6 @@ type DecodeResult = DecodeSuccess | DecodeFailure;
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],
 })
-// ... todo igual hasta la clase
-
 export class MainPageComponent {
   private readonly assistant = inject(AssistantService);
   private readonly translator = inject(TranslatorService);
@@ -80,6 +79,7 @@ export class MainPageComponent {
 
   textInput = model<string>('');
   selected: DecodedInstruction | undefined = undefined;
+  showFooter = false;
 
   constructor(private readonly changes: ChangeDetectorRef) {
     afterNextRender(() => {
@@ -87,6 +87,10 @@ export class MainPageComponent {
       document.addEventListener('dragleave', onDragLeave);
       document.addEventListener('drop', this.dropHandler);
     });
+  }
+
+  toggleFooter(): void {
+    this.showFooter = !this.showFooter;
   }
 
   onInputUpdated(newValue: string) {
@@ -108,9 +112,10 @@ export class MainPageComponent {
     if (parsed.stage === 'complete') {
       this.textInput.set('');
       this.instructions.push(parsed.instruction);
-      this.selected = parsed.instruction; // auto-seleccionamos al agregar
+      this.selected = parsed.instruction;
       return;
     }
+
     alert('Invalid input');
   }
 
@@ -174,6 +179,7 @@ export class MainPageComponent {
             unsupported.push(inst);
           }
         }
+
         resolve({ success: true, result: { decoded, unsupported } });
       };
 
@@ -196,7 +202,7 @@ export class MainPageComponent {
       this.instructions.push(...decode.result.decoded);
 
       if (decode.result.decoded.length > 0) {
-        this.selected = decode.result.decoded[0]; // seleccionamos la primera
+        this.selected = decode.result.decoded[0];
       }
 
       if (decode.result.unsupported.length > 0) {
@@ -230,5 +236,23 @@ export class MainPageComponent {
     if (file) {
       await this.handleRamUpload(file);
     }
+  }
+
+  clearAllInstructions(): void {
+    if (this.instructions.length === 0) return;
+
+    if (
+      !confirm(
+        '⚠️ Are you sure you want to clear all instructions?\nThis action cannot be undone.'
+      )
+    ) {
+      return;
+    }
+
+    this.instructions.splice(0, this.instructions.length);
+    this.selected = undefined;
+    this.suggestions.splice(0, this.suggestions.length);
+    this.textInput.set('');
+    this.changes.detectChanges();
   }
 }
