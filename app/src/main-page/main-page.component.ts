@@ -6,6 +6,8 @@ import {
   model,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
 import {
   AutoSuggestBoxComponent,
   QuerySubmittedEvent,
@@ -59,6 +61,7 @@ type DecodeResult = DecodeSuccess | DecodeFailure;
   selector: 'app-main-page',
   standalone: true,
   imports: [
+    CommonModule,
     AutoSuggestBoxComponent,
     ContributorsComponent,
     ListViewComponent,
@@ -78,6 +81,7 @@ export class MainPageComponent {
 
   textInput = model<string>('');
   selected: DecodedInstruction | undefined = undefined;
+  showFooter = false;
 
   constructor(private readonly changes: ChangeDetectorRef) {
     afterNextRender(() => {
@@ -85,6 +89,10 @@ export class MainPageComponent {
       document.addEventListener('dragleave', onDragLeave);
       document.addEventListener('drop', this.dropHandler);
     });
+  }
+
+  toggleFooter(): void {
+    this.showFooter = !this.showFooter;
   }
 
   onInputUpdated(newValue: string) {
@@ -128,17 +136,14 @@ export class MainPageComponent {
       .map((i) => this.toHex(i))
       .join(' ');
 
-    // Check if hexInstructions is empty
     if (!hexInstructions) {
       return;
     }
 
-    // Create a Blob with the hex instructions
     const blob = new Blob([`v2.0 raw\n${hexInstructions}`], {
       type: 'text/plain',
     });
 
-    // Create a temporary anchor element to trigger the download
     const anchor = document.createElement('a');
     anchor.download = 'mips_instructions.hex';
     anchor.href = window.URL.createObjectURL(blob);
@@ -229,4 +234,23 @@ export class MainPageComponent {
       await this.handleRamUpload(file);
     }
   }
+
+  clearAllInstructions(): void {
+    if (this.instructions.length === 0) return;
+
+    if (
+      !confirm(
+        '⚠️ Are you sure you want to clear all instructions?\nThis action cannot be undone.'
+      )
+    ) {
+      return;
+    }
+
+    this.instructions.splice(0, this.instructions.length);
+    this.selected = undefined;
+    this.suggestions.splice(0, this.suggestions.length);
+    this.textInput.set('');
+    this.changes.detectChanges();
+  }
+  
 }

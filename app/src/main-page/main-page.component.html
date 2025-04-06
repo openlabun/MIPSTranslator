@@ -16,9 +16,14 @@
         [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
         (selectionChanged)="onInstructionSelected($event)"></app-list-view>
 
-      <button (click)="downloadRam()" style="grid-column: 1; grid-row: 4;" [disabled]="instructions.length === 0">Save
-        to
-        RAM</button>
+        <div style="grid-column: 1; grid-row: 4; display: flex; gap: 8px;">
+          <button (click)="downloadRam()" [disabled]="instructions.length === 0">Save to RAM</button>
+          <button (click)="clearAllInstructions()" 
+                  [disabled]="instructions.length === 0" 
+                  class="danger-button">
+            Clear All
+          </button>
+        </div>
 
       <hr vertical style="grid-column: 2; grid-row: 1 / span 4;">
 
@@ -31,7 +36,13 @@
     </section>
   </main>
 
-  <footer>
+
+  <button (click)="toggleFooter()">
+    {{ showFooter ? 'Contributors' : 'Contributors' }}
+  </button>
+  
+
+  <footer *ngIf="showFooter">
     <h3>
       This is an open-source project by
       <a href="https://github.com/proyectosingenieriauninorte/MIPSTranslator" target="_blank">
