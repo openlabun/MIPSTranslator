@@ -11,11 +11,10 @@ export class TableInstructionService {
   converter = inject(TranslatorService);
   private selectedLineTextSubject = new BehaviorSubject<string>('');
   isHexToMips = inject(FormInputManagerService).isHexToMips;
-  // Esto es el observable al que otros componentes pueden suscribirse
   selectedLineText$ = this.selectedLineTextSubject.asObservable();
   selectedLineText = '';
-  // Método para actualizar el valor
   updateSelectedLineText(newText: string): void {
+    console.log("🔵 updateSelectedLineText ejecutado con:", newText);
     this.selectedLineTextSubject.next(newText);
   }
   textContent = '';
@@ -63,6 +62,7 @@ export class TableInstructionService {
   explainInstruction() {
     
     this.selectedLineText$.subscribe((text) => {
+      console.log("🟠 Tabla de Opcode recibió:", text);
       if(!this.isHexToMips.value){
         text = this.converter.translateMIPStoHex(text);
       }
@@ -117,11 +117,11 @@ export class TableInstructionService {
       opcode: binaryInstruction.slice(0, 6),
       rs: binaryInstruction.slice(6, 11),
       rt: binaryInstruction.slice(11, 16),
-      code: binaryInstruction.slice(16, 26), // Code de 10 bits
-      funct: binaryInstruction.slice(26, 32), // Funct de 6 bits
+      code: binaryInstruction.slice(16, 26), 
+      funct: binaryInstruction.slice(26, 32), 
     };
 
-    console.log("R-Trap Instruction", result); // Verifica los valores aquí
+    console.log("R-Trap Instruction", result); 
     return result;
   }
   produceITrapInstruction(instruction: string) {
@@ -135,15 +135,15 @@ export class TableInstructionService {
       "01100": "teqi",
       "01110": "tnei"
     };
-  // Obtenemos el binario de rt y lo mapeamos
-  const rtBinary = binaryInstruction.slice(11, 16); // Obtenemos el valor binario de rt
-  const rtName = rtMap[rtBinary]; // Usamos el mapa para obtener el nombre correspondiente
+
+  const rtBinary = binaryInstruction.slice(11, 16); 
+  const rtName = rtMap[rtBinary]; 
 
     return {
       opcode: binaryInstruction.slice(0, 6),
       rs: binaryInstruction.slice(6, 11),
-      rtBinary: rtBinary,  // Devolvemos el valor binario de rt
-      rtName: rtName,      // Devolvemos el nombre mapeado
+      rtBinary: rtBinary,  
+      rtName: rtName,     
       immediate: binaryInstruction.slice(16, 32),
     };
   }
@@ -186,9 +186,8 @@ export class TableInstructionService {
     let explanation = '';
     let details: any = {};
 
-    // Assume `instruction` is a string like "add $t1, $t2, $t3"
     const parts = instruction.split(/\s+/);
-    const operation = parts[0]; // e.g., "add"
+    const operation = parts[0]; 
     console.log('operation', operation);
     switch (operation) {
       case 'add':
@@ -199,15 +198,14 @@ export class TableInstructionService {
         // R-type instructions
         details = {
           operation: operation,
-          rs: parts[2], // e.g., "$t2"
-          rt: parts[3], // e.g., "$t3"
-          rd: parts[1], // e.g., "$t1"
+          rs: parts[2], 
+          rt: parts[3], 
+          rd: parts[1], 
           shamt: '0',
           funct: this.converter.getFunctCode(operation),
         };
         explanation = `This is an R-type instruction where ${details.rd} gets the result of ${details.operation} operation between ${details.rs} and ${details.rt}.`;
         break;
-      // Add cases for I-type and J-type instructions
       case 'lw':
       case 'lb':
       case 'lbu':
@@ -215,9 +213,9 @@ export class TableInstructionService {
       case 'lhu':
         details = {
           operation: operation,
-          rt: parts[1], // e.g., "$t1"
-          offset: parts[2], // e.g., "100($t2)"
-          rs: parts[2].split('(')[1].replace(')', ''), // e.g., "$t2"
+          rt: parts[1], 
+          offset: parts[2], 
+          rs: parts[2].split('(')[1].replace(')', ''), 
         };
         explanation = `This is an I-type instruction where ${details.rt} gets the value from memory at the address ${details.offset} offset from ${details.rs}.`;
         break;
@@ -226,45 +224,45 @@ export class TableInstructionService {
       case 'sh':
         details = {
           operation: operation,
-          rt: parts[1], // e.g., "$t1"
-          offset: parts[2], // e.g., "100($t2)"
-          rs: parts[2].split('(')[1].replace(')', ''), // e.g., "$t2"
+          rt: parts[1], 
+          offset: parts[2], 
+          rs: parts[2].split('(')[1].replace(')', ''), 
         };
         explanation = `This is an I-type instruction where the value in ${details.rt} is stored in memory at the address ${details.offset} offset from ${details.rs}.`;
         break;
       case 'addi':
         details = {
           operation: operation,
-          rt: parts[1], // e.g., "$t1"
-          rs: parts[2], // e.g., "$t2"
-          immediate: parts[3], // e.g., "100"
+          rt: parts[1], 
+          rs: parts[2], 
+          immediate: parts[3], 
         };
         explanation = `This is an I-type instruction where ${details.rt} gets the result of adding the value in ${details.rs} and the immediate value ${details.immediate}.`;
         break;
       case 'beq':
         details = {
           operation: operation,
-          rs: parts[1], // e.g., "$t1"
-          rt: parts[2], // e.g., "$t2"
-          offset: parts[3], // e.g., "100"
+          rs: parts[1], 
+          rt: parts[2], 
+          offset: parts[3], 
         };
         explanation = `This is an I-type instruction where the program jumps to the target address if the values in ${details.rs} and ${details.rt} are equal.`;
         break;
       case 'bne':
         details = {
           operation: operation,
-          rs: parts[1], // e.g., "$t1"
-          rt: parts[2], // e.g., "$t2"
-          offset: parts[3], // e.g., "100"
+          rs: parts[1], 
+          rt: parts[2], 
+          offset: parts[3], 
         };
         explanation = `This is an I-type instruction where the program jumps to the target address if the values in ${details.rs} and ${details.rt} are not equal.`;
         break;
         case 'addiu':
           details = {
             operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
+            rt: parts[1], 
+            rs: parts[2], 
+            immediate: parts[3], 
           };
           explanation = `This is an I-type instruction where ${details.rt} get the result of adding the value in ${details.rs} and the immediate value ${details.immediate}, but without generating an overflow.`;
           break;
@@ -272,9 +270,9 @@ export class TableInstructionService {
         case 'andi':
           details = {
             operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
+            rt: parts[1], 
+            rs: parts[2], 
+            immediate: parts[3], 
           };
           explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise AND between the value in ${details.rs} and the immediate value ${details.immediate}.`;
           break;
@@ -282,9 +280,9 @@ export class TableInstructionService {
         case 'ori':
           details = {
             operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
+            rt: parts[1], 
+            rs: parts[2], 
+            immediate: parts[3], 
           };
           explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise OR between the value in ${details.rs} and the immediate value ${details.immediate}.`;
           break;
@@ -292,9 +290,9 @@ export class TableInstructionService {
         case 'xori':
           details = {
             operation: operation,
-            rt: parts[1], // e.g., "$t1"
-            rs: parts[2], // e.g., "$t2"
-            immediate: parts[3], // e.g., "100"
+            rt: parts[1], 
+            rs: parts[2], 
+            immediate: parts[3], 
           };
           explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise XOR between the value in ${details.rs} and the immediate value ${details.immediate}.`;
           break;

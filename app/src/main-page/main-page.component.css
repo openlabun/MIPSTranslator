@@ -1,4 +1,4 @@
-.title{
+.title {
     color: #266478;
     font-family: "Nunito", sans-serif;
     font-size: 75px;
@@ -6,35 +6,67 @@
     font-weight: 400;
     line-height: normal;
     text-align: center;
-   
 }
-.container{
+
+.container {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5rem;
     margin-top: 75px;
-
+    position: relative;
 }
 
 .input-textbox {
     display: flex;
+    position: relative;
+    margin-right: 900px;
     font-family: "Nunito", sans-serif;
-    
+}
+
+.control-stack-container {
+    position: absolute;
+    right: 100px; 
+    top: 240px; 
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    width: 450px;
+}
+
+.stack-title {
+    color: #0000FF;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+
+.control-stack {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.control-stack th,
+.control-stack td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: black;
+}
+
+.control-stack td:hover {
+    background-color: #f2f2f2;
+    cursor: pointer;
 }
 
 .translate {
     display: flex;
-    margin-left: 180px;
-    flex-direction: column; 
-    align-items: center; 
-    gap: 40px; 
-}
-
-
-.output-textbox {
-    display: flex;
-    margin-left: 180px;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    margin-left: 0; 
 }
 
 .save-to-ram-container {

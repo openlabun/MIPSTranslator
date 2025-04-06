@@ -8,6 +8,7 @@
     cursor: pointer;
     background-color: #7c2ae8d9;
     transition: all 0.2s ease;
+    margin-left: -650px
   }
   
   .button:active {

@@ -17,6 +17,7 @@ export class TextboxComponent {
   userInput = inject(FormInputManagerService).inputApp;
   assistantService = inject(AssistantService);
   selectedLineText = output<string>();
+
   constructor() {
     this.userInput.valueChanges.subscribe((value: string | null) => {
       if (value !== null) {
@@ -24,43 +25,34 @@ export class TextboxComponent {
       }
     });
   }
-  
+
+  clearInput(): void {
+    this.userInput.setValue('');
+  }
 
   onSelect(event: Event): void {
     const textarea = event.target as HTMLTextAreaElement;
     const text = textarea.value;
 
-    // Obtener los índices de la selección
     const selectionStart = textarea.selectionStart;
     const selectionEnd = textarea.selectionEnd;
 
-    // Dividir el texto en líneas
     const lines = text.split('\n');
-
     let charCount = 0;
 
-    // Iterar por cada línea y encontrar cuál contiene el texto seleccionado
     for (const line of lines) {
-      const lineLength = line.length + 1; // +1 por el salto de línea (\n)
+      const lineLength = line.length + 1;
 
-      if (
-        selectionStart >= charCount && 
-        selectionStart < charCount + lineLength
-      ) {
-        // Verifica si la selección está en una sola línea
+      if (selectionStart >= charCount && selectionStart < charCount + lineLength) {
         if (selectionEnd <= charCount + lineLength) {
           this.selectedLineText.emit(line);
         } else {
-          this.selectedLineText.emit(""); // Selección cruza varias líneas
+          this.selectedLineText.emit("");
         }
         break;
       }
-      
-      charCount += lineLength;
-      
-    }
-    
-  }
 
- 
+      charCount += lineLength;
+    }
+  }
 }

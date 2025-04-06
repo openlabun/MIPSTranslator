@@ -1,27 +1,53 @@
-
 <p class="title">MIPS CONVERTER</p>
+
 <section class="container">
     <div class="input-textbox">
-        <app-textbox (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 
+        <app-textbox (inputChange)="onInput($event)"></app-textbox> 
     </div>
 
-    <div class = "translate">
-        <app-switch (toggleChange)="onToggle($event)"></app-switch> 
+    <div class="translate">
         <app-translate-button (click)="onTranslate()"></app-translate-button> 
-        <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
     </div>
-
-   
 
     <div class="output-textbox">
         <app-texbox-output [outputText]="output"></app-texbox-output>
     </div>
 </section>
-<section class = "instruction-table">
-    <app-instruction-table></app-instruction-table>
-<section class ="save-ram">
+
+
+<section class="control-stack-container">
+    <h3 class="stack-title">PILA DE CONTROL</h3>
+    <table class="control-stack">
+        <thead>
+            <tr>
+                <th>INSTRUCCIONES MIPS</th>
+                <th>INSTRUCCIONES HEX</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of controlStack">
+                <td (click)="onInstructionClick(item.original)" [ngClass]="{ 'selected': selectedInstruction === item.original }">
+                    {{ item.type === 'MIPS' ? item.original : item.translated }}
+                </td>
+                <td (click)="onInstructionClick(item.original)" [ngClass]="{ 'selected': selectedInstruction === item.original }">
+                    {{ item.type === 'HEX' ? item.original : item.translated }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+<section class="instruction-table" *ngIf="selectedInstruction">
+    <app-instruction-table [instruction]="selectedInstruction"></app-instruction-table>
+</section>
+
+
+<section class="save-ram">
     <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
 </section>
+
+
 
 
     

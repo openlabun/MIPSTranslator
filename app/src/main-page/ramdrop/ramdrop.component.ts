@@ -40,7 +40,8 @@ export class RamdropComponent {
       reader.onload = (event) => {
         const fileContent = event.target?.result as string;
 
-        const lines = fileContent.trim().split('\n');
+        const lines = fileContent.trim().split('\n').filter(line => line.trim() !== '');
+
 
         if (lines.length < 2) {
           console.error("Invalid file format. Expected at least two lines.");
@@ -52,14 +53,21 @@ export class RamdropComponent {
 
         let translatedInstructions = '';
         let originalInstructions = '';
-
+        
         instructionsArray.forEach(instruction => {
-          const translated = this.translator.translateInstructionToMIPS(instruction.trim());
-          translatedInstructions += `${translated}\n`;
-          originalInstructions += `${instruction.trim()}\n`;
+          const trimmed = instruction.trim();
+          const translated = this.translator.translateInstructionToMIPS(trimmed);
+        
+          // Validar si la instrucción es válida
+          if (!translated.includes("Unsupported") && !translated.includes("Unknown")) {
+            translatedInstructions += `${translated}\n`;
+            originalInstructions += `${trimmed}\n`;
+          }
         });
+        
         console.log([originalInstructions, translatedInstructions]);
         resolve([originalInstructions, translatedInstructions]);
+        
       };
 
       reader.onerror = (error) => {
