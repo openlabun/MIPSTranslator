@@ -1,25 +1,25 @@
 @if (status === 'valid') {
-@let inst = instruction()!;
-@let structure = structureEntries(inst);
+  <h2>{{ title(instruction()) }}</h2>
 
-<h2>{{ title(inst) }}</h2>
-<div class="instruction-structure">
-  @for (part of structure; track part.name) {
-  @let range = part.bitRange;
-  @let span = getRangeSpan(range);
-
-  <div [style.gridColumn]="span">
-    {{ part.name }}
-    <p secondary>{{ toBinary(part.value, range.size) }}</p>
+  <div class="instruction-structure">
+    @for (part of structureEntries(instruction()); track part.name) {
+      <div [style.gridColumn]="getRangeSpan(part.bitRange)">
+        {{ part.name }}
+        <p class="secondary">{{ toBinary(part.value, part.bitRange.size) }}</p>
+      </div>
+      <p
+        class="secondary"
+        [style.gridRow]="2"
+        [style.gridColumn]="getRangeSpan(part.bitRange)"
+      >
+        {{ part.bitRange.size }} bits
+      </p>
+    }
   </div>
-  <p secondary [style.gridRow]="2" [style.gridColumn]="span">
-    {{ range.size }} bits
-  </p>
-  }
-</div>
-
-} @else if (status === 'unset') {
-<h2>Pick an instruction...</h2>
 } @else {
-<h2>The picked instruction is not valid.</h2>
+  @if (status === 'unset') {
+    <h2>Pick an instruction...</h2>
+  } @else {
+    <h2>The picked instruction is not valid.</h2>
+  }
 }

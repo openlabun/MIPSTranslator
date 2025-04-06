@@ -1,36 +1,60 @@
 <ng-template #instructionTemplate let-item>
-  {{ toAsm(item) }}
-  <p secondary>0x{{ toHex(item) }}</p>
+  <div style="display: flex; flex-direction: column;">
+    <span>{{ toAsm(item) }}</span>
+    <span style="color: gray; font-size: smaller;">0x{{ toHex(item) }}</span>
+  </div>
 </ng-template>
 
 <section class="root-panel">
   <main>
     <h1>MIPS CONVERTER</h1>
     <section class="content-panel">
-      <app-auto-suggest-box [(text)]="textInput" [suggestions]="suggestions" (querySubmitted)="onInputSubmitted($event)"
-        (textChange)="onInputUpdated($event)"></app-auto-suggest-box>
+      <!-- Caja de sugerencias -->
+      <app-auto-suggest-box
+        [(text)]="textInput"
+        [suggestions]="suggestions"
+        (querySubmitted)="onInputSubmitted($event)"
+        (textChange)="onInputUpdated($event)">
+      </app-auto-suggest-box>
 
-      <hr style="grid-column: 1; grid-row: 2;">
+      <!-- Separador -->
+      <hr style="grid-column: 1; grid-row: 2;" />
 
-      <app-list-view style="grid-column: 1; grid-row: 3;" [singleSelectionFollowsFocus]="false"
-        [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
-        (selectionChanged)="onInstructionSelected($event)"></app-list-view>
+      <!-- Lista de instrucciones -->
+      <app-list-view
+        style="grid-column: 1; grid-row: 3;"
+        [singleSelectionFollowsFocus]="false"
+        [itemsSource]="instructions"
+        [dataTemplate]="instructionTemplate"
+        (selectionChanged)="onInstructionSelected($event)">
+      </app-list-view>
 
-      <button (click)="downloadRam()" style="grid-column: 1; grid-row: 4;" [disabled]="instructions.length === 0">Save
-        to
-        RAM</button>
+      <!-- Botón guardar RAM -->
+      <button
+        (click)="downloadRam()"
+        style="grid-column: 1; grid-row: 4;"
+        [disabled]="instructions.length === 0">
+        Save to RAM
+      </button>
 
-      <hr vertical style="grid-column: 2; grid-row: 1 / span 4;">
+      <!-- Separador vertical -->
+      <hr vertical style="grid-column: 2; grid-row: 1 / span 4;" />
 
-      <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 3;"></app-mips-detail>
+      <!-- Detalles de la instrucción seleccionada -->
+      <app-mips-detail
+        [instruction]="selected"
+        style="grid-column: 3; grid-row: 1 / span 3;">
+      </app-mips-detail>
 
-      <input #fileInput type="file" (change)="onRamUpload($event)" style="visibility: hidden;">
+      <!-- Subir archivo -->
+      <input #fileInput type="file" (change)="onRamUpload($event)" style="visibility: hidden;" />
       <button style="grid-column: 3; grid-row: 4;" (click)="fileInput.click()">
         Load RAM (you can also drop it anywhere on the page)
       </button>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
     <h3>
       This is an open-source project by
@@ -38,9 +62,7 @@
         Proyectos Ingenieria Uninorte
       </a>
     </h3>
-
-    <hr>
-
+    <hr />
     <app-contributors></app-contributors>
   </footer>
 </section>

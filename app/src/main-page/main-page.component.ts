@@ -68,6 +68,8 @@ type DecodeResult = DecodeSuccess | DecodeFailure;
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],
 })
+// ... todo igual hasta la clase
+
 export class MainPageComponent {
   private readonly assistant = inject(AssistantService);
   private readonly translator = inject(TranslatorService);
@@ -106,6 +108,7 @@ export class MainPageComponent {
     if (parsed.stage === 'complete') {
       this.textInput.set('');
       this.instructions.push(parsed.instruction);
+      this.selected = parsed.instruction; // auto-seleccionamos al agregar
       return;
     }
     alert('Invalid input');
@@ -128,17 +131,12 @@ export class MainPageComponent {
       .map((i) => this.toHex(i))
       .join(' ');
 
-    // Check if hexInstructions is empty
-    if (!hexInstructions) {
-      return;
-    }
+    if (!hexInstructions) return;
 
-    // Create a Blob with the hex instructions
     const blob = new Blob([`v2.0 raw\n${hexInstructions}`], {
       type: 'text/plain',
     });
 
-    // Create a temporary anchor element to trigger the download
     const anchor = document.createElement('a');
     anchor.download = 'mips_instructions.hex';
     anchor.href = window.URL.createObjectURL(blob);
@@ -196,6 +194,10 @@ export class MainPageComponent {
     if (decode.success) {
       this.instructions.splice(0, this.instructions.length);
       this.instructions.push(...decode.result.decoded);
+
+      if (decode.result.decoded.length > 0) {
+        this.selected = decode.result.decoded[0]; // seleccionamos la primera
+      }
 
       if (decode.result.unsupported.length > 0) {
         alert(
