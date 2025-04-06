@@ -15,7 +15,6 @@ import {
   RegisterInstruction,
 } from '../Shared/lib/mips/instruction';
 import { KnownInstructionOpcode } from '../Shared/lib/mips/op';
-import { ListViewComponent } from '../list-view/list-view.component';
 
 type InputStatus = 'unset' | 'valid' | 'invalid';
 
@@ -38,7 +37,7 @@ function range(start: number, size: number): BitRange {
 @Component({
   selector: 'app-mips-detail',
   standalone: true,
-  imports: [ListViewComponent],
+  imports: [],
   templateUrl: './mips-detail.component.html',
   styleUrl: './mips-detail.component.css',
 })
@@ -48,9 +47,7 @@ export class MipsDetailComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const change = changes['instruction'];
-    if (!change) {
-      return;
-    }
+    if (!change) return;
 
     const inst = change.currentValue as DecodedInstruction;
     if (!inst) {
@@ -65,28 +62,20 @@ export class MipsDetailComponent implements OnChanges {
     }
   }
 
-  // Convenience methods to display information
   title(inst: DecodedInstruction): string {
     const op = inst.op;
     const str = KnownInstructionOpcode[op];
-
     if (op === KnownInstructionOpcode.REG) {
       return `${FunctionCode[inst.funct]} (${str})`;
     }
     return `${str} (${isImm(inst) ? 'IMM' : 'JUMP'})`;
   }
 
-  private static readonly regKeys: ValidArgument<'reg'>[] = [
-    'rs',
-    'rt',
-    'rd',
-    'shamt',
-  ];
+  private static readonly regKeys: ValidArgument<'reg'>[] = ['rs', 'rt', 'rd', 'shamt'];
 
-  private static getRegStructure(inst: RegisterInstruction) {
+  private static getRegStructure(inst: RegisterInstruction): PartInformation[] {
     const args = getRequiredFunctArguments(inst.funct);
     let start = 6;
-
     const kvps: PartInformation[] = [
       { name: 'op', required: true, bitRange: range(0, 6), value: inst.op },
     ];
@@ -107,15 +96,15 @@ export class MipsDetailComponent implements OnChanges {
       bitRange: range(start, 6),
       value: inst.funct,
     });
+
     return kvps;
   }
 
   private static readonly immKeys: ValidArgument<'imm'>[] = ['rs', 'rt', 'imm'];
 
-  private static getImmStructure(inst: ImmediateInstruction) {
+  private static getImmStructure(inst: ImmediateInstruction): PartInformation[] {
     const args = getRequiredImmArguments(inst.op);
     let start = 6;
-
     const kvps: PartInformation[] = [
       { name: 'op', required: true, bitRange: range(0, 6), value: inst.op },
     ];
@@ -130,6 +119,7 @@ export class MipsDetailComponent implements OnChanges {
       });
       start += size;
     }
+
     return kvps;
   }
 
@@ -140,7 +130,7 @@ export class MipsDetailComponent implements OnChanges {
     ];
   }
 
-  structureEntries(inst: DecodedInstruction) {
+  structureEntries(inst: DecodedInstruction): PartInformation[] {
     if (isReg(inst)) {
       return MipsDetailComponent.getRegStructure(inst);
     } else if (isImm(inst)) {
@@ -152,11 +142,15 @@ export class MipsDetailComponent implements OnChanges {
     throw new TypeError('The provided instruction is not valid');
   }
 
-  getRangeSpan(range: BitRange) {
+  getRangeSpan(range: BitRange): string {
     return `${range.start + 1} / span ${range.size}`;
   }
 
-  toBinary(num: number, size: number) {
+  toBinary(num: number, size: number): string {
     return num.toString(2).padStart(size, '0');
+  }
+
+  trackByPart(index: number, item: PartInformation): string {
+    return item.name;
   }
 }

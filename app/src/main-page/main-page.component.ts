@@ -26,9 +26,7 @@ function onDragEnter(e: DragEvent) {
   e.preventDefault();
   const dt = e.dataTransfer;
 
-  if (!dt) {
-    return;
-  }
+  if (!dt) return;
 
   if (dt.items.length === 1 && dt.items[0].kind === 'file') {
     dt.dropEffect = 'copy';
@@ -114,8 +112,10 @@ export class MainPageComponent {
     if (parsed.stage === 'complete') {
       this.textInput.set('');
       this.instructions.push(parsed.instruction);
+      this.selected = parsed.instruction;
       return;
     }
+
     alert('Invalid input');
   }
 
@@ -136,9 +136,7 @@ export class MainPageComponent {
       .map((i) => this.toHex(i))
       .join(' ');
 
-    if (!hexInstructions) {
-      return;
-    }
+    if (!hexInstructions) return;
 
     const blob = new Blob([`v2.0 raw\n${hexInstructions}`], {
       type: 'text/plain',
@@ -181,6 +179,7 @@ export class MainPageComponent {
             unsupported.push(inst);
           }
         }
+
         resolve({ success: true, result: { decoded, unsupported } });
       };
 
@@ -201,6 +200,10 @@ export class MainPageComponent {
     if (decode.success) {
       this.instructions.splice(0, this.instructions.length);
       this.instructions.push(...decode.result.decoded);
+
+      if (decode.result.decoded.length > 0) {
+        this.selected = decode.result.decoded[0];
+      }
 
       if (decode.result.unsupported.length > 0) {
         alert(
@@ -252,5 +255,4 @@ export class MainPageComponent {
     this.textInput.set('');
     this.changes.detectChanges();
   }
-  
 }
