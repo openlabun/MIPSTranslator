@@ -111,3 +111,15 @@
         flex-direction: column; /* Cambia a fila en pantallas móviles */
     }
 }
+.container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 60px;
+    flex-direction: row;
+}
+
+.instruction-menu-container {
+    margin-top: 20px;
+}

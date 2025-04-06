@@ -10,6 +10,7 @@ import { TranslatorService } from '../Shared/Services/Translator/translator.serv
 import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
 import { InstructionTableComponent } from './instruction-table/instruction-table.component';
 import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
+import { InstructionMenuComponent } from '../../instruction-menu/instruction-menu.component';
 
 interface Translation {
   mips: string;
@@ -27,7 +28,8 @@ interface Translation {
     TexboxOutputComponent,
     RamdropComponent,
     SaveRamButtonComponent,
-    InstructionTableComponent
+    InstructionTableComponent,
+    InstructionMenuComponent
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'], 
@@ -138,5 +140,41 @@ export class MainPageComponent {
     } else {
       this.isValidInstruction = false;
     }
+  }
+
+  // Método para Angular *ngFor en la plantilla HTML del menú
+  objectKeys = Object.keys;
+
+  onInstructionMenuSelect(instruction: string): void {
+    // Agrega "x1, x2, x3" como valores de ejemplo para los registros
+    let formattedInstruction = '';
+    
+    // Formatear la instrucción según su tipo
+    if (['add', 'sub', 'and', 'or', 'xor', 'sll', 'srl', 'sra', 'slt', 'sltu'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, x2, x3`;
+    } else if (['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, x2, 10`;
+    } else if (['slli', 'srli', 'srai'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, x2, 2`;
+    } else if (['lb', 'lh', 'lw', 'lbu', 'lhu'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, 0(x2)`;
+    } else if (['sb', 'sh', 'sw'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, 0(x2)`;
+    } else if (['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, x2, 8`;
+    } else if (instruction === 'jal') {
+      formattedInstruction = `${instruction} x1, 16`;
+    } else if (instruction === 'jalr') {
+      formattedInstruction = `${instruction} x1, 0(x2)`;
+    } else if (['lui', 'auipc'].includes(instruction)) {
+      formattedInstruction = `${instruction} x1, 1024`;
+    } else {
+      formattedInstruction = instruction;
+    }
+    
+    // Establecer el valor en el input
+    this.inputText = formattedInstruction;
+    // Ejecutar cualquier otra lógica necesaria después de seleccionar una instrucción
+    this.detectInstructionType(formattedInstruction);
   }
 }

@@ -1,5 +1,10 @@
 <p class="title">MIPS CONVERTER</p>
 <section class="container">
+     <!-- Menú de instrucciones RISC-V -->
+     <div class="instruction-menu-container">
+        <app-instruction-menu (instructionSelected)="onInstructionMenuSelect($event)"></app-instruction-menu>
+    </div>
+
     <div class="input-container">
         <div class="input-textbox">
             <app-textbox (keyup.enter)="onTranslate()" (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 

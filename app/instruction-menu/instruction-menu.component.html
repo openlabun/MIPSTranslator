@@ -1,0 +1,19 @@
+<div class="instruction-menu">
+    <h3 class="menu-title">RISC-V RV32I</h3>
+    
+    <ng-container *ngFor="let category of objectKeys(instructionCategories)">
+      <details class="instruction-category">
+        <summary class="category-summary">{{ category }}</summary>
+        <div class="instructions-list">
+          <ng-container *ngFor="let inst of instructionCategories[category]">
+            <button 
+              class="instruction-button" 
+              [title]="getDescription(inst)"
+              (click)="selectInstruction(inst)">
+              {{ inst }}
+            </button>
+          </ng-container>
+        </div>
+      </details>
+    </ng-container>
+  </div>
