@@ -29,22 +29,3 @@ input {
   position: absolute;
   width: 100%;
 }
-button {
-  margin-top: 8px;
-  padding: 6px 12px;
-  font-family: monospace, monospace;
-  font-size: large;
-  background: var(--secondary-background);
-  border: 2px solid var(--accent);
-  color: var(--accent);
-  border-radius: 6px;
-  cursor: pointer;
-  width: 100%;
-  box-sizing: border-box;
-  transition: background 0.2s, color 0.2s;
-}
-
-button:hover {
-  background: var(--accent);
-  color: var(--secondary-background);
-}

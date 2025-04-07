@@ -99,14 +99,14 @@ export class MainPageComponent {
     }
   }
 
-  onInputSubmitted(e: QuerySubmittedEvent) {
-    if (e.chosenSuggestion) {
+  private submitInput(text: string, suggestion?: string) {
+    if (suggestion) {
       this.suggestions.splice(0, this.suggestions.length);
-      this.textInput.set(e.chosenSuggestion);
+      this.textInput.set(suggestion);
       return;
     }
 
-    const parsed = this.translator.tryParse(e.queryText);
+    const parsed = this.translator.tryParse(text);
 
     if (parsed.stage === 'complete') {
       this.textInput.set('');
@@ -116,6 +116,14 @@ export class MainPageComponent {
     }
 
     alert('Invalid input');
+  }
+
+  onInputSubmitted(e: QuerySubmittedEvent) {
+    this.submitInput(e.queryText, e.chosenSuggestion);
+  }
+
+  onAddClick() {
+    this.submitInput(this.textInput(), undefined);
   }
 
   onInstructionSelected(args: SelectionChangedEvent) {
@@ -252,6 +260,5 @@ export class MainPageComponent {
     this.selected = undefined;
     this.suggestions.splice(0, this.suggestions.length);
     this.textInput.set('');
-    this.changes.detectChanges();
   }
 }

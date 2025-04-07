@@ -18,7 +18,7 @@ main {
   display: grid;
   gap: 4px;
   grid-template-columns: minmax(0, 1fr) 1px minmax(0, 2fr);
-  grid-template-rows: auto 1px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto 1px minmax(0, 1fr) auto;
 }
 
 h1 {
@@ -37,6 +37,22 @@ button {
   line-height: 1.15;
   margin: 0;
   resize: none;
+}
+
+button:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--secondary-background);
+}
+
+.danger-button:not(:disabled) {
+  background: var(--secondary-background);
+  border: 2px solid #e74c3c;
+  color: #e74c3c;
+}
+
+.danger-button:hover:not(:disabled) {
+  background: #e74c3c;
+  color: white;
 }
 
 textarea {
@@ -70,28 +86,9 @@ footer {
   text-align: center;
 }
 
-.danger-button {
-  background: var(--secondary-background);
-  border: 2px solid #e74c3c;
-  color: #e74c3c;
-}
 
-.danger-button:hover:not(:disabled) {
-  background: #e74c3c;
-  color: white;
-}
-
-.danger-button:disabled {
-  border-color: var(--disabled-color, #95a5a6);
-  color: var(--disabled-color, #95a5a6);
-}
 
 footer {
   transition: opacity 0.3s ease-in-out;
   opacity: 1;
-}
-
-footer.ng-leave-active,
-footer.ng-enter {
-  opacity: 0;
 }

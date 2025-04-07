@@ -13,18 +13,19 @@
       <app-auto-suggest-box [(text)]="textInput" [suggestions]="suggestions" (querySubmitted)="onInputSubmitted($event)"
         (textChange)="onInputUpdated($event)">
       </app-auto-suggest-box>
+      <button style="grid-column: 1; grid-row: 2;" (click)="onAddClick()">Añadir</button>
 
       <!-- Separador -->
-      <hr style="grid-column: 1; grid-row: 2;">
+      <hr style="grid-column: 1; grid-row: 3;">
 
       <!-- Lista de instrucciones -->
-      <app-list-view style="grid-column: 1; grid-row: 3;" [singleSelectionFollowsFocus]="false"
+      <app-list-view style="grid-column: 1; grid-row: 4;" [singleSelectionFollowsFocus]="false"
         [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
         (selectionChanged)="onInstructionSelected($event)">
       </app-list-view>
 
       <!-- Botones Save to RAM y Clear All -->
-      <div style="grid-column: 1; grid-row: 4; display: flex; gap: 8px;">
+      <div style="grid-column: 1; grid-row: 5; display: grid; gap: 8px; grid-template-columns: 1fr 1fr;">
         <button (click)="downloadRam()" [disabled]="instructions.length === 0">
           Save to RAM
         </button>
@@ -34,15 +35,15 @@
       </div>
 
       <!-- Separador vertical -->
-      <hr vertical style="grid-column: 2; grid-row: 1 / span 4;">
+      <hr vertical style="grid-column: 2; grid-row: 1 / span 5;">
 
       <!-- Detalles de la instrucción seleccionada -->
-      <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 3;">
+      <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 4;">
       </app-mips-detail>
 
       <!-- Subir archivo -->
       <input #fileInput type="file" (change)="onRamUpload($event)" style="visibility: hidden;">
-      <button style="grid-column: 3; grid-row: 4;" (click)="fileInput.click()">
+      <button style="grid-column: 3; grid-row: 5;" (click)="fileInput.click()">
         Load RAM (you can also drop it anywhere on the page)
       </button>
     </section>
@@ -60,7 +61,9 @@
         Proyectos Ingenieria Uninorte
       </a>
     </h3>
-    <hr />
+
+    <br>
+
     <app-contributors></app-contributors>
   </footer>
   }
