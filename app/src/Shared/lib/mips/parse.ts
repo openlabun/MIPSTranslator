@@ -37,15 +37,16 @@ function tryParseRegister(val: string) {
     val = val.slice(1);
   }
 
-  if (inEnum(val, Register)) {
-    return Register[val];
-  }
-
   if (
     (radix === 10 && /^[0-9]{1,2}$/.test(val)) ||
-    (radix === 16 && /^[0-9A-F]{1,2}$/.test(val))
+    (radix === 16 && /^[0-9A-Fa-f]{1,8}$/.test(val))
   ) {
-    return parseInt(val, radix);
+    const reg = parseInt(val, radix);
+    if (inEnum(reg, Register)) {
+      return reg;
+    }
+  } else if (inEnum(val, Register)) {
+    return Register[val];
   }
 
   return undefined;
@@ -108,7 +109,15 @@ function makeInstImpl<TType extends InstructionType>(
           radix = 16;
         }
 
-        inst[key] = parseInt(val, radix);
+        const parsed = parseInt(val, radix);
+        if (!isNaN(parsed)) {
+          if (parsed >= 0) {
+            inst[key] = parsed;
+          } else {
+            const bits = key === 'shamt' ? 5 : type === 'imm' ? 16 : 26;
+            inst[key] = 2 ** bits + parsed;
+          }
+        }
         break;
       }
 
@@ -201,7 +210,7 @@ export function parsePartialInstruction(
   }
 
   // If we receive hex input, parse it directly
-  if (/^[0-9A-F]{1,8}$/.test(input)) {
+  if (/^[0-9A-Fa-f]{1,8}$/.test(input)) {
     try {
       return decodeInstruction(parseInt(input, 16));
     } catch {
@@ -224,7 +233,7 @@ export function parsePartialInstruction(
   // https://stackoverflow.com/questions/23225990/what-is-the-proper-behavior-of-jalr-a0-a0
   if (first === 'jalr') {
     const inst = makeR(first, rest, ['rd', 'rs']);
-    if (inst.rd && !inst.rs) {
+    if (inst.rd && inst.rs === undefined) {
       return { ...inst, rs: inst.rd, rd: Register.ra };
     }
 

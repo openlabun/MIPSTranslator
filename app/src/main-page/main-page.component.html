@@ -1,28 +1,70 @@
+<ng-template #instructionTemplate let-item>
+  <div style="display: flex; flex-direction: column;">
+    <span>{{ toAsm(item) }}</span>
+    <span style="color: gray; font-size: smaller;">0x{{ toHex(item) }}</span>
+  </div>
+</ng-template>
 
-<p class="title">MIPS CONVERTER</p>
-<section class="container">
-    <div class="input-textbox">
-        <app-textbox (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 
-    </div>
+<section class="root-panel">
+  <main>
+    <h1>MIPS CONVERTER</h1>
+    <section class="content-panel">
+      <!-- Caja de sugerencias -->
+      <app-auto-suggest-box [(text)]="textInput" [suggestions]="suggestions" (querySubmitted)="onInputSubmitted($event)"
+        (textChange)="onInputUpdated($event)">
+      </app-auto-suggest-box>
+      <button style="grid-column: 1; grid-row: 2;" (click)="onAddClick()">Añadir</button>
 
-    <div class = "translate">
-        <app-switch (toggleChange)="onToggle($event)"></app-switch> 
-        <app-translate-button (click)="onTranslate()"></app-translate-button> 
-        <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
-    </div>
+      <!-- Separador -->
+      <hr style="grid-column: 1; grid-row: 3;">
 
-   
+      <!-- Lista de instrucciones -->
+      <app-list-view style="grid-column: 1; grid-row: 4;" [singleSelectionFollowsFocus]="false"
+        [itemsSource]="instructions" [dataTemplate]="instructionTemplate"
+        (selectionChanged)="onInstructionSelected($event)">
+      </app-list-view>
 
-    <div class="output-textbox">
-        <app-texbox-output [outputText]="output"></app-texbox-output>
-    </div>
+      <!-- Botones Save to RAM y Clear All -->
+      <div style="grid-column: 1; grid-row: 5; display: grid; gap: 8px; grid-template-columns: 1fr 1fr;">
+        <button (click)="downloadRam()" [disabled]="instructions.length === 0">
+          Save to RAM
+        </button>
+        <button (click)="clearAllInstructions()" [disabled]="instructions.length === 0" class="danger-button">
+          Clear All
+        </button>
+      </div>
+
+      <!-- Separador vertical -->
+      <hr vertical style="grid-column: 2; grid-row: 1 / span 5;">
+
+      <!-- Detalles de la instrucción seleccionada -->
+      <app-mips-detail [instruction]="selected" style="grid-column: 3; grid-row: 1 / span 4;">
+      </app-mips-detail>
+
+      <!-- Subir archivo -->
+      <input #fileInput type="file" (change)="onRamUpload($event)" style="visibility: hidden;">
+      <button style="grid-column: 3; grid-row: 5;" (click)="fileInput.click()">
+        Load RAM (you can also drop it anywhere on the page)
+      </button>
+    </section>
+  </main>
+
+  <!-- Botón para mostrar/ocultar el footer -->
+  <button (click)="toggleFooter()">Contributors</button>
+
+  <!-- Footer con colaboradores -->
+  @if (showFooter) {
+  <footer>
+    <h3>
+      This is an open-source project by
+      <a href="https://github.com/proyectosingenieriauninorte/MIPSTranslator" target="_blank">
+        Proyectos Ingenieria Uninorte
+      </a>
+    </h3>
+
+    <br>
+
+    <app-contributors></app-contributors>
+  </footer>
+  }
 </section>
-<section class = "instruction-table">
-    <app-instruction-table></app-instruction-table>
-<section class ="save-ram">
-    <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
-</section>
-
-
-    
-
