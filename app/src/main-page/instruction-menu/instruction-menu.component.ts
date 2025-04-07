@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RV32I_INSTRUCTIONS } from '../src/Shared/Constants/rv32i-instructions';
+import { RV32I_INSTRUCTIONS } from '../../Shared/Constants/rv32i-instructions';
 
 @Component({
   selector: 'app-instruction-menu',
@@ -15,14 +15,11 @@ export class InstructionMenuComponent {
   objectKeys = Object.keys;
   
   // Agregamos una firma de índice para permitir acceso mediante string
+  
   instructionCategories: { [key: string]: string[] } = {
-    'R-Type': ['add', 'sub', 'sll', 'slt', 'sltu', 'xor', 'srl', 'sra', 'or', 'and'],
-    'I-Type': ['jalr', 'lb', 'lh', 'lw', 'lbu', 'lhu', 'addi', 'slti', 'sltiu', 'xori', 'ori', 'andi', 'slli', 'srli', 'srai'],
-    'S-Type': ['sb', 'sh', 'sw'],
-    'B-Type': ['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'],
-    'U-Type': ['lui', 'auipc'],
-    'J-Type': ['jal'],
-    'System': ['fence', 'ecall', 'ebreak']
+    'R-Type': ["add","sub","and","or","jalr","jr","slt","mfhi","mflo","mthi","mtlo","teq","tge","tgeu","tlt","tltu","tne","addu","div","divu","mult","multu","nor","sll","sllv","sra","srav","srl","srlv","subu","xor",],
+    'I-Type': ["addi","addiu","andi","ori","xori","lw","sw","lb","lbu","lh","lhu","sb","sh","beq","bne","bgtz","blez",],
+    'J-Type': ['jal', 'j'],
   };
   
   // Obtener descripción para una instrucción
