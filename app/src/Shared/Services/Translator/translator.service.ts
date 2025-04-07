@@ -332,7 +332,7 @@ export class TranslatorService {
   }
 
   isValidHex(text: string): boolean {
-    return /^[0-9A-Fa-f\s]+$/.test(text);
+    return /^[0-9A-Fa-f\s]{8}$/.test(text);
   }
 
   isValidMIPS(text: string): boolean {
