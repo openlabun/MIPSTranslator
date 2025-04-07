@@ -71,7 +71,12 @@ export class MipsDetailComponent implements OnChanges {
     return `${str} (${isImm(inst) ? 'IMM' : 'JUMP'})`;
   }
 
-  private static readonly regKeys: ValidArgument<'reg'>[] = ['rs', 'rt', 'rd', 'shamt'];
+  private static readonly regKeys: ValidArgument<'reg'>[] = [
+    'rs',
+    'rt',
+    'rd',
+    'shamt',
+  ];
 
   private static getRegStructure(inst: RegisterInstruction): PartInformation[] {
     const args = getRequiredFunctArguments(inst.funct);
@@ -102,7 +107,9 @@ export class MipsDetailComponent implements OnChanges {
 
   private static readonly immKeys: ValidArgument<'imm'>[] = ['rs', 'rt', 'imm'];
 
-  private static getImmStructure(inst: ImmediateInstruction): PartInformation[] {
+  private static getImmStructure(
+    inst: ImmediateInstruction
+  ): PartInformation[] {
     const args = getRequiredImmArguments(inst.op);
     let start = 6;
     const kvps: PartInformation[] = [
@@ -148,9 +155,5 @@ export class MipsDetailComponent implements OnChanges {
 
   toBinary(num: number, size: number): string {
     return num.toString(2).padStart(size, '0');
-  }
-
-  trackByPart(index: number, item: PartInformation): string {
-    return item.name;
   }
 }

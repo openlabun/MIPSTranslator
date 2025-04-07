@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   afterNextRender,
   ChangeDetectorRef,
@@ -6,8 +7,6 @@ import {
   model,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
 import {
   AutoSuggestBoxComponent,
   QuerySubmittedEvent,
