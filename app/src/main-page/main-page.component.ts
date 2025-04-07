@@ -1,87 +1,264 @@
-import { Component, inject } from '@angular/core';
-import { TextboxComponent } from './textbox/textbox.component';
-import { TranslateButtonComponent } from './translate-button/translate-button.component';
-import { SwitchComponent } from './switch/switch.component';
-import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
-import { RamdropComponent } from './ramdrop/ramdrop.component';
-import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
+import { CommonModule } from '@angular/common';
+import {
+  afterNextRender,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  model,
+} from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import {
+  AutoSuggestBoxComponent,
+  QuerySubmittedEvent,
+} from '../auto-suggest-box/auto-suggest-box.component';
+import { ContributorsComponent } from '../contributors/contributors.component';
+import {
+  ListViewComponent,
+  SelectionChangedEvent,
+} from '../list-view/list-view.component';
+import { MipsDetailComponent } from '../mips-detail/mips-detail.component';
+import { DecodedInstruction } from '../Shared/lib/mips/instruction';
+import { AssistantService } from '../Shared/Services/Assistant/assistant.service';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
-import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
-import { InstructionTableComponent } from './instruction-table/instruction-table.component';
-import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
 
+function onDragEnter(e: DragEvent) {
+  e.preventDefault();
+  const dt = e.dataTransfer;
+
+  if (!dt) return;
+
+  if (dt.items.length === 1 && dt.items[0].kind === 'file') {
+    dt.dropEffect = 'copy';
+    document.body.toggleAttribute('drag', true);
+  } else {
+    dt.dropEffect = 'none';
+  }
+}
+
+function onDragLeave() {
+  document.body.toggleAttribute('drag', false);
+}
+
+type DecodeSuccess = {
+  success: true;
+  result: {
+    decoded: DecodedInstruction[];
+    unsupported: string[];
+  };
+};
+
+type DecodeFailure = {
+  success: false;
+  error: string;
+};
+
+type DecodeResult = DecodeSuccess | DecodeFailure;
 
 @Component({
   selector: 'app-main-page',
   standalone: true,
   imports: [
-    TextboxComponent,
-    TranslateButtonComponent,
-    SwitchComponent,
-    TexboxOutputComponent,
-    RamdropComponent,
-    SaveRamButtonComponent,
-    InstructionTableComponent
+    CommonModule,
+    AutoSuggestBoxComponent,
+    ContributorsComponent,
+    ListViewComponent,
+    MipsDetailComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css'], 
+  styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
-  
-  inputText: string = '';
-  output: string = '';
-  parameter:string = '';
-  private translator = inject(TranslatorService);
-  private inputManager = inject(FormInputManagerService).inputApp;
-  private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
-  isHexToMIPS: boolean = false;
-  tableManager = inject(TableInstructionService);
+  private readonly assistant = inject(AssistantService);
+  private readonly translator = inject(TranslatorService);
+  private readonly dropHandler = this.onDrop.bind(this);
 
-  onTableValueChange(value: string): void {
-    this.tableManager.updateSelectedLineText(value);
-    
-  }
+  readonly instructions: DecodedInstruction[] = [];
+  readonly suggestions: string[] = [];
 
-  // Manejadores de eventos
-  onToggle(isChecked: boolean): void {
-    this.isHexToMIPS = isChecked;
-    this.inputManagerIsHexToMips.setValue(isChecked);
-    let draft = this.inputManager.value;
-    this.inputManager.setValue(this.output);
-    this.output = draft;
+  textInput = model<string>('');
+  selected: DecodedInstruction | undefined = undefined;
+  showFooter = false;
 
-  }
-
-  onInput(input: string): void {
-    this.inputText = input;
-    
-  }
-  onTextFile(textFile: Promise<string[]>): void {
-    
-    textFile.then((instructions) => {
-      
-      if (this.isHexToMIPS) {
-        
-        this.inputManager.setValue(instructions[0]) ;
-        this.output = instructions[1];
-      } else {
-        this.output = instructions[0];
-        this.inputManager.setValue(instructions[1]) ;
-      }
-      
+  constructor(private readonly changes: ChangeDetectorRef) {
+    afterNextRender(() => {
+      document.addEventListener('dragover', onDragEnter);
+      document.addEventListener('dragleave', onDragLeave);
+      document.addEventListener('drop', this.dropHandler);
     });
   }
-  onTranslate(): void {
-    if (this.isHexToMIPS) {
-      
-      this.output = this.translator.translateHextoMIPS(this.inputText);
-      this.parameter = this.inputText;
-    } else {
-      this.output = this.translator.translateMIPStoHex(this.inputText);
-      this.parameter = this.output
+
+  toggleFooter(): void {
+    this.showFooter = !this.showFooter;
+  }
+
+  onInputUpdated(newValue: string) {
+    this.suggestions.splice(0, this.suggestions.length);
+    if (newValue) {
+      this.suggestions.push(...this.assistant.getSuggestions(newValue));
     }
   }
-  
- 
-  
+
+  private submitInput(text: string, suggestion?: string) {
+    if (suggestion) {
+      this.suggestions.splice(0, this.suggestions.length);
+      this.textInput.set(suggestion);
+      return;
+    }
+
+    const parsed = this.translator.tryParse(text);
+
+    if (parsed.stage === 'complete') {
+      this.textInput.set('');
+      this.instructions.push(parsed.instruction);
+      this.selected = parsed.instruction;
+      return;
+    }
+
+    alert('Invalid input');
+  }
+
+  onInputSubmitted(e: QuerySubmittedEvent) {
+    this.submitInput(e.queryText, e.chosenSuggestion);
+  }
+
+  onAddClick() {
+    this.submitInput(this.textInput(), undefined);
+  }
+
+  onInstructionSelected(args: SelectionChangedEvent) {
+    this.selected = args.selectedItem as DecodedInstruction;
+  }
+
+  toAsm(instruction: DecodedInstruction) {
+    return this.translator.toAsm(instruction);
+  }
+
+  toHex(instruction: DecodedInstruction) {
+    return this.translator.toHex(instruction);
+  }
+
+  downloadRam() {
+    const hexInstructions = this.instructions
+      .map((i) => this.toHex(i))
+      .join(' ');
+
+    if (!hexInstructions) return;
+
+    const blob = new Blob([`v2.0 raw\n${hexInstructions}`], {
+      type: 'text/plain',
+    });
+
+    const anchor = document.createElement('a');
+    anchor.download = 'mips_instructions.hex';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.click();
+
+    window.URL.revokeObjectURL(anchor.href);
+  }
+
+  private decodeRam(file: File) {
+    return new Promise<DecodeResult>((resolve) => {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const fileContent = event.target?.result as string;
+        const lines = fileContent.trim().split('\n');
+
+        if (lines.length < 2) {
+          resolve({
+            success: false,
+            error: 'Invalid file format. Expected at least two lines.',
+          });
+          return;
+        }
+
+        const instructions = lines[1].trim().split(/\s+/);
+        const decoded = [];
+        const unsupported = [];
+
+        for (const inst of instructions) {
+          const parsed = this.translator.tryParse(inst);
+
+          if (parsed.stage === 'complete') {
+            decoded.push(parsed.instruction);
+          } else {
+            unsupported.push(inst);
+          }
+        }
+
+        resolve({ success: true, result: { decoded, unsupported } });
+      };
+
+      reader.onerror = () => {
+        resolve({
+          success: false,
+          error: 'Unable to read file.',
+        });
+      };
+
+      reader.readAsText(file);
+    });
+  }
+
+  private async handleRamUpload(file: File) {
+    const decode = await this.decodeRam(file);
+
+    if (decode.success) {
+      this.instructions.splice(0, this.instructions.length);
+      this.instructions.push(...decode.result.decoded);
+
+      if (decode.result.decoded.length > 0) {
+        this.selected = decode.result.decoded[0];
+      }
+
+      if (decode.result.unsupported.length > 0) {
+        alert(
+          `The following instructions couldn't be decoded: "${decode.result.unsupported.join(
+            '", "'
+          )}"`
+        );
+      }
+    } else {
+      alert(`Unable to load RAM: ${decode.error}`);
+    }
+  }
+
+  private async onDrop(e: DragEvent) {
+    e.preventDefault();
+    document.body.toggleAttribute('drag', false);
+    const item = e.dataTransfer?.items[0];
+
+    if (item?.kind === 'file') {
+      await this.handleRamUpload(item.getAsFile()!);
+      this.changes.detectChanges();
+    }
+  }
+
+  async onRamUpload(e: Event) {
+    e.preventDefault();
+    const inputEvent = e.target as HTMLInputElement;
+    const file = inputEvent.files?.item(0);
+
+    if (file) {
+      await this.handleRamUpload(file);
+    }
+  }
+
+  clearAllInstructions(): void {
+    if (this.instructions.length === 0) return;
+
+    if (
+      !confirm(
+        '⚠️ Are you sure you want to clear all instructions?\nThis action cannot be undone.'
+      )
+    ) {
+      return;
+    }
+
+    this.instructions.splice(0, this.instructions.length);
+    this.selected = undefined;
+    this.suggestions.splice(0, this.suggestions.length);
+    this.textInput.set('');
+  }
 }

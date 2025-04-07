@@ -1,0 +1,31 @@
+.root {
+  position: relative;
+}
+
+input {
+  border: 2px solid var(--divider);
+  position: relative;
+  width: 100%;
+}
+
+app-list-view,
+input {
+  background: var(--secondary-background);
+  font-family: monospace, monospace;
+  font-size: large;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.flyout:not([open=true]) {
+  visibility: hidden;
+}
+
+.flyout {
+  background: var(--secondary-background);
+  border: 2px solid var(--accent);
+  max-height: 300px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+}

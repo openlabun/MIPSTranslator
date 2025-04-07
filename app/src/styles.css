@@ -1,21 +1,115 @@
-html {
- background-color: rgb(246, 246, 248);
-color-scheme: dark;
+:root {
+  color-scheme: light dark;
+
+  --safe-area-inset-top: 0px;
+  --safe-area-inset-right: 0px;
+  --safe-area-inset-left: 0px;
+
+  @supports (top: constant(safe-area-inset-top)) {
+    --safe-area-inset-top: constant(safe-area-inset-top);
+    --safe-area-inset-right: constant(safe-area-inset-right);
+    --safe-area-inset-left: constant(safe-area-inset-left);
   }
 
-  /* If your title uses a specific color, e.g. #3c3c3c, use that here: */
-.fixed-footer {
-  
-  
-  width: 100%;
-  color: #266478;
-  background-color: #f8f9fa;
-  text-align: center;
-  padding: 10px 0;
-  z-index: 1000; /* Keep above other elements */
+  @supports (top: env(safe-area-inset-top)) {
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-right: env(safe-area-inset-right);
+    --safe-area-inset-left: env(safe-area-inset-left);
+  }
 }
 
-/* Add bottom padding so the footer doesn’t overlap content */
-.page-content {
-  padding-bottom: 60px; /* Adjust if your footer is taller */
+@media (prefers-color-scheme: light) {
+  :root {
+    --accent-rgb: 38, 100, 120;
+
+    --accent: rgb(var(--accent-rgb));
+    --on-accent: rgb(255, 255, 255);
+    --divider: rgba(38, 100, 120, 0.4);
+    --primary-background: rgb(255, 255, 255);
+    --secondary-background: rgb(240, 240, 240);
+    --primary-foreground: rgba(0, 0, 0, 0.87);
+    --secondary-foreground: rgba(0, 0, 0, 0.6);
+
+    --focus: rgb(0, 0, 0);
+
+    --list-hover: rgba(0, 0, 0, 0.1);
+    --list-press: rgba(0, 0, 0, 0.2);
+    --list-selection: rgba(var(--accent-rgb), 0.6);
+    --list-selection-hover: rgba(var(--accent-rgb), 0.8);
+    --list-selection-press: rgba(var(--accent-rgb), 0.9);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent-rgb: 147, 200, 209;
+
+    --accent: rgb(var(--accent-rgb));
+    --on-accent: rgb(0, 0, 0);
+    --divider: rgba(var(--accent-rgb), 0.4);
+    --primary-background: rgb(29, 29, 29);
+    --secondary-background: rgb(0, 0, 0);
+    --primary-foreground: rgba(255, 255, 255, 0.87);
+    --secondary-foreground: rgba(255, 255, 255, 0.6);
+
+    --focus: rgb(255, 255, 255);
+
+    --list-hover: rgba(255, 255, 255, 0.1);
+    --list-press: rgba(255, 255, 255, 0.2);
+    --list-selection: rgba(var(--accent-rgb), 0.6);
+    --list-selection-hover: rgba(var(--accent-rgb), 0.8);
+    --list-selection-press: rgba(var(--accent-rgb), 0.9);
+  }
+}
+
+html {
+  background: var(--primary-background);
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  color: var(--primary-foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+
+body[drag] {
+  opacity: 0.4;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+hr {
+  border-width: 1px 0 0 0;
+  border-top: 1px solid var(--divider);
+  margin: 0;
+}
+
+hr[vertical] {
+  border-width: 0 1px 0 0;
+  border-right: 1px solid var(--divider);
+  height: calc(100% - 4px);
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+p[secondary] {
+  color: var(--secondary-foreground);
+  font-size: smaller;
+  margin: 0;
 }

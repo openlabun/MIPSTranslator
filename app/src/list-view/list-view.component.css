@@ -1,0 +1,62 @@
+:host {
+  --list-view-padding: 0;
+
+  --list-view-item-background: transparent;
+  --list-view-item-foreground: var(--primary-foreground);
+  --list-view-item-padding: 4px;
+
+  --list-view-item-focus-border-color: var(--focus);
+  --list-view-item-focus-border-thickness: 2px;
+
+  --list-view-item-hover-background: var(--list-hover);
+  --list-view-item-hover-foreground: var(--primary-foreground);
+  --list-view-item-pressed-background: var(--list-press);
+
+  --list-view-item-selected-background: var(--list-selection);
+  --list-view-item-selected-foreground: var(--primary-foreground);
+  --list-view-item-selected-hover-background: var(--list-selection-hover);
+  --list-view-item-selected-pressed-background: var(--list-selection-press);
+}
+
+[role="listbox"] {
+  height: 100%;
+  padding: var(--list-view-padding);
+}
+
+[role="listbox"]:focus {
+  outline: none;
+}
+
+[role="listbox"]>[role="option"] {
+  background: var(--list-view-item-background);
+  color: var(--list-view-item-foreground);
+  margin: 0;
+  padding: var(--list-view-item-padding);
+}
+
+[role="listbox"]:focus>[role="option"].focused {
+  outline: var(--list-view-item-focus-border-thickness) solid var(--list-view-item-focus-border-color);
+  outline-offset: calc(-1 * var(--list-view-item-focus-border-thickness));
+}
+
+[role="listbox"]>[role="option"]:hover {
+  background: var(--list-view-item-hover-background);
+  color: var(--list-view-item-hover-foreground);
+}
+
+[role="listbox"]>[role="option"]:active {
+  background: var(--list-view-item-pressed-background);
+}
+
+[role="listbox"]>[role="option"][aria-selected=true] {
+  background: var(--list-view-item-selected-background);
+  color: var(--list-view-item-selected-foreground);
+}
+
+[role="listbox"]>[role="option"][aria-selected=true]:hover {
+  background: var(--list-view-item-selected-hover-background);
+}
+
+[role="listbox"]>[role="option"][aria-selected=true]:active {
+  background: var(--list-view-item-selected-pressed-background);
+}
