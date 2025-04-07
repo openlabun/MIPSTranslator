@@ -1,13 +1,17 @@
 <p class="title">MIPS CONVERTER</p>
 <section class="container">
-     <!-- Menú de instrucciones RISC-V -->
-     <div class="instruction-menu-container">
+    <div class="instruction-menu-container">
         <app-instruction-menu (instructionSelected)="onInstructionMenuSelect($event)"></app-instruction-menu>
     </div>
 
     <div class="input-container">
         <div class="input-textbox">
-            <app-textbox (keyup.enter)="onTranslate()" (inputChange)="onInput($event)" (selectedLineText)="onTableValueChange($event)"></app-textbox> 
+            <app-textbox 
+                [inputText]="inputText"
+                (keyup.enter)="onTranslate()" 
+                (inputChange)="onInput($event)" 
+                (selectedLineText)="onTableValueChange($event)">
+            </app-textbox> 
         </div>
         <div class = "translate">
             <!-- <app-switch (toggleChange)="onToggle($event)"></app-switch>  -->
@@ -15,29 +19,16 @@
             <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
         </div>
     </div>
-        <!-- <div class="output-textbox">
-        <app-texbox-output [outputText]="output"></app-texbox-output>
-    </div> -->
-    <section class="control-stack-container">
-        <table class="control-stack">
-            <thead>
-                <tr>
-                    <th>MIPS</th>
-                    <th>HEX</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let trans of translations">
-                    <td (click)="onInstructionClick(trans.mips)">{{ trans.mips }}</td>
-                    <td (click)="onInstructionClick(trans.mips)">{{ trans.hex }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+
+    <app-control-stack 
+        [translations]="translations"
+        (instructionClick)="onInstructionClick($event)">
+    </app-control-stack>
 </section>
-<section class = "instruction-table">
+<section class="instruction-table">
     <app-instruction-table></app-instruction-table>
-<section class ="save-ram">
+</section>
+<section class="save-ram">
     <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
 </section>
 

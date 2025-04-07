@@ -10,7 +10,8 @@ import { TranslatorService } from '../Shared/Services/Translator/translator.serv
 import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
 import { InstructionTableComponent } from './instruction-table/instruction-table.component';
 import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
-import { InstructionMenuComponent } from '../../instruction-menu/instruction-menu.component';
+import { InstructionMenuComponent } from './instruction-menu/instruction-menu.component';
+import { ControlStackComponent } from './control-stack/control-stack.component';
 
 interface Translation {
   mips: string;
@@ -29,7 +30,8 @@ interface Translation {
     RamdropComponent,
     SaveRamButtonComponent,
     InstructionTableComponent,
-    InstructionMenuComponent
+    InstructionMenuComponent,
+    ControlStackComponent
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'], 
@@ -63,6 +65,19 @@ export class MainPageComponent {
 
   }
 
+  /**
+   * Este método permite agregar una instrucción a la tabla de instrucciones desde el código.
+    * 
+    * @param instruction - La instrucción que se desea agregar a la tabla. Puede ser una instrucción en formato MIPS o HEX.
+    * 
+    * Funcionamiento:
+    * 1. Establece el valor de la instrucción en el campo de entrada (`inputText`).
+    * 2. Detecta automáticamente el tipo de instrucción (MIPS o HEX) utilizando el método `detectInstructionType`.
+    * 3. Si la instrucción es diferente a la última seleccionada, actualiza la instrucción seleccionada y
+    *    llama al método `onTableValueChange` para agregarla a la tabla.
+    * 
+    * Este método es útil para programáticamente insertar instrucciones en la tabla sin necesidad de interacción directa del usuario.
+    */
   onInstructionClick(instruction: string){
     this.inputText=instruction
     this.detectInstructionType(instruction);
@@ -86,6 +101,7 @@ export class MainPageComponent {
     textFile.then((instructions) => {
       const HEXs = instructions[0].split('\n');
       const MIPSs = instructions[1].split('\n');
+      this.parameter = '';
 
       for (let i = 0; i < HEXs.length; i++) {
         const HEX = HEXs[i];
@@ -142,32 +158,29 @@ export class MainPageComponent {
     }
   }
 
-  // Método para Angular *ngFor en la plantilla HTML del menú
-  objectKeys = Object.keys;
-
   onInstructionMenuSelect(instruction: string): void {
     // Agrega "x1, x2, x3" como valores de ejemplo para los registros
     let formattedInstruction = '';
     
     // Formatear la instrucción según su tipo
     if (['add', 'sub', 'and', 'or', 'xor', 'sll', 'srl', 'sra', 'slt', 'sltu'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, x2, x3`;
+      formattedInstruction = `${instruction} $t1 $t2 $t3`;
     } else if (['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, x2, 10`;
+      formattedInstruction = `${instruction} $t1 $t2 10`;
     } else if (['slli', 'srli', 'srai'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, x2, 2`;
+      formattedInstruction = `${instruction} $t1 $t2 2`;
     } else if (['lb', 'lh', 'lw', 'lbu', 'lhu'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, 0(x2)`;
+      formattedInstruction = `${instruction} $t1 0($t2)`;
     } else if (['sb', 'sh', 'sw'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, 0(x2)`;
+      formattedInstruction = `${instruction} $t1 0($t2)`;
     } else if (['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, x2, 8`;
+      formattedInstruction = `${instruction} $t1 $t2 8`;
     } else if (instruction === 'jal') {
-      formattedInstruction = `${instruction} x1, 16`;
+      formattedInstruction = `${instruction} $t1 16`;
     } else if (instruction === 'jalr') {
-      formattedInstruction = `${instruction} x1, 0(x2)`;
+      formattedInstruction = `${instruction} $t1 0($t2)`;
     } else if (['lui', 'auipc'].includes(instruction)) {
-      formattedInstruction = `${instruction} x1, 1024`;
+      formattedInstruction = `${instruction} $t1 1024`;
     } else {
       formattedInstruction = instruction;
     }
