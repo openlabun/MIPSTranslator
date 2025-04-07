@@ -1,7 +1,7 @@
 <ng-template #instructionTemplate let-item>
   <div style="display: flex; flex-direction: column;">
     <span>{{ toAsm(item) }}</span>
-    <span style="color: gray; font-size: smaller;">0x{{ toHex(item) }}</span>
+    <p secondary>0x{{ toHex(item) }}</p>
   </div>
 </ng-template>
 
