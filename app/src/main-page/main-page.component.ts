@@ -5,6 +5,7 @@ import { TranslateButtonComponent } from './translate-button/translate-button.co
 import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
 import { RamdropComponent } from './ramdrop/ramdrop.component';
 import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
+import { InstruccionesComponent } from './instrucciones/instrucciones.component';
 import { InstructionTableComponent } from './instruction-table/instruction-table.component';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
 import { FormInputManagerService } from '../Shared/Services/FormInputManager/form-input-manager.service';
@@ -22,6 +23,7 @@ import { ViewChild } from '@angular/core';
     TexboxOutputComponent,
     RamdropComponent,
     InstructionTableComponent,
+    InstruccionesComponent,
     
   ],
   templateUrl: './main-page.component.html',
@@ -89,8 +91,8 @@ export class MainPageComponent {
             
         }));
         console.log("📌 Control Stack Updated:", this.controlStack);
+        this.output='';
     });
-    this.textboxComponent.clearInput();
 }
 
 onTranslate(): void {
@@ -102,8 +104,10 @@ onTranslate(): void {
 
   if (
     translatedInstruction.includes("Unknown") ||
-    translatedInstruction.includes("Unsupported")
+    translatedInstruction.includes("Unsupported") ||
+    translatedInstruction.includes("Invalid") || translatedInstruction == '00000000'
   ) {
+    this.textboxComponent.texto('Sintaxis Incorrecta')
     console.log("El formato de la instrucción es inválido");
   } else {
     const instruction = this.inputText.trim();
@@ -115,15 +119,20 @@ onTranslate(): void {
     });
 
     this.inputText = '';
-    this.textboxComponent.clearInput();
+    this.textboxComponent.texto('');
   }
 }
-
-
 
   //Verifica si el input es HEX
   private isHex(input: string): boolean {
     return /^0x[0-9A-Fa-f]+$/.test(input) || /^[0-9A-Fa-f]{8}$/.test(input);
   }
+
+  onMipsGeneradoDesdeInstrucciones(mips: string): void {
+    this.inputText = mips;
+    this.detectFormatAndToggle();
+    this.textboxComponent.texto(mips); 
+  }  
+
 }
 

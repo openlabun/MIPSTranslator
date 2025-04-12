@@ -19,8 +19,9 @@
 
 .input-textbox {
     display: flex;
-    position: relative;
-    margin-right: 900px;
+    position: absolute;
+    margin-right: 800px;
+    margin-top: 160px;
     font-family: "Nunito", sans-serif;
 }
 
@@ -71,6 +72,8 @@
 
 .save-to-ram-container {
     display: flex;
+    position: absolute;
     justify-content: center;
     align-items: center;
 }
+

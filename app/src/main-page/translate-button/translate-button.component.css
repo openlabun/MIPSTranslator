@@ -1,4 +1,12 @@
 /* From Uiverse.io by zjssun */ 
+.button-container {
+  position: absolute;
+  top: 80px; /* ajusta según necesites */
+  left: 79%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
 .button {
     position: relative;
     padding: 10px 22px;

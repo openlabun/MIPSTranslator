@@ -26,8 +26,8 @@ export class TextboxComponent {
     });
   }
 
-  clearInput(): void {
-    this.userInput.setValue('');
+  texto(word: String): void {
+    this.userInput.setValue(word);
   }
 
   onSelect(event: Event): void {

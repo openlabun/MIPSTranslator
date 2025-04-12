@@ -1,6 +1,6 @@
 table {
     font-family: 'Arial';
-    margin: 25px auto;
+    margin: 5px auto;
     border-collapse: collapse;
     border: 1px solid #eee;
     border-bottom: 2px solid #7d2ae8;
@@ -32,4 +32,9 @@ table {
         border-right: none;
       }
     }
+    
   }
+  .mips-table {
+    margin-top: 200px; 
+  }
+  

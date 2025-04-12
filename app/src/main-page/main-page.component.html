@@ -1,51 +1,56 @@
 <p class="title">MIPS CONVERTER</p>
 
 <section class="container">
-    <div class="input-textbox">
-        <app-textbox (inputChange)="onInput($event)"></app-textbox> 
-    </div>
+  <div class="input-textbox">
+    <app-textbox (inputChange)="onInput($event)"></app-textbox> 
+  </div>
 
-    <div class="translate">
-        <app-translate-button (click)="onTranslate()"></app-translate-button> 
-    </div>
+  <div class="translate">
+    <app-translate-button (click)="onTranslate()"></app-translate-button> 
+  </div>
 
-    <div class="output-textbox">
-        <app-texbox-output [outputText]="output"></app-texbox-output>
-    </div>
+  <div class="output-textbox">
+    <app-texbox-output [outputText]="output"></app-texbox-output>
+  </div>
 </section>
-
 
 <section class="control-stack-container">
-    <h3 class="stack-title">PILA DE CONTROL</h3>
-    <table class="control-stack">
-        <thead>
-            <tr>
-                <th>INSTRUCCIONES MIPS</th>
-                <th>INSTRUCCIONES HEX</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of controlStack">
-                <td (click)="onInstructionClick(item.original)" [ngClass]="{ 'selected': selectedInstruction === item.original }">
-                    {{ item.type === 'MIPS' ? item.original : item.translated }}
-                </td>
-                <td (click)="onInstructionClick(item.original)" [ngClass]="{ 'selected': selectedInstruction === item.original }">
-                    {{ item.type === 'HEX' ? item.original : item.translated }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <h3 class="stack-title">PILA DE CONTROL</h3>
+  <table class="control-stack">
+    <thead>
+      <tr>
+        <th>INSTRUCCIONES MIPS</th>
+        <th>INSTRUCCIONES HEX</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of controlStack">
+        <td (click)="onInstructionClick(item.original)" [ngClass]="{ 'selected': selectedInstruction === item.original }">
+          {{ item.type === 'MIPS' ? item.original : item.translated }}
+        </td>
+        <td (click)="onInstructionClick(item.original)" [ngClass]="{ 'selected': selectedInstruction === item.original }">
+          {{ item.type === 'HEX' ? item.original : item.translated }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </section>
-
 
 <section class="instruction-table" *ngIf="selectedInstruction">
-    <app-instruction-table [instruction]="selectedInstruction"></app-instruction-table>
+  <app-instruction-table [instruction]="selectedInstruction"></app-instruction-table>
 </section>
 
+<!-- 🔁 EVENTO DE MIPS DESDE COMPONENTE HIJO -->
+<section class="instruction-browser">
+  <app-instrucciones (mipsGenerado)="onMipsGeneradoDesdeInstrucciones($event)"></app-instrucciones>
+</section>  
 
 <section class="save-ram">
-    <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
+  <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
 </section>
+
+
+
 
 
 
