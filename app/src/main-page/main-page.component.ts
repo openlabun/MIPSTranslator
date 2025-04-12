@@ -107,6 +107,9 @@ export class MainPageComponent {
         const HEX = HEXs[i];
         const MIPS = MIPSs[i];
 
+        if (HEX === '') continue; // Ignorar líneas vacías
+        if (MIPS === '') continue; // Ignorar líneas vacías
+
         this.translations.push({
           mips: MIPS,
           hex: HEX
@@ -170,13 +173,13 @@ export class MainPageComponent {
     } else if (['slli', 'srli', 'srai'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 $t2 2`;
     } else if (['lb', 'lh', 'lw', 'lbu', 'lhu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 0($t2)`;
+      formattedInstruction = `${instruction} $t1 0x0001 $t2`;
     } else if (['sb', 'sh', 'sw'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 0($t2)`;
+      formattedInstruction = `${instruction} $t1 0x0001 $t2`;
     } else if (['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 $t2 8`;
-    } else if (instruction === 'jal') {
-      formattedInstruction = `${instruction} $t1 16`;
+    } else if (instruction === 'j') {
+      formattedInstruction = `${instruction} 16`;
     } else if (instruction === 'jalr') {
       formattedInstruction = `${instruction} $t1 0($t2)`;
     } else if (['lui', 'auipc'].includes(instruction)) {
@@ -189,5 +192,14 @@ export class MainPageComponent {
     this.inputText = formattedInstruction;
     // Ejecutar cualquier otra lógica necesaria después de seleccionar una instrucción
     this.detectInstructionType(formattedInstruction);
+  }
+
+  onDeleteInstruction(translation: Translation): void {
+    const index = this.translations.indexOf(translation);
+    if (index !== -1) {
+      this.translations.splice(index, 1);
+    }
+
+    this.parameter = this.translations.map(t => t.hex).join('\n');
   }
 }

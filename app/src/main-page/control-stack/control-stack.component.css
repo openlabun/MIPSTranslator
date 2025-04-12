@@ -4,7 +4,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 20px;
-    height: calc(11 * 40px);
+    height: calc(15 * 40px);
     overflow-y: auto;
     max-width: 440px;
     margin: 0 auto; /* Centra el contenedor en la página */

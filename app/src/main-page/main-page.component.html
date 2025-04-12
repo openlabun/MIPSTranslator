@@ -22,7 +22,8 @@
 
     <app-control-stack 
         [translations]="translations"
-        (instructionClick)="onInstructionClick($event)">
+        (instructionClick)="onInstructionClick($event)"
+        (deleteInstruction)="onDeleteInstruction($event)">
     </app-control-stack>
 </section>
 <section class="instruction-table">
