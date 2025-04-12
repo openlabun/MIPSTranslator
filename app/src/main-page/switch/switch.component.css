@@ -60,15 +60,15 @@
   }
   
   .left-label {
-    left: -90px; /* Ajusta la posición a la izquierda */
+    left: -90px; 
   }
   
   .right-label {
-    right: -90px; /* Ajusta la posición a la derecha */
-    color: #2a9d8f; /* Cambia el color si lo deseas */
+    right: -90px; 
+    color: #2a9d8f; 
   }
   
-  /* Rounded sliders */
+
   .slider.round {
     border-radius: 34px;
   }

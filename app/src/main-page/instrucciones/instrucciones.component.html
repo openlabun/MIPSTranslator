@@ -1,0 +1,38 @@
+<div class="contenedor">
+  <h2 class="titulo">Instrucciones</h2>
+
+  <div *ngFor="let tipo of tipos" class="tipo-bloque">
+    <div (click)="seleccionarTipo(tipo)" class="tipo-titulo">
+      ▶ {{ tipo }}
+    </div>
+
+    <ul *ngIf="tipoSeleccionado === tipo">
+      <li 
+        *ngFor="let instruccion of instruccionesPorTipo[tipo]" 
+        (click)="seleccionarInstruccion(instruccion)"
+        [ngClass]="{ 'instruccion-seleccionada': instruccion === instruccionSeleccionada }">
+        
+        {{ instruccion }}
+
+        <!-- Inputs visibles solo si esta instrucción es la seleccionada -->
+        <div class="inputs-operandos" *ngIf="instruccion === instruccionSeleccionada">
+          <label>
+            r1:
+            <input type="text" [(ngModel)]="valoresTemporales[instruccion].r1">
+          </label>
+          <label *ngIf="!esTipoJ(instruccion)">
+            r2:
+            <input type="text" [(ngModel)]="valoresTemporales[instruccion].r2">
+          </label>
+          <label *ngIf="!esTipoJ(instruccion)">
+            r3:
+            <input type="text" [(ngModel)]="valoresTemporales[instruccion].r3">
+          </label>
+
+          <button (click)="guardarValores()">OK</button>
+        </div>
+
+      </li>
+    </ul>
+  </div>
+</div>

@@ -3,19 +3,16 @@ html {
 color-scheme: dark;
   }
 
-  /* If your title uses a specific color, e.g. #3c3c3c, use that here: */
 .fixed-footer {
-  
   
   width: 100%;
   color: #266478;
   background-color: #f8f9fa;
   text-align: center;
   padding: 10px 0;
-  z-index: 1000; /* Keep above other elements */
+  z-index: 1000; 
 }
 
-/* Add bottom padding so the footer doesn’t overlap content */
 .page-content {
-  padding-bottom: 60px; /* Adjust if your footer is taller */
+  padding-bottom: 60px; 
 }

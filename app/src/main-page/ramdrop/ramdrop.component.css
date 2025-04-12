@@ -15,14 +15,14 @@
    }
 .drop-area {
     border: 2px dashed #2a999d;
-    border-radius: 10px;
+    border-radius: 2px;
     padding: 25px;
     background-color: transparent;
     text-align: center;
     width: 350px;
     transition: background-color 0.3s ease, border-color 0.3s ease;
     position: relative;
-    margin-top: 40px;
+    margin-top: 200px;
 }
 
 .drop-area:hover {
