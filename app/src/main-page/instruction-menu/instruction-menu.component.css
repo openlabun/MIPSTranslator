@@ -65,7 +65,7 @@
 }
 
 .category-summary {
-  background-color: #7c2ae828;
+  background-color: #5d0081;
   padding: 6px 10px;
   cursor: pointer;
   font-weight: 600;
@@ -73,7 +73,7 @@
 }
 
 .category-summary:hover {
-  background-color: #7c2ae840;
+  background-color: #773e8e;
 }
 
 .instructions-list {

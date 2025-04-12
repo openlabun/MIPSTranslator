@@ -9,6 +9,7 @@ table {
        0px 20px 20px rgba(0,0,0,0.05),
        0px 30px 20px rgba(0,0,0,0.05);
     tr {
+      
        &:hover {
         background: #2a999d1b;
         
