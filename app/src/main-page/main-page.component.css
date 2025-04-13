@@ -6,14 +6,13 @@
     font-weight: 400;
     line-height: normal;
     text-align: center;
-   
+    margin: 15px 0 10px 0;
 }
 .container{
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 60px;
+    justify-content: space-around;
+    gap: 4rem;
     flex-direction: row;
 }
 
@@ -29,7 +28,7 @@
     align-items: center; 
     gap: 15px; 
     justify-content: flex-start; /* Alineación vertical superior */
-    height: calc(11 * 40px);
+    height: calc(10 * 40px);
 }
 
 .translate {
@@ -63,5 +62,5 @@
     flex-direction: column;
     align-items: center; /* Centra horizontalmente */
     justify-content: flex-start; /* Alineación vertical superior */
-    height: max-content;
+    height: calc(10 * 40px);
 }

@@ -162,36 +162,9 @@ export class MainPageComponent {
   }
 
   onInstructionMenuSelect(instruction: string): void {
-    // Agrega "x1, x2, x3" como valores de ejemplo para los registros
-    let formattedInstruction = '';
-    
-    // Formatear la instrucción según su tipo
-    if (['add', 'sub', 'and', 'or', 'xor', 'sll', 'srl', 'sra', 'slt', 'sltu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 $t3`;
-    } else if (['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 10`;
-    } else if (['slli', 'srli', 'srai'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 2`;
-    } else if (['lb', 'lh', 'lw', 'lbu', 'lhu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 0x0001 $t2`;
-    } else if (['sb', 'sh', 'sw'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 0x0001 $t2`;
-    } else if (['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 8`;
-    } else if (instruction === 'j') {
-      formattedInstruction = `${instruction} 16`;
-    } else if (instruction === 'jalr') {
-      formattedInstruction = `${instruction} $t1 0($t2)`;
-    } else if (['lui', 'auipc'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 1024`;
-    } else {
-      formattedInstruction = instruction;
-    }
-    
-    // Establecer el valor en el input
-    this.inputText = formattedInstruction;
+    this.inputText = instruction; // Establecer el valor en el input
     // Ejecutar cualquier otra lógica necesaria después de seleccionar una instrucción
-    this.detectInstructionType(formattedInstruction);
+    this.detectInstructionType(instruction);
   }
 
   onDeleteInstruction(translation: Translation): void {
