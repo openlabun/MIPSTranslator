@@ -1,0 +1,23 @@
+.contributors-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.contributor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  gap: .25rem;
+}
+
+.contributor img {
+  width: 2.75rem;
+  border-radius: 100%;
+}
+
+.contributor p {
+  font-size: .75rem;
+}

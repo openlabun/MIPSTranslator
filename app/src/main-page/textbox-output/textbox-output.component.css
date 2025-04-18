@@ -1,12 +1,12 @@
-.textbox {
+.output-textbox {
   width: 100%;
-  min-height: 10rem;
-  flex-shrink: 0;
+  height: 10rem;
   border-radius: 1rem;
-  border: .25rem solid #4F518CBB;
+  border: 0.25rem solid #4F518CBB;
   background-color: #FFF0;
   color: #266478;
   padding: 1.2rem;
   font-size: 1.2rem;
   font-family: "Nunito", sans-serif;
+  white-space: pre-wrap;
 }

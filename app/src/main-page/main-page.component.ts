@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { TextboxComponent } from './textbox/textbox.component';
 import { TranslateButtonComponent } from './translate-button/translate-button.component';
 import { SwitchComponent } from './switch/switch.component';
-import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
+import { TextboxOutputComponent } from './textbox-output/textbox-output.component';
 import { RamdropComponent } from './ramdrop/ramdrop.component';
 import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
@@ -18,16 +18,16 @@ import { TableInstructionService } from '../Shared/Services/tableInstruction/tab
     TextboxComponent,
     TranslateButtonComponent,
     SwitchComponent,
-    TexboxOutputComponent,
+    TextboxOutputComponent,
     RamdropComponent,
     SaveRamButtonComponent,
     InstructionTableComponent
   ],
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css'], 
+  styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
-  
+
   inputText: string = '';
   output: string = '';
   parameter:string = '';
@@ -39,7 +39,7 @@ export class MainPageComponent {
 
   onTableValueChange(value: string): void {
     this.tableManager.updateSelectedLineText(value);
-    
+
   }
 
   // Manejadores de eventos
@@ -54,26 +54,26 @@ export class MainPageComponent {
 
   onInput(input: string): void {
     this.inputText = input;
-    
+
   }
   onTextFile(textFile: Promise<string[]>): void {
-    
+
     textFile.then((instructions) => {
-      
+
       if (this.isHexToMIPS) {
-        
+
         this.inputManager.setValue(instructions[0]) ;
         this.output = instructions[1];
       } else {
         this.output = instructions[0];
         this.inputManager.setValue(instructions[1]) ;
       }
-      
+
     });
   }
   onTranslate(): void {
     if (this.isHexToMIPS) {
-      
+
       this.output = this.translator.translateHextoMIPS(this.inputText);
       this.parameter = this.inputText;
     } else {
@@ -81,7 +81,7 @@ export class MainPageComponent {
       this.parameter = this.output
     }
   }
-  
- 
-  
+
+
+
 }

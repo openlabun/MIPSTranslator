@@ -1,72 +1,69 @@
 .save-to-ram-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column: 1 / span 3;
+
 }
+
 .file-input{
-    opacity: 0;
-    left: 0;
-    top: 0;
-    width: 150%;
-    height:150%;
-    position: absolute;
-    z-index: 50;
-   }
+  opacity: 0;
+  left: 0;
+  top: 0;
+  position: absolute;
+  z-index: 50;
+}
+
 .drop-area {
-    border: 2px dashed #2a999d;
-    border-radius: 10px;
-    padding: 25px;
-    background-color: transparent;
-    text-align: center;
-    width: 350px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    position: relative;
-    margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  border: 2px dashed #2a999d;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background-color: transparent;
+  text-align: center;
+  /* width: 350px; */
+  gap: 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  position: relative;
 }
 
 .drop-area:hover {
-    background-color: #43296a42;
-    border-color: #7d2ae8;
+  background-color: #E7E9EA;
 }
 
-
-.drop-text {
-    font-size: 16px;
-    color: #266478;
-    margin-bottom: 10px;
-    font-family: "Nunito", sans-serif;
+.drop-text, .file-name {
+  font-size: 16px;
+  color: #266478;
+  font-family: "Nunito", sans-serif;
 }
+
 .or-text {
-    font-size: 14px;
-    color: #266478;
-    margin: 15px 0;
-    font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #266478;
+  font-family: "Nunito", sans-serif;
 }
+
 .select-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #266478; 
-    background-color: transparent; 
-    border: 2px solid #2a999d; /* Borde del botón */
-    border-radius: 5px;
-    cursor: pointer;
-    transition: color 0.3s ease, border-color 0.3s ease; 
-    font-family: "Nunito", sans-serif;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #FFF;
+  background-color: #266478;
+  border-radius: 10rem;
+  cursor: pointer;
+  /* transition: color 0.3s ease, border-color 0.3s ease; */
+  font-family: "Nunito", sans-serif;
+  /* font-weight: 700; */
+  width: 100%;
 }
+
 .info-drop{
     position: absolute;
     z-index: 50;
     top: 5rem;
     left: 4rem;
 }
-.select-button:hover {
-    background-color: #7c2ae85a;
-    border-color: #7d2ae8;
-}
-
 
 #drop-area.active {
-    background-color: #e0e7ff;
-    border-color: #0056b3;
+  background-color: #e0e7ff;
 }

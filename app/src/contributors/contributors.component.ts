@@ -13,38 +13,8 @@ interface Contributor {
   selector: 'app-contributors',
   standalone: true,
   imports: [CommonModule, HttpClientModule],
-  template: `
-    <div class="contributors-container" *ngIf="!errorMsg; else errorTpl">
-      <div class="contributor" *ngFor="let c of contributors" (click)="openProfile(c.html_url)">
-        <img [src]="c.avatar_url" [alt]="c.login" title="{{ c.login }}" />
-        <p>{{ c.login }}</p>
-      </div>
-    </div>
-    <ng-template #errorTpl>
-      <p style="color: red;">{{ errorMsg }}</p>
-    </ng-template>
-  `,
-  styles: [`
-    .contributors-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .contributor {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 80px;
-      cursor: pointer;
-    }
-    .contributor img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-bottom: 5px;
-    }
-  `]
+  templateUrl: './contributors.component.html',
+  styleUrl: './contributors.component.css'
 })
 export class ContributorsComponent implements OnInit {
   contributors: Contributor[] = [];
