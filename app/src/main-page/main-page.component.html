@@ -23,6 +23,18 @@
     <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
 </section>
 
-
-    
+<div class="assembler-container"> <h3 class="assembler-title">Código Ensamblador MIPS</h3> <div>
+    <textarea #mipsCodeInput
+              class="assembler-textarea" rows="15"
+              cols="50"
+              placeholder="loop:&#10;  addi $t0, $t0, 1&#10;  bne $t0, $s0, loop&#10;# Escribe o pega tu código aquí..."></textarea>
+  </div>
+  <button (click)="loadMipsCode(mipsCodeInput.value)"
+          class="assembler-button" style="margin-top: 10px;">
+    Cargar y Procesar Código
+  </button>
+  <div *ngIf="parsingErrors.length > 0" class="assembler-errors"> <h4>Errores encontrados:</h4>
+    {{ parsingErrors.join('\\n') }}
+  </div>
+</div>
 

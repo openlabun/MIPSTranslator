@@ -30,6 +30,7 @@ export const instructionMap: { [key: string]: Instruction } = {
   "multu": { opcode: "000000", funct: "011001" },
   "nor": { opcode: "000000", funct: "100111" },
   "sll": { opcode: "000000", funct: "000000" },
+  "nop": { opcode: "000000", funct: "000000" },
   "sllv": { opcode: "000000", funct: "000100" },
   "sra": { opcode: "000000", funct: "000011" },
   "srav": { opcode: "000000", funct: "000111" },
