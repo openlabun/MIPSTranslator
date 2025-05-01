@@ -1,0 +1,104 @@
+
+
+.instruction-menu {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 250px;
+  max-height: 500px;
+  overflow-y: auto;
+  font-family: "Nunito", sans-serif;
+  
+  /* Firefox - scrollbar inicialmente invisible */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* Mostrar scrollbar en Firefox cuando se interactúa */
+.instruction-menu:hover,
+.instruction-menu:focus-within,
+.instruction-menu:active {
+  scrollbar-color: rgba(125, 42, 232, 0.3) transparent;
+}
+
+/* Webkit browsers (Chrome, Edge, Safari) - scrollbar invisible por defecto */
+.instruction-menu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.instruction-menu::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+}
+
+.instruction-menu::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Inicialmente transparente */
+  border-radius: 8px;
+}
+/* Mostrar scrollbar más pronunciado al hacer hover */
+.instruction-menu:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(125, 42, 232, 0.4); /* Más visible */
+}
+
+/* Cuando se está scrolleando activamente */
+.instruction-menu::-webkit-scrollbar-thumb:active {
+  background-color: rgba(125, 42, 232, 0.7); /* Muy visible */
+}
+
+.menu-title {
+  color: #266478;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+  position: relative; /* Opcional: mantener el título visible al desplazarse */
+  top: 0;
+  background-color: #f5f5f5;
+  padding: 5px 0;
+  z-index: 1;
+}
+
+.instruction-category {
+  margin-bottom: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.category-summary {
+  background-color: #5d0081;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.category-summary:hover {
+  background-color: #773e8e;
+}
+
+.instructions-list {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+  max-height: 200px; /* Altura máxima para las listas de instrucciones */
+  overflow-y: auto; /* Barra de desplazamiento interna para listas largas */
+}
+
+
+
+
+.instruction-button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 5px 15px;
+  cursor: pointer;
+  color: #333;
+  font-family: "Nunito", sans-serif;
+  transition: background-color 0.2s;
+}
+
+.instruction-button:hover {
+  background-color: #e0e0e0;
+  color: #7d2ae8;
+}

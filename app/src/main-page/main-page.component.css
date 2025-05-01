@@ -6,15 +6,14 @@
     font-weight: 400;
     line-height: normal;
     text-align: center;
-   
+    margin: 15px 0 10px 0;
 }
 .container{
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 5rem;
-    margin-top: 75px;
-
+    justify-content: space-around;
+    gap: 4rem;
+    flex-direction: row;
 }
 
 .input-textbox {
@@ -23,12 +22,20 @@
     
 }
 
-.translate {
+.input-container {
     display: flex;
-    margin-left: 180px;
     flex-direction: column; 
     align-items: center; 
-    gap: 40px; 
+    gap: 15px; 
+    justify-content: flex-start; /* Alineación vertical superior */
+    height: calc(10 * 40px);
+}
+
+.translate {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 20px; 
 }
 
 
@@ -41,4 +48,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Cambia a fila en pantallas móviles */
+    }
+}
+
+
+.instruction-menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra horizontalmente */
+    justify-content: flex-start; /* Alineación vertical superior */
+    height: calc(10 * 40px);
 }

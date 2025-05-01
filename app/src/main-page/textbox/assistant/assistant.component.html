@@ -1,4 +1,4 @@
-<div>
+<div class="assistant" *ngIf="suggestions.length > 0">
   <ul>
     <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
       {{ suggestion }}

@@ -1,4 +1,4 @@
-import { Component, inject, output} from '@angular/core';
+import { Component, inject, output, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormInputManagerService } from '../../Shared/Services/FormInputManager/form-input-manager.service';
 import { TableInstructionService } from '../../Shared/Services/tableInstruction/table-instruction.service';
@@ -14,6 +14,7 @@ import { AssistantComponent } from './assistant/assistant.component';
 })
 export class TextboxComponent {
   inputChange = output<string>();
+  inputText = input<string>();
   userInput = inject(FormInputManagerService).inputApp;
   assistantService = inject(AssistantService);
   selectedLineText = output<string>();
@@ -25,6 +26,11 @@ export class TextboxComponent {
     });
   }
   
+  ngOnChanges() {
+    if (this.inputText()) {
+      this.userInput.setValue(this.inputText());
+    }
+  }
 
   onSelect(event: Event): void {
     const textarea = event.target as HTMLTextAreaElement;
