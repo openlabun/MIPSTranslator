@@ -108,6 +108,7 @@ class Line {
     }
 
     private registerToNumber(reg: string): number {
+        if (!reg) throw new Error('Registro no ingresado o indefinido');
         const regName = reg.slice(1); // Elimina el "$"
         const binaryCode = Object.entries(registerMap).find(([_, name]) => name === regName)?.[0];
         if (!binaryCode) throw new Error(`Registro inválido: ${reg}`);
