@@ -12,7 +12,7 @@ import { InstructionTableComponent } from './instruction-table/instruction-table
 import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
 import { InstructionMenuComponent } from './instruction-menu/instruction-menu.component';
 import { ControlStackComponent } from './control-stack/control-stack.component';
-
+import { assemblerTextboxComponent } from './assembler-textbox/assembler-textbox.component';
 interface Translation {
   mips: string;
   hex: string;
@@ -22,6 +22,7 @@ interface Translation {
   selector: 'app-main-page',
   standalone: true,
   imports: [
+    assemblerTextboxComponent,
     TextboxComponent,
     TranslateButtonComponent,
     CommonModule,
@@ -41,6 +42,7 @@ export class MainPageComponent {
   inputText: string = '';
   output: string = '';
   parameter:string = '';
+  assemblerInputText: string = '';
   private translator = inject(TranslatorService);
   private inputManager = inject(FormInputManagerService).inputApp;
   private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
@@ -174,5 +176,8 @@ export class MainPageComponent {
     }
 
     this.parameter = this.translations.map(t => t.hex).join('\n');
+  }
+  onAssemblerInput(input: string): void {
+    this.assemblerInputText = input;
   }
 }
