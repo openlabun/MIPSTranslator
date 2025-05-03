@@ -13,6 +13,8 @@ import { TableInstructionService } from '../Shared/Services/tableInstruction/tab
 import { InstructionMenuComponent } from './instruction-menu/instruction-menu.component';
 import { ControlStackComponent } from './control-stack/control-stack.component';
 import { assemblerTextboxComponent } from './assembler-textbox/assembler-textbox.component';
+import { AssemblerTranslatorService } from '../Shared/Services/assemblerTranslator/assembler-Translator.service';
+import { assemblerTranslateButtonComponent } from './assembler-translate-Button/assembler-translate-button.component';  
 interface Translation {
   mips: string;
   hex: string;
@@ -22,6 +24,7 @@ interface Translation {
   selector: 'app-main-page',
   standalone: true,
   imports: [
+    assemblerTranslateButtonComponent,
     assemblerTextboxComponent,
     TextboxComponent,
     TranslateButtonComponent,
@@ -44,6 +47,7 @@ export class MainPageComponent {
   parameter:string = '';
   assemblerInputText: string = '';
   private translator = inject(TranslatorService);
+  private assemblerTranslator = inject(AssemblerTranslatorService);
   private inputManager = inject(FormInputManagerService).inputApp;
   private inputManagerIsHexToMips = inject(FormInputManagerService).isHexToMips;
   isHexToMIPS: boolean = false;
@@ -51,6 +55,76 @@ export class MainPageComponent {
   selectedInstruction: string = '';
   isValidInstruction: boolean = true;
   translations: Translation[] = [];
+
+
+
+
+  private _updateStateFromTranslationDict(translationDict: { [key: string]: string }): void {
+    const loadedTranslations: Translation[] = [];
+    const hexValues: string[] = [];
+
+    // Iterate through the dictionary (MIPS instruction is the key)
+    for (const mipsInstruction in translationDict) {
+      // Ensure it's an own property and not from the prototype chain
+      if (Object.prototype.hasOwnProperty.call(translationDict, mipsInstruction)) {
+        const hexValue = translationDict[mipsInstruction];
+
+        // Create the Translation object needed by the table
+        loadedTranslations.push({
+          mips: mipsInstruction,
+          hex: hexValue
+        });
+
+        // Collect the HEX value for the parameter string
+        hexValues.push(hexValue);
+      }
+    }
+
+    // --- Update the component's properties ---
+    // Replace the existing translations with the new ones from assembly
+    this.translations = loadedTranslations;
+    // Rebuild the parameter string from the new HEX values
+    this.parameter = hexValues.join('\n');
+  }
+
+  // Handler for the assembler input changing
+  onAssemblerInput(input: string): void {
+    this.assemblerInputText = input;
+  }
+
+  // Handler for the "Assemble" button click
+  onAssemblerTranslate(): void {
+    if (!this.assemblerInputText.trim()) {
+      // Handle empty input: Clear the table
+      this.translations = [];
+      this.parameter = '';
+      return;
+    }
+
+    // Call the service to get the dictionary
+    const assemblerOutput = this.assemblerTranslator.assembleTranslate(this.assemblerInputText);
+    console.log("Assembler Output Received:", assemblerOutput); // Good for debugging
+
+    // --- Process the output ---
+    // Check if the service returned an error object
+    if (assemblerOutput && assemblerOutput['error']) {
+      console.error('Assembly failed:', assemblerOutput['error']);
+    }
+    // Check if the output is a valid, non-empty object (and not the error object)
+    else if (assemblerOutput && typeof assemblerOutput === 'object' && Object.keys(assemblerOutput).length > 0) {
+      // Call the helper function to update the state
+      this._updateStateFromTranslationDict(assemblerOutput);
+      console.log('Assembly successful. Translations array and parameter updated.');
+    }
+     else {
+       // Handle cases where the assembler might return null, undefined, or an empty object unexpectedly
+       console.warn("Assembler returned empty or invalid output.");
+       this.translations = []; // Clear table
+       this.parameter = '';
+    }
+  }
+
+  // ... other methods like onDeleteInstruction, onTextFile, etc. ...
 
   onTableValueChange(value: string): void {
     this.tableManager.updateSelectedLineText(value);
@@ -176,8 +250,5 @@ export class MainPageComponent {
     }
 
     this.parameter = this.translations.map(t => t.hex).join('\n');
-  }
-  onAssemblerInput(input: string): void {
-    this.assemblerInputText = input;
   }
 }

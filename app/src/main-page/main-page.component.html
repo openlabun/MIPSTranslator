@@ -29,8 +29,16 @@
 <section class="instruction-table">
     <app-instruction-table></app-instruction-table>
 </section>
-<section class="assemblerOutput">
-<app-assembler-textbox></app-assembler-textbox>
+<section class = "assembler-container">
+   
+    <div class="assemblerInput">    
+    <app-assembler-textbox (assemblerInputChange) = "onAssemblerInput($event)"></app-assembler-textbox>
+    </div>
+
+    <div class = "assembler-translate">
+        <app-assembler-translate-button (click) = "onAssemblerTranslate()"></app-assembler-translate-button> 
+    </div>
+
 </section>
 <section class="save-ram">
     <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
