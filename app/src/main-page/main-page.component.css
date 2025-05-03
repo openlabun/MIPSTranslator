@@ -72,3 +72,22 @@
     justify-content: center;
 
 }
+.assemblerInput{
+        display: flex;
+        font-family: "Nunito", sans-serif;
+}
+
+.assembler-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 15px; 
+    justify-content: flex-start; /* Alineación vertical superior */
+    height: calc(10 * 40px);
+}
+.assembler-translate {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 20px; 
+}
