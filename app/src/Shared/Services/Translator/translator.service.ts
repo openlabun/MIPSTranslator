@@ -251,10 +251,11 @@ export class TranslatorService {
       const rt = binaryInstruction.slice(11, 16);
       const offset = this.binaryToHex(binaryInstruction.slice(16, 32));
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+      
       if (rt === "00000") {
-        mipsInstruction = `bltz ${rs}, ${offset}`;
+        mipsInstruction = `bltz ${rs} ${offset}`;
       } else if (rt === "00001") {
-        mipsInstruction = `bgez ${rs}, ${offset}`;
+        mipsInstruction = `bgez ${rs} ${offset}`;
       } 
     } else if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", 
       "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
@@ -310,10 +311,17 @@ export class TranslatorService {
       const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
       if (!rt || !rs || !immediate) return "Invalid Syntax";
       mipsInstruction += rs + " " + rt + " " + immediate;
-    } else if (["lui", "slti", "sltiu"].includes(opcodeMIPS)) {
+    } else if (["slti", "sltiu"].includes(opcodeMIPS)) {
+      const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+      const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
+      const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
+      
+      if (!rt || !rs || !immediate) return "Invalid Syntax";
+      mipsInstruction = `${opcodeMIPS} ${rt} ${rs} ${immediate}`;
+    } else if (opcodeMIPS === "lui") {
       const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
       const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
-      mipsInstruction = `${opcodeMIPS} ${rt}, ${immediate}`;
+      mipsInstruction = `lui ${rt} ${immediate}`;
     } else if (["beq", "bne", "bgtz", "blez"].includes(opcodeMIPS)) {
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rt = ["beq", "bne"].includes(opcodeMIPS) ? this.convertRegisterToName(binaryInstruction.slice(11, 16)) : "00000";
