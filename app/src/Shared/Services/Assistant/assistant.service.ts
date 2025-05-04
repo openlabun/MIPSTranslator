@@ -138,11 +138,6 @@ export class AssistantService {
         case 'lui':
           examples.push(`${instruction} ${this.randomRegister()} ${this.randomImmediate()}`);
           break;
-        
-        case 'slti':
-        case 'sltiu':
-          examples.push(`${instruction} ${this.randomRegister()} ${this.randomRegister()} ${this.randomImmediate()}`);
-          break;
 
         default:
           examples.push(`${instruction} (Formato no definido)`);
