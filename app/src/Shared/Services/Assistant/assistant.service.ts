@@ -125,6 +125,25 @@ export class AssistantService {
           examples.push(`${instruction} ${this.randomRegister()} ${this.randomRegister()} ${this.randomImmediate(10)}`);
           break;
 
+        case 'bltz':
+        case 'bgez':
+          examples.push(`${instruction} ${this.randomRegister()} etiqueta${this.randomImmediate()}`);
+          break;
+        
+        case 'syscall':
+        case 'break':
+          examples.push(`${instruction}`);
+          break;
+        
+        case 'lui':
+          examples.push(`${instruction} ${this.randomRegister()} ${this.randomImmediate()}`);
+          break;
+        
+        case 'slti':
+        case 'sltiu':
+          examples.push(`${instruction} ${this.randomRegister()} ${this.randomRegister()} ${this.randomImmediate()}`);
+          break;
+
         default:
           examples.push(`${instruction} (Formato no definido)`);
           break;

@@ -225,6 +225,9 @@ export class AssemblyParserService {
         }
 
         // I-Types específicos
+        if (mnemonic === 'bltz' || mnemonic === 'bgez') return ['register', 'label'];
+        if (mnemonic === 'lui') return ['register', 'immediate16u']; // rt, imm
+        if (mnemonic === 'slti' || mnemonic === 'sltiu') return ['register', 'register', 'immediate16s']; // rt, rs, imm
         if (mnemonic === 'lw' || mnemonic === 'sw' || mnemonic === 'lb' || mnemonic === 'lbu' || mnemonic === 'lh' || mnemonic === 'lhu' || mnemonic === 'sb' || mnemonic === 'sh') return ['register', 'loadStore']; // rt, offset(rs)
         if (mnemonic === 'beq' || mnemonic === 'bne') return ['register', 'register', 'label']; // rs, rt, label
         if (mnemonic === 'blez' || mnemonic === 'bgtz') return ['register', 'label']; // rs, label
@@ -262,66 +265,66 @@ export class AssemblyParserService {
            let validated: ValidatedOperand | null = null;
 
            switch (expected) {
-               case 'register':
-                   const regName = this._parseRegister(actualRaw);
-                   if (regName) {
-                       validated = { type: 'register', name: regName };
-                   } else {
-                       validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un registro MIPS válido.`);
-                   }
-                   break;
-               case 'immediate16s':
-               case 'immediate16u':
-                   const imm16 = this._parseImmediate(actualRaw);
-                   if (imm16 !== null) {
-                       const isSigned = expected === 'immediate16s';
-                       const min = isSigned ? -32768 : 0;
-                       const max = isSigned ? 32767 : 65535;
-                       if (imm16 < min || imm16 > max) {
-                           validationErrors.push(`Línea ${lineNumber}: Inmediato '${actualRaw}' (${imm16}) fuera de rango para '${mnemonic}' (${min} a ${max}).`);
-                       } else {
-                           validated = { type: 'immediate', value: imm16 };
-                       }
-                   } else {
-                       validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un número inmediato válido.`);
-                   }
-                   break;
-               case 'shamt5u':
-                   const shamt = this._parseImmediate(actualRaw);
-                   if (shamt !== null) {
-                       if (shamt < 0 || shamt > 31) {
-                           validationErrors.push(`Línea ${lineNumber}: Valor de shift ('${actualRaw}') fuera de rango para '${mnemonic}' (0 a 31).`);
-                       } else {
-                           validated = { type: 'immediate', value: shamt };
-                       }
-                   } else {
-                       validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un inmediato válido para shamt.`);
-                   }
-                   break;
-               case 'loadStore':
-                   const memOp = this._parseLoadStoreOperand(actualRaw);
-                   if (memOp) {
-                       if (memOp.offset < -32768 || memOp.offset > 32767) {
-                           validationErrors.push(`Línea ${lineNumber}: Offset '${memOp.offset}' fuera de rango para '${mnemonic}' (-32768 a 32767).`);
-                       } else {
-                           validated = { type: 'loadStore', offset: memOp.offset, baseRegister: memOp.base };
-                       }
-                   } else {
-                       validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no tiene el formato offset(base) válido.`);
-                   }
-                   break;
-               case 'label':
-                   if (this._isPotentialLabel(actualRaw)) {
-                       validated = { type: 'label', name: actualRaw.toLowerCase() };
-                   } else if (this._parseImmediate(actualRaw) !== null){
-                       // Permitir números como posibles offsets/direcciones ya resueltos? Podría ser problemático.
-                       // Por ahora, exigimos que sea una etiqueta válida si se espera una.
-                       // validated = { type: 'immediate', value: this._parseImmediate(actualRaw)! };
-                       validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un nombre de etiqueta válido para '${mnemonic}'.`);
-                   } else {
-                        validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un nombre de etiqueta válido para '${mnemonic}'.`);
-                   }
-                   break;
+              case 'register':
+                  const regName = this._parseRegister(actualRaw);
+                  if (regName) {
+                      validated = { type: 'register', name: regName };
+                  } else {
+                      validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un registro MIPS válido.`);
+                  }
+                  break;
+              case 'immediate16s':
+              case 'immediate16u':
+                  const imm16 = this._parseImmediate(actualRaw);
+                  if (imm16 !== null) {
+                      const isSigned = expected === 'immediate16s';
+                      const min = isSigned ? -32768 : 0;
+                      const max = isSigned ? 32767 : 65535;
+                      if (imm16 < min || imm16 > max) {
+                          validationErrors.push(`Línea ${lineNumber}: Inmediato '${actualRaw}' (${imm16}) fuera de rango para '${mnemonic}' (${min} a ${max}).`);
+                      } else {
+                          validated = { type: 'immediate', value: imm16 };
+                      }
+                  } else {
+                      validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un número inmediato válido.`);
+                  }
+                  break;
+              case 'shamt5u':
+                  const shamt = this._parseImmediate(actualRaw);
+                  if (shamt !== null) {
+                      if (shamt < 0 || shamt > 31) {
+                          validationErrors.push(`Línea ${lineNumber}: Valor de shift ('${actualRaw}') fuera de rango para '${mnemonic}' (0 a 31).`);
+                      } else {
+                          validated = { type: 'immediate', value: shamt };
+                      }
+                  } else {
+                      validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un inmediato válido para shamt.`);
+                  }
+                  break;
+              case 'loadStore':
+                  const memOp = this._parseLoadStoreOperand(actualRaw);
+                  if (memOp) {
+                      if (memOp.offset < -32768 || memOp.offset > 32767) {
+                          validationErrors.push(`Línea ${lineNumber}: Offset '${memOp.offset}' fuera de rango para '${mnemonic}' (-32768 a 32767).`);
+                      } else {
+                          validated = { type: 'loadStore', offset: memOp.offset, baseRegister: memOp.base };
+                      }
+                  } else {
+                      validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no tiene el formato offset(base) válido.`);
+                  }
+                  break;
+              case 'label':
+                  if (this._isPotentialLabel(actualRaw)) {
+                      validated = { type: 'label', name: actualRaw.toLowerCase() };
+                  } else if (this._parseImmediate(actualRaw) !== null){
+                      // Permitir números como posibles offsets/direcciones ya resueltos? Podría ser problemático.
+                      // Por ahora, exigimos que sea una etiqueta válida si se espera una.
+                      // validated = { type: 'immediate', value: this._parseImmediate(actualRaw)! };
+                      validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un nombre de etiqueta válido para '${mnemonic}'.`);
+                  } else {
+                      validationErrors.push(`Línea ${lineNumber}: Operando #${i + 1} ('${actualRaw}') no es un nombre de etiqueta válido para '${mnemonic}'.`);
+                  }
+                  break;
            }
 
            if (validationErrors.length > 0) break; // No seguir si un operando falla
@@ -351,7 +354,7 @@ private _resolveJumpBranchTargets(
   let hasJumpBranchError = false; // <-- ¡DECLARACIÓN AÑADIDA AQUÍ!
 
   const isJump = mnemonic === 'j' || mnemonic === 'jal';
-  const isBranch = mnemonic === 'beq' || mnemonic === 'bne'; // Añadir más branches aquí
+  const isBranch = ['beq', 'bne', 'bltz', 'bgez', 'blez', 'bgtz'].includes(mnemonic);
 
   // Iterar sobre los operandos para encontrar el que necesita resolución (si aplica)
   for (let i = 0; i < resolvedOperands.length; i++) {

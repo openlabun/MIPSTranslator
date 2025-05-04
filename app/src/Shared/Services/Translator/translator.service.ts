@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 export interface Instruction {
   opcode: string;
   funct?: string;
+  rt?: string;
 }
 
 export const instructionMap: { [key: string]: Instruction } = {
@@ -30,7 +31,6 @@ export const instructionMap: { [key: string]: Instruction } = {
   "multu": { opcode: "000000", funct: "011001" },
   "nor": { opcode: "000000", funct: "100111" },
   "sll": { opcode: "000000", funct: "000000" },
-  "nop": { opcode: "000000", funct: "000000" },
   "sllv": { opcode: "000000", funct: "000100" },
   "sra": { opcode: "000000", funct: "000011" },
   "srav": { opcode: "000000", funct: "000111" },
@@ -38,6 +38,10 @@ export const instructionMap: { [key: string]: Instruction } = {
   "srlv": { opcode: "000000", funct: "000110" },
   "subu": { opcode: "000000", funct: "100011" },
   "xor": { opcode: "000000", funct: "100110" },
+  "syscall": { opcode: "000000", funct: "001100" },
+  "break":   { opcode: "000000", funct: "001101" },
+  "bltz": { opcode: "000001", rt: "00000" },
+  "bgez": { opcode: "000001", rt: "00001" },
   "addi": { opcode: "001000" },
   "addiu": { opcode: "001001" },
   "andi": { opcode: "001100" },
@@ -56,7 +60,10 @@ export const instructionMap: { [key: string]: Instruction } = {
   "bgtz": { opcode: "000111" },
   "blez": { opcode: "000110" },
   "j": { opcode: "000010" },
-  "jal": { opcode: "000011" }
+  "jal": { opcode: "000011" },
+  "lui":  { opcode: "001111" },
+  "slti": { opcode: "001010" },
+  "sltiu":{ opcode: "001011" }
 };
 
 export const registerMap: { [key: string]: string } = {
@@ -124,7 +131,7 @@ export class TranslatorService {
 
     let binaryInstruction = opcode;
 
-    if (["add", "sub", "slt", "and", "or", "nor", "addu", "sllv", "srlv", "subu", "srav", "sllv", "xor"].includes(parts[0])) {
+    if (["add", "sub", "slt", "and", "or", "nor", "addu", "sllv", "srlv", "subu", "srav", "xor"].includes(parts[0])) {
       const rd = this.convertRegisterToBinary(parts[1]);
       const rs = this.convertRegisterToBinary(parts[2]);
       const rt = this.convertRegisterToBinary(parts[3]);
@@ -194,6 +201,27 @@ export class TranslatorService {
       if (isNaN(code) || code < 0 || code > 1023) return "Invalid Code";
       const codeBinary = code.toString(2).padStart(10, '0');
       binaryInstruction += rs + rt + codeBinary + this.getFunctCode(parts[0]);
+    } else if (["syscall", "break"].includes(parts[0])) {
+      binaryInstruction = opcode + "00000000000000000000" + this.getFunctCode(parts[0]);
+    } else if (["bltz", "bgez"].includes(parts[0])) {
+      const rs = this.convertRegisterToBinary(parts[1]);
+      const offset = parseInt(parts[2]);
+      if (!rs || isNaN(offset)) return "Invalid Syntax";
+      binaryInstruction += rs + instructionMap[parts[0]].rt + (offset >>> 0).toString(2).padStart(16, '0');
+    } else if (["slti", "sltiu"].includes(parts[0])) {
+      const rt = this.convertRegisterToBinary(parts[1]);
+      const rs = this.convertRegisterToBinary(parts[2]);
+      const immediate = parseInt(parts[3]);    
+      
+      if (!rt || !rs || isNaN(immediate)) return "Invalid Syntax";
+      
+      // Estructura I-Type: opcode + rs + rt + immediate
+      binaryInstruction += rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+    } else if (["lui"].includes(parts[0])) {
+      const rt = this.convertRegisterToBinary(parts[1]);
+      const immediate = parseInt(parts[2]);
+      if (!rt || isNaN(immediate)) return "Invalid Syntax";
+      binaryInstruction += "00000" + rt + (immediate >>> 0).toString(2).padStart(16, '0');
     } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(parts[0])) {
       const rs = this.convertRegisterToBinary(parts[1]);
       const immediate = parseInt(parts[2]);
@@ -219,7 +247,16 @@ export class TranslatorService {
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", 
+    if (opcode === "000001") {
+      const rt = binaryInstruction.slice(11, 16);
+      const offset = this.binaryToHex(binaryInstruction.slice(16, 32));
+      const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+      if (rt === "00000") {
+        mipsInstruction = `bltz ${rs}, ${offset}`;
+      } else if (rt === "00001") {
+        mipsInstruction = `bgez ${rs}, ${offset}`;
+      } 
+    } else if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", 
       "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
       const func = binaryInstruction.slice(26, 32);
       const funcMIPS = this.convertFunctToName(func);
@@ -247,6 +284,8 @@ export class TranslatorService {
       } else if (["tge", "tgeu", "tlt", "tltu", "teq", "tne"].includes(funcMIPS)) {
         const code = this.binaryToHex(binaryInstruction.slice(16, 26));
         mipsInstruction = funcMIPS + " " + rt + " " + rs + " " + code;
+      } else if (funcMIPS === "syscall" || funcMIPS === "break") {
+        mipsInstruction = funcMIPS; 
       }
     } else if (["tgei", "tgeiu", "tlti", "tltiu", "teqi", "tnei"].includes(opcodeMIPS)) {
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
@@ -271,6 +310,10 @@ export class TranslatorService {
       const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
       if (!rt || !rs || !immediate) return "Invalid Syntax";
       mipsInstruction += rs + " " + rt + " " + immediate;
+    } else if (["lui", "slti", "sltiu"].includes(opcodeMIPS)) {
+      const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
+      const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
+      mipsInstruction = `${opcodeMIPS} ${rt}, ${immediate}`;
     } else if (["beq", "bne", "bgtz", "blez"].includes(opcodeMIPS)) {
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rt = ["beq", "bne"].includes(opcodeMIPS) ? this.convertRegisterToName(binaryInstruction.slice(11, 16)) : "00000";
