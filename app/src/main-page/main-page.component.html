@@ -14,9 +14,12 @@
                 (selectedLineText)="onTableValueChange($event)">
             </app-textbox>
         </div>
-        <div class = "translate">
-             <app-translate-button (click)="onTranslate()"></app-translate-button>
-            <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
+        <div class = "container">
+            <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
+                <div class = "translate">  
+                    <app-translate-button (click)="onTranslate()"></app-translate-button>
+                    <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
+                </div>
         </div>
     </div>
 
@@ -31,9 +34,7 @@
     <app-instruction-table></app-instruction-table>
 </section>
 
-<section class="save-ram">
-    <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
-</section>
+
 
 <div class="assembler-container">
   <h3 class="assembler-title">Código Ensamblador MIPS</h3>
