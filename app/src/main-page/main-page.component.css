@@ -1,4 +1,4 @@
-.title{
+.title {
   color: #266478;
   font-family: "Nunito", sans-serif;
   font-size: 75px;
@@ -8,19 +8,17 @@
   text-align: center;
   margin: 15px 0 10px 0;
 }
-.container{
+.container {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  gap: 4rem;
-  flex-direction: row; /* Dirección por defecto: fila */
+  gap: 2.8rem;
+  flex-direction: row;
 }
-
 .input-textbox {
   display: flex;
   font-family: "Nunito", sans-serif;
 }
-
 .input-container {
   display: flex;
   flex-direction: column;
@@ -29,137 +27,108 @@
   justify-content: flex-start;
   height: calc(10 * 40px);
 }
-
 .translate {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
-
 .output-textbox {
   display: flex;
-  margin-left: 180px; /* Considera si este margen fijo sigue siendo adecuado con los nuevos componentes */
+  margin-left: 180px;
 }
-
 .save-to-ram-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-/* ===== INICIO ESTILOS NUEVOS ISSUE #39 ===== */
-
-/* Contenedor general del módulo de ensamblador */
 .assembler-container {
-background-color: white; /* Fondo blanco como el resto */
-padding: 25px;           /* Espaciado interno */
-border-radius: 10px;     /* Bordes redondeados suaves */
-box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave similar a otras */
-margin-top: 40px;        /* Espacio arriba */
-margin-bottom: 40px;     /* Espacio abajo */
-text-align: center; /* Centrar título y botón por defecto */
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  margin-bottom: 40px;
+  text-align: center;
 }
-
-/* Título para el área de ensamblador */
 .assembler-title {
-color: #266478; /* Color similar al título principal */
-font-family: "Nunito", sans-serif;
-font-size: 28px; /* Tamaño intermedio */
-font-weight: 600;
-margin-bottom: 15px;
+  color: #266478;
+  font-family: "Nunito", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
-
-/* Textarea para el código ensamblador MIPS */
 .assembler-textarea {
-/* Inspirado en .textbox pero adaptado para código */
-width: 90%; /* Ocupa casi todo el contenedor */
-max-width: 600px; /* Límite para que no sea gigante */
-height: 20rem; /* Altura inicial generosa */
-display: block; /* Necesario para centrar con márgenes */
-margin-left: auto;
-margin-right: auto;
-border-radius: 15px; /* Redondeo más sutil que los textboxes pequeños */
-border: 3px solid #7d2ae8; /* Borde morado como el input MIPS original */
-box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.5); /* Sombra morada */
-background-color: #fdfdff; /* Fondo casi blanco, ligeramente diferente */
-color: #333; /* Texto oscuro para legibilidad */
-padding: 1rem;
-font-size: 1rem; /* Tamaño de fuente estándar */
-font-family: "Consolas", "Monaco", monospace; /* FUENTE MONOESPACIADA IMPORTANTE PARA CÓDIGO */
-resize: vertical; /* Permitir al usuario ajustar altura */
-margin-bottom: 15px; /* Espacio antes del botón */
+  width: 90%;
+  max-width: 600px;
+  height: 10rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
+  border: 3px solid #7d2ae8;
+  box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.5);
+  background-color: #fdfdff;
+  color: #333;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: "Consolas", "Monaco", monospace;
+  resize: vertical;
+  margin-bottom: 15px;
 }
-
-/* Botón "Cargar y Procesar Código" */
 .assembler-button {
-/* Inspirado en .button de translate-button.component.css */
-display: inline-block; /* Que no ocupe toda la línea */
-padding: 10px 22px;
-border-radius: 6px;
-border: none;
-color: #fff; /* Texto blanco */
-cursor: pointer;
-background-color: #7c2ae8d9; /* Morado principal (como Translate) */
-transition: all 0.2s ease;
-font-family: "Nunito", sans-serif;
-font-size: 16px; /* Un poco más grande quizás */
-font-weight: 600;
+  display: inline-block;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: #7c2ae8d9;
+  transition: all 0.2s ease;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
 }
-
 .assembler-button:hover {
-background-color: #5a1fb5; /* Morado un poco más oscuro al pasar el ratón */
-transform: translateY(-2px); /* Efecto sutil de levantarse */
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #5a1fb5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
-
 .assembler-button:active {
-transform: translateY(0px); /* Vuelve a su sitio al hacer clic */
-background-color: #4a1994;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(0px);
+  background-color: #4a1994;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-/* Estilo para el contenedor de errores */
 .assembler-errors {
- color: #D8000C; /* Rojo oscuro para errores */
- background-color: #FFD2D2; /* Fondo rosa pálido */
- border: 1px solid #D8000C;
- border-radius: 5px;
- padding: 10px;
- margin-top: 15px;
- text-align: left; /* Alinear texto de error a la izquierda */
- white-space: pre-wrap; /* Respetar saltos de línea en errores */
- font-family: "Consolas", "Monaco", monospace; /* Fuente monoespaciada */
- font-size: 0.9em;
- max-width: 600px; /* Mismo ancho que el textarea */
- margin-left: auto;
- margin-right: auto;
+  color: #D8000C;
+  background-color: #FFD2D2;
+  border: 1px solid #D8000C;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 15px;
+  text-align: left;
+  white-space: pre-wrap;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 0.9em;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
-
 .assembler-errors h4 {
-margin-top: 0;
-margin-bottom: 5px;
-color: #D8000C;
-font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #D8000C;
+  font-weight: bold;
 }
-
-/* ===== FIN ESTILOS NUEVOS ISSUE #39 ===== */
-
-/* ===== INICIO ESTILOS MERGED DE MAIN (#37) ===== */
-@media (max-width: 768px) { /* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
   .container {
-      flex-direction: column; /* Cambia a columna en pantallas móviles */
+    flex-direction: column;
   }
-  /* Podrían haber otros ajustes de estilo responsive aquí que vinieran de main */
 }
-
-/* Estilos para el nuevo componente del menú/lista de instrucciones de #37 */
 .instruction-menu-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra horizontalmente */
-  justify-content: flex-start; /* Alineación vertical superior */
-  height: calc(10 * 40px); /* Ejemplo de altura calculada */
-  /* ... Otros estilos específicos para el menú de #37 ... */
+  align-items: center;
+  justify-content: flex-start;
+  height: calc(10 * 40px);
 }
-/* ===== FIN ESTILOS MERGED DE MAIN (#37) ===== */

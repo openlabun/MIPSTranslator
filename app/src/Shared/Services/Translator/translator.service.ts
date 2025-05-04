@@ -312,8 +312,8 @@ export class TranslatorService {
       if (!rt || !rs || !immediate) return "Invalid Syntax";
       mipsInstruction += rs + " " + rt + " " + immediate;
     } else if (["slti", "sltiu"].includes(opcodeMIPS)) {
-      const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
-      const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
+      const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
+      const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
       const immediate = this.binaryToHex(binaryInstruction.slice(16, 32));
       
       if (!rt || !rs || !immediate) return "Invalid Syntax";
