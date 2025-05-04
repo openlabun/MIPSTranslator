@@ -15,8 +15,17 @@ export class InstructionMenuComponent {
   objectKeys = Object.keys;
   
   instructionCategories: { [key: string]: string[] } = {
-    'R-Type': ["add","sub","and","or","jalr","jr","slt","mfhi","mflo","mthi","mtlo","teq","tge","tgeu","tlt","tltu","tne","addu","div","divu","mult","multu","nor","sll","sllv","sra","srav","srl","srlv","subu","xor",],
-    'I-Type': ["addi","addiu","andi","ori","xori","lw","sw","lb","lbu","lh","lhu","sb","sh","beq","bne","bgtz","blez",],
+    'R-Type': [
+      "add", "sub", "and", "or", "jalr", "jr", "slt", "mfhi", "mflo", 
+      "mthi", "mtlo", "teq", "tge", "tgeu", "tlt", "tltu", "tne", "addu", 
+      "div", "divu", "mult", "multu", "nor", "sll", "sllv", "sra", "srav", 
+      "srl", "srlv", "subu", "xor", "syscall", "break"
+    ],
+    'I-Type': [
+      "addi", "addiu", "andi", "ori", "xori", "lw", "sw", "lb", "lbu", 
+      "lh", "lhu", "sb", "sh", "beq", "bne", "bgtz", "blez", "bltz", 
+      "bgez", "lui", "slti", "sltiu"
+    ],
     'J-Type': ['jal', 'j'],
   };
   
@@ -53,6 +62,10 @@ export class InstructionMenuComponent {
       formattedInstruction = `${instruction} $t1`;
     } else if (['lui', 'auipc', 'blez', 'bgtz'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 1024`;
+    } else if (['syscall', 'break'].includes(instruction)) {
+      formattedInstruction = instruction;  // Sin operandos
+    } else if (['bltz', 'bgez'].includes(instruction)) {
+      formattedInstruction = `${instruction} $t1 8`;
     } else {
       formattedInstruction = instruction;
     }

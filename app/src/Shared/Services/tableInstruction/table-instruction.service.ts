@@ -88,11 +88,18 @@ export class TableInstructionService {
   }
 
   produceIInstruction(instruction: string) {
-    const binaryInstruction: string = this.converter.hexToBinary(
-      (instruction)
-    );
+    const binaryInstruction: string = this.converter.hexToBinary(instruction);
+    const opcode = binaryInstruction.slice(0, 6);
+    if (opcode === '000001') {
+      return {
+        opcode: opcode,
+        rs: binaryInstruction.slice(6, 11),
+        rt: binaryInstruction.slice(11, 16), // "00000" o "00001"
+        immediate: binaryInstruction.slice(16, 32)
+      };
+    }
     return {
-      opcode: binaryInstruction.slice(0, 6),
+      opcode: opcode,
       rs: binaryInstruction.slice(6, 11),
       rt: binaryInstruction.slice(11, 16),
       immediate: binaryInstruction.slice(16, 32),
@@ -157,23 +164,27 @@ export class TableInstructionService {
     switch (opCode) {
       case '000000':
         return { type: 'R', data: this.produceRInstruction(instruction) };
-      case '001000':
-      case '100011':
-      case '101011':
-      case '000100':
-      case '000101':
-      case '000110':
-      case '000111': 
-      case '001001':
-      case '001100':
-      case '001101':
-      case '001110':
-      case '100000': 
-      case '100100':
-      case '100001': 
-      case '100101': 
-      case '101000': 
-      case '101001':
+      case '001000': // addi
+      case '100011': // lw
+      case '101011': // sw
+      case '000100': // beq
+      case '000101': // bne
+      case '000110': // blez
+      case '000111': // bgtz
+      case '001001': // addiu
+      case '001100': // andi
+      case '001101': // ori
+      case '001110': // xori
+      case '100000': // lb
+      case '100100': // lbu
+      case '100001': // lh
+      case '100101': // lhu
+      case '101000': // sb
+      case '101001': // sh
+      case '000001': // bltz / bgez (rt = 00000 ⇒ bltz; rt = 00001 ⇒ bgez)
+      case '001111': // lui
+      case '001010': // slti
+      case '001011': // sltiu
         return { type: 'I', data: this.produceIInstruction(instruction) };
       case '000010':
       case '000011':
@@ -298,7 +309,36 @@ export class TableInstructionService {
           };
           explanation = `This is an I-type instruction where ${details.rt} gets the result of a bitwise XOR between the value in ${details.rs} and the immediate value ${details.immediate}.`;
           break;
-      
+
+        case 'bltz':
+        case 'bgez':
+          details = {
+            operation: operation,
+            rs: parts[1],       // Ej: "$s0"
+            offset: parts[2],   // Ej: "etiqueta"
+          };
+          explanation = `Branch if ${details.rs} is ${operation === 'bltz' ? 'less than zero' : 'greater or equal to zero'}`;
+          break;
+        
+        case 'lui':
+          details = {
+            operation: operation,
+            rt: parts[1],       // Ej: "$t0"
+            immediate: parts[2],// Ej: "0x1000"
+          };
+          explanation = `Load upper immediate: ${details.rt} = ${details.immediate} << 16`;
+          break;
+        
+        case 'slti':
+        case 'sltiu':
+          details = {
+            operation: operation,
+            rt: parts[1],       // Ej: "$t0"
+            rs: parts[2],       // Ej: "$s1"
+            immediate: parts[3],// Ej: "100"
+          };
+          explanation = `Set ${details.rt} to 1 if ${details.rs} < ${details.immediate} (${operation.includes('u') ? 'unsigned' : 'signed'})`;
+          break;
     }
     return explanation;
   }
