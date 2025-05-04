@@ -7,16 +7,17 @@ import { TranslatorService } from '../../Shared/Services/Translator/translator.s
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './ramdrop.component.html',
-  styleUrls: ['./ramdrop.component.css']  // Cambiado styleUrl a styleUrls
+  styleUrls: ['./ramdrop.component.css']
 })
 export class RamdropComponent {
   file: File | null = null;
   fileForm = new FormControl<File | null>(null);
   translator = inject(TranslatorService);
   valueFile = output<Promise<string[]>>();
+
   constructor() {
     this.fileForm.valueChanges.subscribe((value: File | null) => {
-      if (value && value instanceof File) {  // Ensure value is of type File
+      if (value && value instanceof File) {
         this.file = value;
         this.valueFile.emit(this.processFiles(value));
       }
@@ -29,7 +30,7 @@ export class RamdropComponent {
     if (inputEvent.files && inputEvent.files.length > 0) {
       this.file = inputEvent.files[0];
       console.log(this.file);
-      this.valueFile.emit(this.processFiles(this.file));  // Process the file once selected
+      this.valueFile.emit(this.processFiles(this.file));
     }
   }
 
@@ -58,6 +59,7 @@ export class RamdropComponent {
           translatedInstructions += `${translated}\n`;
           originalInstructions += `${instruction.trim()}\n`;
         });
+
         console.log([originalInstructions, translatedInstructions]);
         resolve([originalInstructions, translatedInstructions]);
       };
@@ -66,10 +68,7 @@ export class RamdropComponent {
         reject(error);
       };
 
-      reader.readAsText(file);  // Ensure 'file' is a File object
+      reader.readAsText(file);
     });
   }
-  
-
- 
 }

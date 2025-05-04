@@ -7,7 +7,7 @@
     height: calc(10  * 40px);
     overflow-y: auto;
     max-width: 440px;
-    margin: 0 auto; /* Centra el contenedor en la página */
+    margin: 0 auto;  
 }
 
 .control-stack {
@@ -58,7 +58,7 @@
     transition: background-color 0.4s ease;
 }
 
-/* Webkit browsers (Chrome, Edge, Safari) - scrollbar invisible por defecto */
+
 .control-stack-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -69,17 +69,17 @@
 }
 
 .control-stack-container::-webkit-scrollbar-thumb {
-  background-color: transparent; /* Inicialmente transparente */
+  background-color: transparent; 
   border-radius: 8px;
 }
-/* Mostrar scrollbar más pronunciado al hacer hover */
+
 .control-stack-container:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(125, 42, 232, 0.4); /* Más visible */
+  background-color: rgba(125, 42, 232, 0.4); 
 }
 
-/* Cuando se está scrolleando activamente */
+
 .control-stack-container::-webkit-scrollbar-thumb:active {
-  background-color: rgba(125, 42, 232, 0.7); /* Muy visible */
+  background-color: rgba(125, 42, 232, 0.7); 
 }
 
 .delete-btn {
