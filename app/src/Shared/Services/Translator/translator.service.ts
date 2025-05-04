@@ -202,7 +202,6 @@ export class TranslatorService {
     } else {
       return "Unsupported Instruction";
     }
-
     const hexInstruction = parseInt(binaryInstruction, 2).toString(16).toUpperCase().padStart(8, '0');
     return hexInstruction;
   }
@@ -218,7 +217,7 @@ export class TranslatorService {
 
     let mipsInstruction = opcodeMIPS + " ";
 
-    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu", 
+    if (["add", "sub", "slt", "and", "or", "jr", "jalr", "mfhi", "mflo", "mthi", "mtlo", "tge", "tgeu", "tlt", "tltu", "teq", "tne", "addu",
       "subu", "xor", "nor", "sll", "srl", "mult", "div", "sra", "srav", "srlv", "divu", "multu", "sllv"].includes(opcodeMIPS)) {
       const func = binaryInstruction.slice(26, 32);
       const funcMIPS = this.convertFunctToName(func);
@@ -323,7 +322,10 @@ export class TranslatorService {
   }
 
   translateMIPStoHex(textInput: string): string {
-    const instructions: string[] = textInput.trim().split('\n');
+    const normalized = this.normalizeInstruction(textInput);
+    console.log(normalized);
+    const tokens = normalized.split(' ');
+    const instructions: string[] = normalized.trim().split('\n');
     const translatedInstructions: string[] = instructions.map(instruction => {
       return this.translateInstructionToHex(instruction.trim());
     });
@@ -349,4 +351,9 @@ export class TranslatorService {
 
     return true;
   }
+
+  normalizeInstruction(instruction: string): string {
+    return instruction.replace(/,/g, '').replace(/\s+/g, ' ').trim();
+  }
+
 }
