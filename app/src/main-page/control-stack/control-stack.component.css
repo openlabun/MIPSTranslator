@@ -3,23 +3,22 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 20px;
-    height: calc(10  * 40px);
+    gap: .5rem;
     overflow-y: auto;
     max-width: 440px;
-    margin: 0 auto; /* Centra el contenedor en la página */
+    margin: 0 auto;
 }
 
 .control-stack {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
-    border: 5px #7d2ae8;
-    box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.96);
+    border: 2px solid #0d5c63;
     text-align: center;
     font-family: "Nunito", sans-serif;
     font-size: 18px;
-    color: #266478;
+    color: #0d5c63;
     height: max-content;
+    border-radius: 1rem;
 }
 
 .control-stack th,
@@ -27,13 +26,11 @@
     padding: 10px;
     text-align: left;
     width: 20rem;
-    color: #741ce7d6;
     text-align: center;
 }
 
 .control-stack th {
     background-color: #ffffff;
-    color: #741ce7d6;
     font-weight: bold;
     font-size: 20px;
     text-align: center;
@@ -53,8 +50,7 @@
 }
 
 .control-stack tr:hover td {
-    background-color: #bba4e6;
-    color: #ffffff;
+    background-color: #D1D1D1;
     transition: background-color 0.4s ease;
 }
 
@@ -69,7 +65,7 @@
 }
 
 .control-stack-container::-webkit-scrollbar-thumb {
-  background-color: transparent; /* Inicialmente transparente */
+  background-color: transparent;
   border-radius: 8px;
 }
 /* Mostrar scrollbar más pronunciado al hacer hover */
@@ -85,7 +81,7 @@
 .delete-btn {
     background: none;
     border: none;
-    color: #741ce7d6;
+    color: #0d5c63;
     cursor: pointer;
     padding: 0;
     border-radius: 50%;

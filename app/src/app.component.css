@@ -1,0 +1,13 @@
+.fixed-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #E7E9EA;
+  width: 100%;
+}
+
+.fixed-footer p {
+  font-size: .75rem;
+}

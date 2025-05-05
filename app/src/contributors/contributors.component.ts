@@ -6,7 +6,6 @@ interface Contributor {
   login: string;
   avatar_url: string;
   html_url: string;
-  // add other fields if needed
 }
 
 @Component({
@@ -30,6 +29,8 @@ interface Contributor {
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
+      padding: 10px;
+      margin-top: 10px;
     }
     .contributor {
       display: flex;

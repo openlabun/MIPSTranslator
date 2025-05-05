@@ -15,7 +15,7 @@ ul {
   overflow-y: auto;
   z-index: 40;
 }
-  
+
 li {
   padding: 0.25rem 1rem;
   cursor: pointer;
@@ -23,7 +23,7 @@ li {
   transition: background-color 0.3s ease-in-out;
   transition: color 0.3s ease-in-out;
 }
-  
+
 li:hover {
   background-color: #7c2ae8d9;
   color: rgb(255, 255, 255);

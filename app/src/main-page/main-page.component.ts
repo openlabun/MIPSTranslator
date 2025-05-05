@@ -2,8 +2,6 @@ import { Component, inject } from '@angular/core';
 import { TextboxComponent } from './textbox/textbox.component';
 import { CommonModule } from '@angular/common';
 import { TranslateButtonComponent } from './translate-button/translate-button.component';
-import { SwitchComponent } from './switch/switch.component';
-import { TexboxOutputComponent } from './texbox-output/texbox-output.component';
 import { RamdropComponent } from './ramdrop/ramdrop.component';
 import { SaveRamButtonComponent } from './save-ram-button/save-ram-button.component';
 import { TranslatorService } from '../Shared/Services/Translator/translator.service';
@@ -12,6 +10,7 @@ import { InstructionTableComponent } from './instruction-table/instruction-table
 import { TableInstructionService } from '../Shared/Services/tableInstruction/table-instruction.service';
 import { InstructionMenuComponent } from './instruction-menu/instruction-menu.component';
 import { ControlStackComponent } from './control-stack/control-stack.component';
+import { FormsModule } from '@angular/forms';
 
 interface Translation {
   mips: string;
@@ -25,8 +24,7 @@ interface Translation {
     TextboxComponent,
     TranslateButtonComponent,
     CommonModule,
-    SwitchComponent,
-    TexboxOutputComponent,
+    FormsModule,
     RamdropComponent,
     SaveRamButtonComponent,
     InstructionTableComponent,
@@ -34,10 +32,10 @@ interface Translation {
     ControlStackComponent
   ],
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css'], 
+  styleUrls: ['./main-page.component.css'],
 })
 export class MainPageComponent {
-  
+
   inputText: string = '';
   output: string = '';
   parameter:string = '';
@@ -49,13 +47,61 @@ export class MainPageComponent {
   selectedInstruction: string = '';
   isValidInstruction: boolean = true;
   translations: Translation[] = [];
+  assemblerCode: string = '';
+  uploadErrors: string[] = [];
+
+  onUploadAssemblerCode(): void {
+    if (!this.assemblerCode) return;
+
+    this.uploadErrors = [];
+    this.translations = [];
+    this.parameter = '';
+
+    const originalLines = this.assemblerCode.split('\n');
+
+    for (let i = 0; i < originalLines.length; i++) {
+      let originalLine = originalLines[i];
+      let line = originalLine.split('#')[0].trim();
+      if (line === '') continue;
+
+      if (/^\w+:$/.test(line)) continue;
+
+      const traditionalRegex = /^(\w+)\s+(\$\w+),\s*(0x[0-9a-fA-F]+|\-?\d+)\((\$\w+)\)$/;
+      const match = traditionalRegex.exec(line);
+      if (match) {
+        const [, instr, rt, imm, rs] = match;
+        line = `${instr} ${rt} ${imm} ${rs}`;
+      } else {
+        line = line.replace(/,/g, '').replace(/\s+/g, ' ').trim();
+      }
+
+      const isHex = this.translator.isValidHex(line);
+      const isMIPS = this.translator.isValidMIPS(line);
+      const isMalformed = !this.isWellFormedInstruction(line);
+
+      if ((!isHex && !isMIPS) || isMalformed) {
+        this.uploadErrors.push(`Línea ${i + 1}: "${originalLine}" no tiene el formato correcto o usa registros inválidos.`);
+        continue;
+      }
+
+      try {
+        const MIPS = isHex ? this.translator.translateHextoMIPS(line) : line;
+        const HEX = isMIPS ? this.translator.translateMIPStoHex(line) : line;
+
+        this.translations.push({ mips: MIPS, hex: HEX });
+        this.parameter += HEX + '\n';
+      } catch (error) {
+        console.error(`Error al traducir línea: "${line}"`, error);
+        this.uploadErrors.push(`Línea ${i + 1}: error al traducir "${originalLine}".`);
+      }
+    }
+  }
 
   onTableValueChange(value: string): void {
     this.tableManager.updateSelectedLineText(value);
-    
+
   }
 
-  // Manejadores de eventos
   onToggle(isChecked: boolean): void {
     this.isHexToMIPS = isChecked;
     this.inputManagerIsHexToMips.setValue(isChecked);
@@ -65,28 +111,15 @@ export class MainPageComponent {
 
   }
 
-  /**
-   * Este método permite agregar una instrucción a la tabla de instrucciones desde el código.
-    * 
-    * @param instruction - La instrucción que se desea agregar a la tabla. Puede ser una instrucción en formato MIPS o HEX.
-    * 
-    * Funcionamiento:
-    * 1. Establece el valor de la instrucción en el campo de entrada (`inputText`).
-    * 2. Detecta automáticamente el tipo de instrucción (MIPS o HEX) utilizando el método `detectInstructionType`.
-    * 3. Si la instrucción es diferente a la última seleccionada, actualiza la instrucción seleccionada y
-    *    llama al método `onTableValueChange` para agregarla a la tabla.
-    * 
-    * Este método es útil para programáticamente insertar instrucciones en la tabla sin necesidad de interacción directa del usuario.
-    */
   onInstructionClick(instruction: string){
     this.inputText=instruction
     this.detectInstructionType(instruction);
-    
+
     let output = instruction;
 
     if (output !== this.selectedInstruction) {
       this.selectedInstruction = output;
-      this.onTableValueChange(output);  // Llama al método con la instrucción
+      this.onTableValueChange(output);
     }
   }
 
@@ -95,9 +128,9 @@ export class MainPageComponent {
     this.inputText = input;
     this.detectInstructionType(input);
   }
-  
+
   onTextFile(textFile: Promise<string[]>): void {
-    
+
     textFile.then((instructions) => {
       const HEXs = instructions[0].split('\n');
       const MIPSs = instructions[1].split('\n');
@@ -107,8 +140,8 @@ export class MainPageComponent {
         const HEX = HEXs[i];
         const MIPS = MIPSs[i];
 
-        if (HEX === '') continue; // Ignorar líneas vacías
-        if (MIPS === '') continue; // Ignorar líneas vacías
+        if (HEX === '') continue;
+        if (MIPS === '') continue;
 
         this.translations.push({
           mips: MIPS,
@@ -116,36 +149,36 @@ export class MainPageComponent {
         });
         this.parameter += HEX + '\n';
       }
-      
+
     });
   }
+
   onTranslate(): void {
     let MIPS = '';
     let HEX = '';
 
     if (this.inputText === '' || !this.isValidInstruction ) return
-    
+
     if (this.isHexToMIPS) {
-      
+
       this.output = this.translator.translateHextoMIPS(this.inputText);
       this.parameter += this.inputText + '\n';
       MIPS = this.output;
       HEX = this.inputText;
     } else {
       this.output = this.translator.translateMIPStoHex(this.inputText);
-      this.parameter += this.output + '\n'; 
+      this.parameter += this.output + '\n';
 
       MIPS = this.inputText;
       HEX = this.output;
     }
 
-    // Agregar la traducción a la lista de traducciones
     this.translations.push({
-      mips: MIPS, // resultado MIPS
-      hex: HEX // resultado HEX
+      mips: MIPS,
+      hex: HEX
     });
   }
-  
+
   detectInstructionType(input: string): void {
     const isHEX = this.translator.isValidHex(input);
     const isMIPS = this.translator.isValidMIPS(input);
@@ -162,8 +195,7 @@ export class MainPageComponent {
   }
 
   onInstructionMenuSelect(instruction: string): void {
-    this.inputText = instruction; // Establecer el valor en el input
-    // Ejecutar cualquier otra lógica necesaria después de seleccionar una instrucción
+    this.inputText = instruction;
     this.detectInstructionType(instruction);
   }
 
@@ -175,4 +207,96 @@ export class MainPageComponent {
 
     this.parameter = this.translations.map(t => t.hex).join('\n');
   }
+
+  private isValidRegister(register: string): boolean {
+    return /^\$\w+$/.test(register);
+  }
+
+  private isWellFormedInstruction(instruction: string): boolean {
+    const tokens = instruction.trim().replace(',', '').split(/\s+/);
+    const mnemonic = tokens[0].toLowerCase();
+    console.log('mne' + mnemonic);
+
+    const operands = tokens.slice(1);
+
+    const isRegister = (reg: string) => /^\$\w+$/.test(reg);
+    const isImmediate = (imm: string) => /^-?\d+$/.test(imm) || /^0x[0-9a-fA-F]+$/.test(imm);
+    const isLabelOrAddress = (op: string) => /^[\w\d_]+$/.test(op);
+
+    // Validación especial para instrucciones R tipo 'trap code'
+    const trapInstructions = ['teq', 'tge', 'tgeu', 'tlt', 'tltu', 'tne'];
+    if (trapInstructions.includes(mnemonic)) {
+      return (
+        operands.length === 3 &&
+        this.isValidRegister(operands[0]) &&
+        this.isValidRegister(operands[1]) &&
+        /^-?\d+$/.test(operands[2])
+      );
+    }
+
+    const threeReg = ['add', 'sub', 'and', 'or', 'slt', 'xor', 'addu', 'subu', 'nor', 'sllv', 'srav', 'srlv'];
+    if (threeReg.includes(mnemonic)) {
+      return operands.length === 3 && operands.every(isRegister);
+    }
+
+    const twoReg = ['div', 'divu', 'mult', 'multu', 'teq', 'tge', 'tgeu', 'tlt', 'tltu', 'tne'];
+    if (twoReg.includes(mnemonic)) {
+      return operands.length === 2 && operands.every(isRegister);
+    }
+
+    const oneReg = ['mfhi', 'mflo', 'mthi', 'mtlo', 'jr'];
+    if (oneReg.includes(mnemonic)) {
+      return operands.length === 1 && isRegister(operands[0]);
+    }
+
+    if (mnemonic === 'jalr') {
+      return (operands.length === 1 || operands.length === 2) && operands.every(isRegister);
+    }
+
+    const shiftOps = ['sll', 'sra', 'srl'];
+    if (shiftOps.includes(mnemonic)) {
+      return (
+        operands.length === 3 &&
+        isRegister(operands[0]) &&
+        isRegister(operands[1]) &&
+        isImmediate(operands[2])
+      );
+    }
+
+    const iTypeImmediate = ['addi', 'addiu', 'andi', 'ori', 'xori'];
+    if (iTypeImmediate.includes(mnemonic)) {
+      return operands.length === 3 && isRegister(operands[0]) && isRegister(operands[1]) && isImmediate(operands[2]);
+    }
+
+    const iTypeBranch = ['beq', 'bne'];
+    if (iTypeBranch.includes(mnemonic)) {
+      return operands.length === 3 && isRegister(operands[0]) && isRegister(operands[1]) && isLabelOrAddress(operands[2]);
+    }
+
+    const iTypeOneRegAndLabel = ['bgtz', 'blez'];
+    if (iTypeOneRegAndLabel.includes(mnemonic)) {
+      return operands.length === 2 && isRegister(operands[0]) && isLabelOrAddress(operands[1]);
+    }
+
+    const memoryAccess = ['lw', 'sw', 'lb', 'lbu', 'lh', 'lhu', 'sb', 'sh'];
+    if (memoryAccess.includes(mnemonic)) {
+      if (operands.length === 3) {
+        return isRegister(operands[0]) && isImmediate(operands[1]) && isRegister(operands[2]);
+      }
+      // Soporte para formato offset(base) (lw $t1, 4($t2))
+      if (operands.length === 2 && isRegister(operands[0])) {
+        const match = operands[1].match(/^(-?\d+)\((\$\w+)\)$/);
+        return match !== null;
+      }
+      return false;
+    }
+
+    const jumpInstructions = ['j', 'jal'];
+    if (jumpInstructions.includes(mnemonic)) {
+      return operands.length === 1 && isLabelOrAddress(operands[0]);
+    }
+
+    return false;
+  }
+
 }
