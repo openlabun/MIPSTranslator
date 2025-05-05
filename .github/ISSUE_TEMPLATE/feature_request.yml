@@ -1,0 +1,30 @@
+name: "Solicitud de Funcionalidad"
+description: "Sugiere una idea para este proyecto"
+title: "[FEATURE] Título de la funcionalidad"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Descripción de la Funcionalidad
+        Una descripción clara y concisa de la funcionalidad que te gustaría que tuviera el proyecto.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "Motivación"
+      description: "Explica por qué esta funcionalidad sería útil y quién se beneficiaría de ella."
+      placeholder: "Explica por qué esta funcionalidad sería útil y quién se beneficiaría de ella."
+
+  - type: textarea
+    id: proposed_implementation
+    attributes:
+      label: "Implementación Propuesta"
+      description: "Describe cómo te gustaría que se implementara esta funcionalidad."
+      placeholder: "Una descripción clara y concisa de cómo te gustaría que se implementara esta funcionalidad."
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: "Información Adicional"
+      description: "Cualquier otra información que consideres relevante."
