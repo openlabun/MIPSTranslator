@@ -95,7 +95,7 @@ parseAssembly(assemblyCode: string): ParseResult {
         } else {
           labelMap.set(lowerLabel, {
             name: label,
-            address: instructionCounter,
+            address: this.BASE_ADDRESS + instructionCounter * 4,
             lineNumber: lineNumber
           });
            console.log(`Etiqueta '${label}' mapeada a índice ${instructionCounter}`);
@@ -177,38 +177,74 @@ parseAssembly(assemblyCode: string): ParseResult {
   };
 }
 
-   private _getOperandExpectation(mnemonic: string): OperandExpectation[] {
-        const info = this.translator.instructionMap[mnemonic];
-        if (!info) return [];
+private _getOperandExpectation(mnemonic: string): OperandExpectation[] {
+  // Instrucciones sin operandos
+  if (['nop', 'syscall', 'break'].includes(mnemonic)) {
+    return [];
+  }
 
-        if (mnemonic === 'nop' || mnemonic === 'syscall') return [];
+  const info = this.translator.instructionMap[mnemonic];
+  if (!info) {
+    return [];
+  }
 
-        if (info.funct) {
-             if (mnemonic === 'sll' || mnemonic === 'srl' || mnemonic === 'sra') return ['register', 'register', 'shamt5u'];
-             if (mnemonic === 'sllv' || mnemonic === 'srlv' || mnemonic === 'srav') return ['register', 'register', 'register'];
-             if (mnemonic === 'jr') return ['register'];
-             if (mnemonic === 'jalr') return ['register', 'register'];
-             if (mnemonic === 'mult' || mnemonic === 'div' || mnemonic === 'multu' || mnemonic === 'divu') return ['register', 'register'];
-             if (mnemonic === 'mfhi' || mnemonic === 'mflo') return ['register'];
-             if (mnemonic === 'mthi' || mnemonic === 'mtlo') return ['register'];
-             return ['register', 'register', 'register'];
-        }
+  // R-type puro (funct existe)
+  if (info.funct) {
+    if (mnemonic === 'sll' || mnemonic === 'srl' || mnemonic === 'sra') {
+      return ['register', 'register', 'shamt5u'];
+    }
+    if (mnemonic === 'sllv' || mnemonic === 'srlv' || mnemonic === 'srav') {
+      return ['register', 'register', 'register'];
+    }
+    if (mnemonic === 'jr') {
+      return ['register'];
+    }
+    if (mnemonic === 'jalr') {
+      return ['register', 'register'];
+    }
+    if (['mult', 'div', 'multu', 'divu'].includes(mnemonic)) {
+      return ['register', 'register'];
+    }
+    if (['mfhi', 'mflo', 'mthi', 'mtlo'].includes(mnemonic)) {
+      return ['register'];
+    }
+    // Default R-type: rd, rs, rt
+    return ['register', 'register', 'register'];
+  }
 
-        if (mnemonic === 'bltz' || mnemonic === 'bgez') return ['register', 'label'];
-        if (mnemonic === 'lui') return ['register', 'immediate16u'];
-        if (mnemonic === 'slti' || mnemonic === 'sltiu') return ['register', 'register', 'immediate16s'];
-        if (mnemonic === 'lw' || mnemonic === 'sw' || mnemonic === 'lb' || mnemonic === 'lbu' || mnemonic === 'lh' || mnemonic === 'lhu' || mnemonic === 'sb' || mnemonic === 'sh') return ['register', 'loadStore'];
-        if (mnemonic === 'beq' || mnemonic === 'bne') return ['register', 'register', 'label'];
-        if (mnemonic === 'blez' || mnemonic === 'bgtz') return ['register', 'label'];
-        if (mnemonic === 'addi' || mnemonic === 'slti') return ['register', 'register', 'immediate16s'];
-        if (mnemonic === 'addiu' || mnemonic === 'sltiu' || mnemonic === 'andi' || mnemonic === 'ori' || mnemonic === 'xori') return ['register', 'register', 'immediate16u'];
-        if (mnemonic === 'lui') return ['register', 'immediate16u'];
+  // I-types especiales añadidos
+  if (mnemonic === 'lui') {
+    return ['register', 'immediate16u'];
+  }
+  if (mnemonic === 'slti' || mnemonic === 'sltiu') {
+    return ['register', 'register', 'immediate16s'];
+  }
+  if (mnemonic === 'bltz' || mnemonic === 'bgez') {
+    return ['register', 'label'];
+  }
 
-        if (mnemonic === 'j' || mnemonic === 'jal') return ['label'];
+  // I-type genéricos
+  if (['lw', 'sw', 'lb', 'lbu', 'lh', 'lhu', 'sb', 'sh'].includes(mnemonic)) {
+    return ['register', 'loadStore'];
+  }
+  if (mnemonic === 'beq' || mnemonic === 'bne') {
+    return ['register', 'register', 'label'];
+  }
+  if (mnemonic === 'blez' || mnemonic === 'bgtz') {
+    return ['register', 'label'];
+  }
+  if (['addi', 'addiu', 'andi', 'ori', 'xori'].includes(mnemonic)) {
+    return ['register', 'register', 'immediate16u'];
+  }
 
-        console.warn(`Formato de operandos no definido explícitamente para ${mnemonic}`);
-        return [];
-   }
+  // J-type
+  if (mnemonic === 'j' || mnemonic === 'jal') {
+    return ['label'];
+  }
+
+  console.warn(`Formato de operandos no definido explícitamente para ${mnemonic}`);
+  return [];
+}
 
    private _validateInstructionAndOperands(mnemonic: string, rawOperands: string[], lineNumber: number): { validatedOps: ValidatedOperand[], validationErrors: string[] } {
        const validationErrors: string[] = [];
@@ -303,105 +339,62 @@ parseAssembly(assemblyCode: string): ParseResult {
        return { validatedOps, validationErrors };
    }
 
-private _resolveJumpBranchTargets(
-  mnemonic: string,
-  validatedOperands: ValidatedOperand[],
-  currentAddress: number,
-  labelMap: Map<string, LabelInfo>,
-  lineNumber: number
-): { resolvedOperands: string[], jumpBranchErrors: string[] } {
-  const jumpBranchErrors: string[] = [];
-  let resolvedOperands = [...validatedOperands];
-  let hasJumpBranchError = false;
-
-  for (let i = 0; i < resolvedOperands.length; i++) {
-    const operand = resolvedOperands[i];
-    const isJump = mnemonic === 'j' || mnemonic === 'jal';
-    const isBranch = ['beq', 'bne', 'bltz', 'bgez', 'blez', 'bgtz'].includes(mnemonic);
-
-    if (operand.type === 'label' && ((isJump && i === 0) || (isBranch && i === resolvedOperands.length - 1))) {
-      const labelName = operand.name;
-      const targetLabelInfo = labelMap.get(labelName);
-
-      console.log(`\n[DEBUG Linea ${lineNumber}] Procesando: ${mnemonic} con etiqueta '${labelName}'`);
-      console.log(`  Current Address (Hex): 0x${currentAddress.toString(16)}`);
-      if (targetLabelInfo) {
-         const targetAddressCorrected = targetLabelInfo.address;
-         const calcPcPlus4 = currentAddress + 4;
-         console.log(`  Target Address from Map (Hex): 0x${targetAddressCorrected.toString(16)}`);
-         console.log(`  PC+4 (Hex): 0x${calcPcPlus4.toString(16)}`);
-         if (isBranch) {
-           const debugByteOffset = targetAddressCorrected - calcPcPlus4;
-           const debugWordOffset = debugByteOffset / 4;
-           console.log(`  >>> Calculated Branch Byte Offset: ${debugByteOffset}`);
-           console.log(`  >>> Calculated Branch Word Offset: ${debugWordOffset}`);
-         } else if (isJump) {
-           const debugJumpTargetField = (targetAddressCorrected >> 2) & 0x03FFFFFF;
-           console.log(`  >>> Calculated Jump Target Field: ${debugJumpTargetField} (0x${debugJumpTargetField.toString(16)})`);
-         }
-      } else {
-          console.log(`  Target Label Info: NOT FOUND for ${labelName}`);
-      }
-
-      if (targetLabelInfo) {
-        const targetAddress = targetLabelInfo.address;
-        let targetValue: number;
-
-        if (isBranch) {
-          const pc_plus_4 = currentAddress + 4;
-          const byteOffset = targetAddress - pc_plus_4;
-          if (byteOffset % 4 !== 0) {
-            jumpBranchErrors.push(`Línea ${lineNumber}: Error interno, offset branch (${byteOffset}) no múltiplo de 4 para '${labelName}'.`);
-            hasJumpBranchError = true; break;
-          }
-          const wordOffset = byteOffset / 4;
-          if (wordOffset < -32768 || wordOffset > 32767) {
-            jumpBranchErrors.push(`Línea ${lineNumber}: Salto branch fuera de rango para '${labelName}'. Offset ${wordOffset} no cabe en 16 bits.`);
-            hasJumpBranchError = true;
-          } else {
-             targetValue = wordOffset;
-             resolvedOperands[i] = { type: 'immediate', value: targetValue };
-          }
-
-        } else {
-          if (targetAddress % 4 !== 0) {
-            jumpBranchErrors.push(`Línea ${lineNumber}: Dirección JUMP '${labelName}' (0x${targetAddress.toString(16)}) no alineada.`);
-            hasJumpBranchError = true; break;
-          }
-
-          const jumpTargetField = (targetAddress >> 2) & 0x03FFFFFF;
-          targetValue = jumpTargetField;
-
-          const currentRegion = (currentAddress + 4) & 0xF0000000;
-          const targetRegion = targetAddress & 0xF0000000;
-
-          if (currentRegion !== targetRegion) {
-            jumpBranchErrors.push(`Línea ${lineNumber}: Salto J/JAL a '${labelName}' (0x${targetAddress.toString(16)}) fuera de la región actual de 256MB (PC=0x${currentAddress.toString(16)}). Los saltos J no pueden cambiar los 4 bits superiores de la dirección.`);
-            hasJumpBranchError = true;
-          } else {
-            resolvedOperands[i] = { type: 'immediate', value: targetValue };
-          }
+   private _resolveJumpBranchTargets(
+    mnemonic: string,
+    validatedOperands: ValidatedOperand[],
+    currentAddress: number,
+    labelMap: Map<string, LabelInfo>,
+    lineNumber: number
+  ): { resolvedOperands: string[]; jumpBranchErrors: string[] } {
+    const jumpBranchErrors: string[] = [];
+    let resolvedOperands = [...validatedOperands];
+    const isJump = ['j', 'jal'].includes(mnemonic);
+    const isBranch = ['beq', 'bne', 'bgtz', 'blez', 'bltz', 'bgez'].includes(mnemonic);
+  
+    for (let i = 0; i < resolvedOperands.length; i++) {
+      const op = resolvedOperands[i];
+      if (op.type === 'label' && ((isJump && i === 0) || (isBranch && i === resolvedOperands.length - 1))) {
+        const labelName = op.name;
+        const info = labelMap.get(labelName);
+        if (!info) {
+          jumpBranchErrors.push(`Línea ${lineNumber}: Etiqueta no definida '${labelName}'.`);
+          break;
         }
-      } else {
-        jumpBranchErrors.push(`Línea ${lineNumber}: Etiqueta de salto no definida '${labelName}'.`);
-        hasJumpBranchError = true; break;
+        const targetAddr = info.address;
+        if (isBranch) {
+          const relativeBytes = targetAddr - (currentAddress + 4);
+          if (relativeBytes % 4 !== 0) {
+            jumpBranchErrors.push(`Línea ${lineNumber}: Branch offset no alineado para '${labelName}'.`);
+            break;
+          }
+          const offset = relativeBytes >> 2;
+          if (offset < -32768 || offset > 32767) {
+            jumpBranchErrors.push(`Línea ${lineNumber}: Branch offset fuera de rango para '${labelName}'.`);
+            break;
+          }
+          resolvedOperands[i] = { type: 'immediate', value: offset };
+        } else if (isJump) {
+          if (targetAddr % 4 !== 0) {
+            jumpBranchErrors.push(`Línea ${lineNumber}: Jump target no alineado para '${labelName}'.`);
+            break;
+          }
+          const regionPC = (currentAddress + 4) & 0xF0000000;
+          const regionTgt = targetAddr & 0xF0000000;
+          if (regionPC !== regionTgt) {
+            jumpBranchErrors.push(
+              `Línea ${lineNumber}: Jump fuera de región 256MB para '${labelName}'.`
+            );
+            break;
+          }
+          const imm26 = (targetAddr >>> 2) & 0x03FFFFFF;
+          resolvedOperands[i] = { type: 'immediate', value: imm26 };
+        }
       }
     }
-
-     if (hasJumpBranchError && (jumpBranchErrors[jumpBranchErrors.length-1].includes("Error interno") || jumpBranchErrors[jumpBranchErrors.length-1].includes("no alineada") || jumpBranchErrors[jumpBranchErrors.length-1].includes("no definida")) ) {
-       break;
-    }
-
+  
+    const finalOperandStrings = resolvedOperands.map(op => this._formatValidatedOperand(op));
+    return { resolvedOperands: finalOperandStrings, jumpBranchErrors };
   }
-
-  const finalOperandStrings = resolvedOperands.map(op => this._formatValidatedOperand(op));
-
-  if (hasJumpBranchError) {
-    return { resolvedOperands: [], jumpBranchErrors };
-  }
-
-  return { resolvedOperands: finalOperandStrings, jumpBranchErrors };
-}
 
    private _parseRegister(reg: string | undefined): string | null {
        if (!reg) return null;
