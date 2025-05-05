@@ -1,43 +1,75 @@
 .title{
-    color: #266478;
+    color: #0D5C63;
     font-family: "Nunito", sans-serif;
-    font-size: 75px;
+    font-size: 3.5rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     text-align: center;
-    margin: 15px 0 10px 0;
+    margin: 1rem 0 2rem;
 }
+
 .container{
     display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 4rem;
-    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 1rem;
 }
 
 .input-textbox {
     display: flex;
     font-family: "Nunito", sans-serif;
-    
 }
 
 .input-container {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    gap: 15px; 
-    justify-content: flex-start; /* Alineación vertical superior */
-    height: calc(10 * 40px);
+    flex-direction: column;
+    gap: .5rem;
 }
 
 .translate {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    gap: 20px; 
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
 }
 
+.assemblerTranslator {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.assemblerTranslator textarea {
+  border: 2px solid #0d5c63;
+  color: #0d5c63;
+  padding: 0.5rem;
+}
+
+.assemblerTranslator button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem 1rem;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    background-color: #0d5c63;
+    font-size: .7rem;
+}
+
+.error-container {
+  padding: 0.5rem;
+  border-radius: 4px;
+  color: #0d5c63;
+  font-size: 0.9rem;
+  list-style: none;
+  width: 300px;
+
+  ul {
+    list-style: none;
+  }
+}
 
 .output-textbox {
     display: flex;
@@ -55,7 +87,6 @@
         flex-direction: column; /* Cambia a fila en pantallas móviles */
     }
 }
-
 
 .instruction-menu-container {
     display: flex;

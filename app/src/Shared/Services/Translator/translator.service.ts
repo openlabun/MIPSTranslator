@@ -322,15 +322,43 @@ export class TranslatorService {
   }
 
   translateMIPStoHex(textInput: string): string {
+    // Normaliza el texto completo: elimina comas y espacios extra
     const normalized = this.normalizeInstruction(textInput);
     console.log(normalized);
-    const tokens = normalized.split(' ');
+
+    // Divide el texto en instrucciones por línea
     const instructions: string[] = normalized.trim().split('\n');
+
+    // Traducir cada instrucción
     const translatedInstructions: string[] = instructions.map(instruction => {
-      return this.translateInstructionToHex(instruction.trim());
+      // Preprocesa instrucciones tipo sw/lw para separar offset(base)
+      const preprocessed = this.preprocessMemoryInstruction(instruction.trim());
+      try {
+        return this.translateInstructionToHex(preprocessed);
+      } catch (error) {
+        console.error(`Error al traducir línea: "${instruction}"`, error);
+        return 'ERROR';
+      }
     });
+
     const formattedInstructions: string = translatedInstructions.join('\n');
     return formattedInstructions;
+  }
+
+  private preprocessMemoryInstruction(line: string): string {
+    const regex = /^(\w+)\s+(\$\w+)\s+(-?\d+)\((\$\w+)\)/;
+    const match = line.match(regex);
+
+    if (match) {
+      const [_, op, rt, offset, base] = match;
+      return `${op} ${rt} ${offset} ${base}`;
+    }
+
+    return line;
+  }
+
+  normalizeInstruction(instruction: string): string {
+    return instruction.replace(/,/g, '').replace(/\s+/g, ' ').trim();
   }
 
   isValidHex(text: string): boolean {
@@ -338,22 +366,70 @@ export class TranslatorService {
   }
 
   isValidMIPS(text: string): boolean {
-    const instructions: string[] = text.trim().split('\n');
+    const instruction = text.trim();
+    const parts = instruction.split(/\s+/);
+    const opcode = parts[0];
+    const operands = parts.slice(1);
 
-    for (let i = 0; i < instructions.length; i++) {
-      const instruction = instructions[i].trim();
-      const parts = instruction.split(' ');
-      const opcode = parts[0];
-      if (!instructionMap[opcode]) {
-        return false;
+    const rType = ['add', 'addu', 'sub', 'subu', 'and', 'or', 'xor', 'nor', 'slt',
+                   'sll', 'srl', 'sra', 'sllv', 'srlv', 'srav', 'jr', 'jalr',
+                   'mfhi', 'mflo', 'mthi', 'mtlo', 'div', 'divu', 'mult', 'multu',
+                   'teq', 'tge', 'tgeu', 'tlt', 'tltu', 'tne'];
+    const iType = ['addi', 'addiu', 'andi', 'ori', 'xori', 'slti', 'beq', 'bne', 'bgtz', 'blez'];
+    const memType = ['lw', 'sw', 'lb', 'lbu', 'lh', 'lhu', 'sb', 'sh'];
+    const jType = ['j', 'jal'];
+
+    const isImmediate = (val: string) => /^-?(0x[0-9a-fA-F]+|\d+)$/.test(val);
+    const isRegister = (reg: string): boolean => /^\$\w+$/.test(reg);
+
+    if (!instructionMap[opcode]) return false;
+
+    if (rType.includes(opcode)) {
+      if (['mfhi', 'mflo', 'mthi', 'mtlo', 'jr'].includes(opcode)) {
+        return operands.length === 1 && isRegister(operands[0]);
       }
+      if (opcode === 'jalr') {
+        return (operands.length === 1 && isRegister(operands[0])) ||
+               (operands.length === 2 && operands.every(isRegister));
+      }
+      if (['div', 'divu', 'mult', 'multu'].includes(opcode)) {
+        return operands.length === 2 && operands.every(isRegister);
+      }
+      if (['sll', 'srl', 'sra'].includes(opcode)) {
+        return operands.length === 3 && isRegister(operands[0]) && isRegister(operands[1]) && isImmediate(operands[2]);
+      }
+      if (['sllv', 'srlv', 'srav'].includes(opcode)) {
+        return operands.length === 3 && operands.every(isRegister);
+      }
+      if (['teq', 'tge', 'tgeu', 'tlt', 'tltu', 'tne'].includes(opcode)) {
+        return (operands.length === 2 && operands.every(isRegister)) ||
+               (operands.length === 3 && isRegister(operands[0]) && isRegister(operands[1]) && isImmediate(operands[2]));
+      }
+      return operands.length === 3 && operands.every(isRegister);
     }
 
-    return true;
-  }
+    if (iType.includes(opcode)) {
+      if (['bgtz', 'blez'].includes(opcode)) {
+        return operands.length === 2 && isRegister(operands[0]) && isImmediate(operands[1]);
+      }
+      return operands.length === 3 &&
+        isRegister(operands[0]) &&
+        isRegister(operands[1]) &&
+        isImmediate(operands[2]);
+    }
 
-  normalizeInstruction(instruction: string): string {
-    return instruction.replace(/,/g, '').replace(/\s+/g, ' ').trim();
+    if (memType.includes(opcode)) {
+      return operands.length === 3 &&
+        isRegister(operands[0]) &&
+        isImmediate(operands[1]) &&
+        isRegister(operands[2]);
+    }
+
+    if (jType.includes(opcode)) {
+      return operands.length === 1 && isImmediate(operands[0]);
+    }
+
+    return false;
   }
 
 }
