@@ -72,14 +72,23 @@
 }
 
 .output-textbox {
-    display: flex;
-    margin-left: 180px;
+  display: flex;
+  width: 100%;
+  grid-column: 4 / span 2;
+}
+
+.instruction-table {
+  grid-column: span 3;
+}
+
+.save-ram {
+  grid-column: span 2;
 }
 
 .save-to-ram-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,9 @@
+<div class="contributors-container" *ngIf="!errorMsg; else errorTpl">
+  <div class="contributor" *ngFor="let c of contributors" (click)="openProfile(c.html_url)">
+    <img [src]="c.avatar_url" [alt]="c.login" title="{{ c.login }}" />
+    <p>{{ c.login }}</p>
+  </div>
+</div>
+<ng-template #errorTpl>
+  <p style="color: red;">{{ errorMsg }}</p>
+</ng-template>

@@ -296,10 +296,7 @@ export class MainPageComponent {
       return operands.length === 1 && isLabelOrAddress(operands[0]);
     }
 
-
-
     return false;
   }
-
 
 }

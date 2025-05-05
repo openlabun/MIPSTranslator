@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 .file-input{
@@ -16,20 +15,21 @@
 }
 
 .drop-area {
-    border: 2px dashed #2a999d;
-    border-radius: 10px;
-    padding: 25px;
-    background-color: transparent;
-    text-align: center;
-    width: 350px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    position: relative;
-    margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  border: 2px dashed #2a999d;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background-color: transparent;
+  text-align: center;
+  /* width: 350px; */
+  gap: 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  position: relative;
 }
 
 .drop-area:hover {
-    background-color: #43296a42;
-    border-color: #7d2ae8;
+  background-color: #E7E9EA;
 }
 
 .drop-text {
@@ -38,11 +38,11 @@
     margin-bottom: 10px;
     font-family: "Nunito", sans-serif;
 }
+
 .or-text {
-    font-size: 14px;
-    color: #266478;
-    margin: 15px 0;
-    font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #266478;
+  font-family: "Nunito", sans-serif;
 }
 
 .select-button {
@@ -68,7 +68,6 @@
     background-color: #7c2ae85a;
     border-color: #7d2ae8;
 }
-
 
 #drop-area.active {
     background-color: #e0e7ff;
