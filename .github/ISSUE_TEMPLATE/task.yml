@@ -1,0 +1,24 @@
+name: "Tarea"
+description: "Describe una tarea que necesita completarse"
+title: "[TASK] Título de la tarea"
+labels: ["task"]
+body:
+  - type: input
+    id: task_description
+    attributes:
+      label: "Descripción de la Tarea"
+      description: "Describe la tarea que debe completarse."
+      placeholder: "Una descripción clara y concisa de la tarea que debe completarse."
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "Pasos a Seguir"
+      description: "Describe los pasos necesarios para completar la tarea."
+      placeholder: "1. Paso uno\n2. Paso dos\n3. Paso tres"
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: "Información Adicional"
+      description: "Cualquier otra información que consideres relevante."

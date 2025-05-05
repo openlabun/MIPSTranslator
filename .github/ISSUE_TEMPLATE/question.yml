@@ -1,0 +1,24 @@
+name: "Pregunta"
+description: "Haz una pregunta sobre este proyecto"
+title: "[QUESTION] Título de la pregunta"
+labels: ["question"]
+body:
+  - type: input
+    id: question
+    attributes:
+      label: "Pregunta"
+      description: "Escribe tu pregunta aquí de manera clara y concisa."
+      placeholder: "Escribe tu pregunta aquí de manera clara y concisa."
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "Contexto"
+      description: "Proporciona el contexto necesario para entender tu pregunta."
+      placeholder: "Proporciona el contexto necesario para entender tu pregunta."
+
+  - type: textarea
+    id: additional_info
+    attributes:
+      label: "Información Adicional"
+      description: "Cualquier otra información que consideres relevante."

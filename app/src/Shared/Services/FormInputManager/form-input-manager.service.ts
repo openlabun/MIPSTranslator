@@ -6,6 +6,7 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class FormInputManagerService {
   public inputApp = new FormControl();
+  public assemblerInputApp = new FormControl();
   public isHexToMips = new FormControl<boolean>(false, [Validators.required]);
   constructor() { 
 
