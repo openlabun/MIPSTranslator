@@ -1,66 +1,134 @@
-.title{
-    color: #266478;
-    font-family: "Nunito", sans-serif;
-    font-size: 75px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    text-align: center;
-    margin: 15px 0 10px 0;
+.title {
+  color: #266478;
+  font-family: "Nunito", sans-serif;
+  font-size: 75px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  margin: 15px 0 10px 0;
 }
-.container{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 4rem;
-    flex-direction: row;
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 2.8rem;
+  flex-direction: row;
 }
-
 .input-textbox {
-    display: flex;
-    font-family: "Nunito", sans-serif;
-    
+  display: flex;
+  font-family: "Nunito", sans-serif;
 }
-
 .input-container {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    gap: 15px; 
-    justify-content: flex-start; /* Alineación vertical superior */
-    height: calc(10 * 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  justify-content: flex-start;
+  height: calc(10 * 40px);
 }
-
 .translate {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    gap: 20px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
 }
-
-
 .output-textbox {
-    display: flex;
-    margin-left: 180px;
+  display: flex;
+  margin-left: 180px;
 }
-
 .save-to-ram-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
+.assembler-container {
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.assembler-title {
+  color: #266478;
+  font-family: "Nunito", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+.assembler-textarea {
+  width: 90%;
+  max-width: 600px;
+  height: 10rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
+  border: 3px solid #7d2ae8;
+  box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.5);
+  background-color: #fdfdff;
+  color: #333;
+  padding: 1rem;
+  font-size: 1rem;
+  font-family: "Consolas", "Monaco", monospace;
+  resize: vertical;
+  margin-bottom: 15px;
+}
+.assembler-button {
+  display: inline-block;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: #7c2ae8d9;
+  transition: all 0.2s ease;
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+.assembler-button:hover {
+  background-color: #5a1fb5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.assembler-button:active {
+  transform: translateY(0px);
+  background-color: #4a1994;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.assembler-errors {
+  color: #D8000C;
+  background-color: #FFD2D2;
+  border: 1px solid #D8000C;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 15px;
+  text-align: left;
+  white-space: pre-wrap;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 0.9em;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.assembler-errors h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #D8000C;
+  font-weight: bold;
+}
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column; /* Cambia a fila en pantallas móviles */
-    }
-}
-
-
-.instruction-menu-container {
-    display: flex;
+  .container {
     flex-direction: column;
-    align-items: center; /* Centra horizontalmente */
-    justify-content: flex-start; /* Alineación vertical superior */
-    height: calc(10 * 40px);
+  }
+}
+.instruction-menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: calc(10 * 40px);
 }

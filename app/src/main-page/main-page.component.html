@@ -1,4 +1,5 @@
 <p class="title">MIPS CONVERTER</p>
+
 <section class="container">
     <div class="instruction-menu-container">
         <app-instruction-menu (instructionSelected)="onInstructionMenuSelect($event)"></app-instruction-menu>
@@ -6,33 +7,49 @@
 
     <div class="input-container">
         <div class="input-textbox">
-            <app-textbox 
+             <app-textbox
                 [inputText]="inputText"
-                (keyup.enter)="onTranslate()" 
-                (inputChange)="onInput($event)" 
+                (keyup.enter)="onTranslate()"
+                (inputChange)="onInput($event)"
                 (selectedLineText)="onTableValueChange($event)">
-            </app-textbox> 
+            </app-textbox>
         </div>
-        <div class = "translate">
-            <!-- <app-switch (toggleChange)="onToggle($event)"></app-switch>  -->
-            <app-translate-button (click)="onTranslate()"></app-translate-button> 
-            <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
+        <div class = "container">
+            <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
+                <div class = "translate">  
+                    <app-translate-button (click)="onTranslate()"></app-translate-button>
+                    <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
+                </div>
         </div>
     </div>
 
-    <app-control-stack 
+    <app-control-stack
         [translations]="translations"
         (instructionClick)="onInstructionClick($event)"
         (deleteInstruction)="onDeleteInstruction($event)">
     </app-control-stack>
 </section>
+
 <section class="instruction-table">
     <app-instruction-table></app-instruction-table>
 </section>
-<section class="save-ram">
-    <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
-</section>
 
 
 
-
+<div class="assembler-container">
+  <h3 class="assembler-title">Código Ensamblador MIPS</h3>
+  <div>
+    <textarea #mipsCodeInput
+              class="assembler-textarea" rows="15"
+              cols="50"
+              placeholder="loop:&#10;  addi $t0, $t0, 1&#10;  bne $t0, $s0, loop&#10;# Escribe o pega tu código aquí..."></textarea>
+  </div>
+  <button (click)="loadMipsCode(mipsCodeInput.value)"
+          class="assembler-button" style="margin-top: 10px;">
+    Cargar y Procesar Código
+  </button>
+  <div *ngIf="parsingErrors.length > 0" class="assembler-errors">
+    <h4>Errores encontrados:</h4>
+    {{ parsingErrors.join('\\n') }}
+  </div>
+</div>
