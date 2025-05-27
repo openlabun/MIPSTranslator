@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import { TextboxComponent } from './textbox/textbox.component';
 import { TranslateButtonComponent } from './translate-button/translate-button.component';
 import { SwitchComponent } from './switch/switch.component';
@@ -32,7 +32,8 @@ interface Translation {
     SaveRamButtonComponent,
     InstructionTableComponent,
     InstructionMenuComponent,
-    ControlStackComponent
+    ControlStackComponent,
+    FormsModule,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],

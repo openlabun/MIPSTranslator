@@ -1,19 +1,22 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RV32I_INSTRUCTIONS } from '../../Shared/Constants/rv32i-instructions';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-instruction-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './instruction-menu.component.html',
   styleUrls: ['./instruction-menu.component.css']
 })
 export class InstructionMenuComponent {
   @Output() instructionSelected = new EventEmitter<string>();
-  
+
   objectKeys = Object.keys;
-  
+  filterText: string = '';
+
   instructionCategories: { [key: string]: string[] } = {
     'R-Type': [
       "add", "sub", "and", "or", "jalr", "jr", "slt", "mfhi", "mflo", 
@@ -28,18 +31,23 @@ export class InstructionMenuComponent {
     ],
     'J-Type': ['jal', 'j'],
   };
-  
-  // Obtener descripción para una instrucción
+
+  // Método para filtrar las instrucciones según el texto ingresado
+  getFilteredInstructions(category: string): string[] {
+    const allInstructions = this.instructionCategories[category];
+    if (!this.filterText.trim()) return allInstructions;
+
+    const lowerFilter = this.filterText.toLowerCase();
+    return allInstructions.filter(inst => inst.toLowerCase().includes(lowerFilter));
+  }
+
   getDescription(inst: string): string {
     return RV32I_INSTRUCTIONS[inst] || '';
   }
-  
-  // Seleccionar instrucción
+
   selectInstruction(instruction: string): void {
-    // Agrega "x1, x2, x3" como valores de ejemplo para los registros
     let formattedInstruction = '';
-    
-    // Formatear la instrucción según su tipo
+
     if (['add', 'sub', 'and', 'or', 'xor', 'subu', 'sllv', 'srlv', 'srav', 'slt', 'sltu', 'addu', 'nor'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 $t2 $t3`;
     } else if (['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi', 'addiu'].includes(instruction)) {
@@ -58,12 +66,12 @@ export class InstructionMenuComponent {
       formattedInstruction = `${instruction} $t1 $t2 8`;
     } else if (['j', 'jal'].includes(instruction)) {
       formattedInstruction = `${instruction} 16`;
-    } else if (['jalr', 'jr', 'mfhi', 'mflo', 'mthi', 'mtlo', ].includes(instruction)) {
+    } else if (['jalr', 'jr', 'mfhi', 'mflo', 'mthi', 'mtlo'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1`;
     } else if (['lui', 'auipc', 'blez', 'bgtz'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 1024`;
     } else if (['syscall', 'break'].includes(instruction)) {
-      formattedInstruction = instruction;  // Sin operandos
+      formattedInstruction = instruction;
     } else if (['bltz', 'bgez'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 8`;
     } else {

@@ -1,3 +1,27 @@
+.instruction-filter-input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #333; /* <-- texto visible y coherente */
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.instruction-filter-input:focus {
+  outline: none;
+  border-color: #7d2ae8;
+  box-shadow: 0 0 0 2px rgba(125, 42, 232, 0.2);
+}
+
+.instruction-filter-input::placeholder {
+  color: #999;
+}
+
 
 
 .instruction-menu {
@@ -5,6 +29,7 @@
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 250px;
   max-width: 250px;
   max-height: 500px;
   overflow-y: auto;
@@ -59,8 +84,9 @@
 }
 
 .instruction-category {
-  margin-bottom: 8px;
-  border-radius: 4px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  width: 250px;
   overflow: hidden;
 }
 
@@ -78,7 +104,7 @@
 
 .instructions-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: 5px 0;
   max-height: 200px; /* Altura máxima para las listas de instrucciones */
   overflow-y: auto; /* Barra de desplazamiento interna para listas largas */
