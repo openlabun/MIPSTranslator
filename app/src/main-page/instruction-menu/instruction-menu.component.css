@@ -91,7 +91,7 @@
 }
 
 .category-summary {
-  background-color: #5d0081;
+  background-color: #7c2ae8d9;
   padding: 6px 10px;
   cursor: pointer;
   font-weight: 600;
@@ -99,7 +99,11 @@
 }
 
 .category-summary:hover {
-  background-color: #773e8e;
+  background-color: #5a1fb5;
+}
+
+.category-summary:active {
+  background-color: #4a1994;
 }
 
 .instructions-list {

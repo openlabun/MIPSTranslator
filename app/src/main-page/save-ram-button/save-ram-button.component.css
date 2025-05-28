@@ -23,7 +23,11 @@
 }
 
 .button:hover {
-  background: #2a9d8f;
+  background: #5a1fb5;
+}
+
+.button:active {
+  background: #4a1994;
 }
 
 .button:hover .svg-icon {

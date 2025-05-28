@@ -43,6 +43,16 @@
     animation: greentopBubbles 1.3s ease;
   }
   
+
+  .button:hover {
+    background: #5a1fb5;
+  }
+  
+  .button:active {
+    background: #4a1994;
+  }
+
+
   @keyframes greentopBubbles {
     0% {
       background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
