@@ -13,12 +13,14 @@
 .control-stack {
     width: 90%;
     border-collapse: collapse;
-    border: 5px #7d2ae8;
-    box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.96);
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: "Nunito", sans-serif;
     font-size: 18px;
-    color: #266478;
+    color: #3b3b3b;
     height: max-content;
 }
 
@@ -27,13 +29,13 @@
     padding: 10px;
     text-align: left;
     width: 20rem;
-    color: #741ce7d6;
+    color: #3b3b3b;
     text-align: center;
 }
 
 .control-stack th {
-    background-color: #ffffff;
-    color: #741ce7d6;
+    background-color: #fafafa;
+    color: #7c2ae8d9;
     font-weight: bold;
     font-size: 20px;
     text-align: center;
@@ -48,13 +50,13 @@
 }
 
 .control-stack tr {
-    background-color: #f2f2f2;
+    background-color: #fafafa;
     transition: background-color 0.4s ease;
 }
 
 .control-stack tr:hover td {
     background-color: #bba4e6;
-    color: #ffffff;
+    color: #fafafa;
     transition: background-color 0.4s ease;
 }
 
