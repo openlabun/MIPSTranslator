@@ -11,7 +11,7 @@ table {
     tr {
       
        &:hover {
-        background: #2a999d1b;
+        background: #5050501b;
         
         td {
           color: #555;

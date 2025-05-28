@@ -64,11 +64,13 @@
 /* Mostrar scrollbar más pronunciado al hacer hover */
 .instruction-menu:hover::-webkit-scrollbar-thumb {
   background-color: rgba(125, 42, 232, 0.4); /* Más visible */
+  transition: background-color 0.2s ease;
 }
 
 /* Cuando se está scrolleando activamente */
 .instruction-menu::-webkit-scrollbar-thumb:active {
   background-color: rgba(125, 42, 232, 0.7); /* Muy visible */
+  transition: background-color 0.2s ease;
 }
 
 .menu-title {
@@ -92,6 +94,7 @@
 
 .category-summary {
   background-color: #7c2ae8d9;
+  transition: background-color 0.2s ease;
   padding: 6px 10px;
   cursor: pointer;
   font-weight: 600;

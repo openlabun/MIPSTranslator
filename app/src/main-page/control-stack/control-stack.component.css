@@ -56,8 +56,9 @@
 
 .control-stack tr:hover td {
     background-color: #bba4e6;
-    color: #fafafa;
     transition: background-color 0.4s ease;
+    color: #fafafa;
+    transition: color 0.2s ease;
 }
 
 

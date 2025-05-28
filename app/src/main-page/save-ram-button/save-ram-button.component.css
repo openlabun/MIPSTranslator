@@ -11,6 +11,7 @@
   background: #741ce7d6;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .lable {
@@ -24,14 +25,17 @@
 
 .button:hover {
   background: #5a1fb5;
+  transition: background-color 0.2s ease;
 }
 
 .button:active {
   background: #4a1994;
+  transition: background-color 0.2s ease;
 }
 
 .button:hover .svg-icon {
   animation: spin 1s linear infinite;
+  transition: background-color 0.2s ease;
 }
 
 @keyframes spin {
