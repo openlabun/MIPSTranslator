@@ -7,7 +7,7 @@
   font-family: "Nunito", sans-serif;
   font-size: 14px;
   background-color: #ffffff;
-  color: #333; /* <-- texto visible y coherente */
+  color: #333;
   transition: border-color 0.3s, box-shadow 0.3s;
   box-sizing: border-box;
 }
@@ -22,33 +22,26 @@
   color: #999;
 }
 
-
-
 .instruction-menu {
   background-color: #ffffff;
   border-radius: 10px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 250px;
-  
   max-width: 250px;
   max-height: 500px;
   overflow-y: auto;
   font-family: "Nunito", sans-serif;
-  
-  /* Firefox - scrollbar inicialmente invisible */
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 }
 
-/* Mostrar scrollbar en Firefox cuando se interactúa */
 .instruction-menu:hover,
 .instruction-menu:focus-within,
 .instruction-menu:active {
   scrollbar-color: rgba(125, 42, 232, 0.3) transparent;
 }
 
-/* Webkit browsers (Chrome, Edge, Safari) - scrollbar invisible por defecto */
 .instruction-menu::-webkit-scrollbar {
   width: 4px;
 }
@@ -59,18 +52,17 @@
 }
 
 .instruction-menu::-webkit-scrollbar-thumb {
-  background-color: transparent; /* Inicialmente transparente */
+  background-color: transparent;
   border-radius: 8px;
 }
-/* Mostrar scrollbar más pronunciado al hacer hover */
+
 .instruction-menu:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(125, 42, 232, 0.4); /* Más visible */
+  background-color: rgba(125, 42, 232, 0.4);
   transition: background-color 0.2s ease;
 }
 
-/* Cuando se está scrolleando activamente */
 .instruction-menu::-webkit-scrollbar-thumb:active {
-  background-color: rgba(125, 42, 232, 0.7); /* Muy visible */
+  background-color: rgba(125, 42, 232, 0.7);
   transition: background-color 0.2s ease;
 }
 
@@ -78,15 +70,15 @@
   color: #3b3b3b;
   text-align: center;
   margin-bottom: 15px;
-  font-weight: 600;
-  position: relative; /* Opcional: mantener el título visible al desplazarse */
+  font-weight: 800;
+  position: relative;
   top: 0;
   background-color: #ffffff;
-  font-weight: 800; /* Black weight */
   padding: 5px 0;
   z-index: 1;
 }
 
+/* ----- Animated Category Styles ----- */
 .instruction-category {
   margin-bottom: 12px;
   border-radius: 6px;
@@ -94,13 +86,67 @@
   overflow: hidden;
 }
 
+/* Summary styles with animated arrow */
 .category-summary {
   background-color: #7c2ae8d9;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
   padding: 6px 10px;
   cursor: pointer;
   font-weight: 600;
   user-select: none;
+  list-style: none;
+  position: relative;
+  border-radius: 6px;
+}
+
+.category-summary::-webkit-details-marker {
+  display: none;
+}
+
+.category-summary::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  transition: transform 0.4s ease;
+  color: white;
+}
+
+/* Open state styles */
+.instruction-category[open] .category-summary {
+  border-radius: 6px 6px 0 0;
+}
+
+.instruction-category[open] .category-summary::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Instruction list animation */
+.instructions-list {
+  display: flex;
+  flex-direction: row;
+  padding: 5px 0;
+  max-height: 200px;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fallback for browsers that don't support details[open] animations */
+.instruction-category:not([open]) .instructions-list {
+  display: none;
 }
 
 .category-summary:hover {
@@ -111,17 +157,6 @@
   background-color: #4a1994;
 }
 
-.instructions-list {
-  display: flex;
-  flex-direction: row;
-  padding: 5px 0;
-  max-height: 200px; /* Altura máxima para las listas de instrucciones */
-  overflow-y: auto; /* Barra de desplazamiento interna para listas largas */
-}
-
-
-
-
 .instruction-button {
   background: none;
   border: none;
@@ -130,7 +165,9 @@
   cursor: pointer;
   color: #333;
   font-family: "Nunito", sans-serif;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  margin: 2px 0;
 }
 
 .instruction-button:hover {
