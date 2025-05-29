@@ -25,11 +25,12 @@
 
 
 .instruction-menu {
-  background-color: #fafafa;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border-radius: 10px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 250px;
+  
   max-width: 250px;
   max-height: 500px;
   overflow-y: auto;
@@ -80,7 +81,8 @@
   font-weight: 600;
   position: relative; /* Opcional: mantener el título visible al desplazarse */
   top: 0;
-  background-color: #fafafa;
+  background-color: #ffffff;
+  font-weight: 800; /* Black weight */
   padding: 5px 0;
   z-index: 1;
 }

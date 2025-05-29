@@ -4,18 +4,21 @@
     justify-content: flex-start;
     align-items: center;
     gap: 20px;
-    height: calc(10  * 40px);
+    height: calc(10 * 40px);
     overflow-y: auto;
     max-width: 440px;
-    margin: 0 auto;  
+    margin: 0 auto;
+    border-radius: 10px;
 }
 
 .control-stack {
     width: 90%;
-    border-collapse: collapse;
-    background-color: #fafafa;
-    border-radius: 8px;
-    padding: 10px;
+    border-collapse: separate; /* Changed from collapse to separate */
+    border-spacing: 0; /* Add this to remove gaps between cells */
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden; /* Crucial for rounded corners */
+    padding: 0; /* Changed from 10px to 0 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
     font-family: "Nunito", sans-serif;
@@ -31,14 +34,17 @@
     width: 20rem;
     color: #3b3b3b;
     text-align: center;
+    background-color: transparent;
+    position: relative; /* For hover effects */
 }
 
 .control-stack th {
-    background-color: #fafafa;
+    background-color: #ffffff;
     color: #7c2ae8d9;
     font-weight: bold;
     font-size: 20px;
     text-align: center;
+    font-weight: 800;
 }
 
 .control-stack th:last-child,
@@ -47,6 +53,22 @@
     padding: 0;
     min-width: 40px;
     max-width: 40px;
+}
+
+/* Rounded corners for the first row */
+.control-stack tr:first-child th:first-child {
+    border-top-left-radius: 10px;
+}
+.control-stack tr:first-child th:last-child {
+    border-top-right-radius: 10px;
+}
+
+/* Rounded corners for the last row */
+.control-stack tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+.control-stack tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
 }
 
 .control-stack tr {
@@ -61,28 +83,26 @@
     transition: color 0.2s ease;
 }
 
-
 .control-stack-container::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 .control-stack-container::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 8px;
+    background: transparent;
+    border-radius: 8px;
 }
 
 .control-stack-container::-webkit-scrollbar-thumb {
-  background-color: transparent; 
-  border-radius: 8px;
+    background-color: transparent; 
+    border-radius: 8px;
 }
 
 .control-stack-container:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(125, 42, 232, 0.4); 
+    background-color: rgba(125, 42, 232, 0.4); 
 }
 
-
 .control-stack-container::-webkit-scrollbar-thumb:active {
-  background-color: rgba(125, 42, 232, 0.7); 
+    background-color: rgba(125, 42, 232, 0.7); 
 }
 
 .delete-btn {
