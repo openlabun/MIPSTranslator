@@ -198,9 +198,11 @@ export class MainPageComponent {
     this.inputText = event.instruction;
     this.detectInstructionType(event.instruction);
     
+    // Force table update
+    this.tableManager.updateSelectedLineText(event.instruction);
+    
     if (event.shouldTranslate) {
-      setTimeout(() => this.onTranslate(), 0); 
-      // Timeout ensures UI updates before translation
+      setTimeout(() => this.onTranslate(), 0);
     }
   }
 

@@ -13,7 +13,11 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./instruction-menu.component.css']
 })
 export class InstructionMenuComponent {
-  @Output() instructionSelected = new EventEmitter<{instruction: string, shouldTranslate: boolean}>();
+  @Output() instructionSelected = new EventEmitter<{
+    instruction: string;
+    shouldTranslate: boolean;
+    instructionType?: string;  // Add this new property
+  }>();
 
   objectKeys = Object.keys;
   filterText: string = '';
