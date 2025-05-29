@@ -4,6 +4,7 @@ import { RV32I_INSTRUCTIONS } from '../../Shared/Constants/rv32i-instructions';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-instruction-menu',
   standalone: true,
@@ -12,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./instruction-menu.component.css']
 })
 export class InstructionMenuComponent {
-  @Output() instructionSelected = new EventEmitter<string>();
+  @Output() instructionSelected = new EventEmitter<{instruction: string, shouldTranslate: boolean}>();
 
   objectKeys = Object.keys;
   filterText: string = '';
@@ -78,6 +79,9 @@ export class InstructionMenuComponent {
       formattedInstruction = instruction;
     }
 
-    this.instructionSelected.emit(formattedInstruction);
+    this.instructionSelected.emit({
+      instruction: formattedInstruction,
+      shouldTranslate: true // Flag to trigger translation
+    });
   }
 }

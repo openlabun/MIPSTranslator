@@ -193,10 +193,15 @@ export class MainPageComponent {
     }
   }
 
-  onInstructionMenuSelect(instruction: string): void {
-    this.inputManager.setValue(instruction);
-    this.inputText = instruction;
-    this.detectInstructionType(instruction);
+  onInstructionMenuSelect(event: {instruction: string, shouldTranslate: boolean}): void {
+    this.inputManager.setValue(event.instruction);
+    this.inputText = event.instruction;
+    this.detectInstructionType(event.instruction);
+    
+    if (event.shouldTranslate) {
+      setTimeout(() => this.onTranslate(), 0); 
+      // Timeout ensures UI updates before translation
+    }
   }
 
   onDeleteInstruction(translation: Translation): void {
