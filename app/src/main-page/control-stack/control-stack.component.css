@@ -6,7 +6,8 @@
     gap: 0;
     height: calc(10 * 40px);
     overflow-y: auto;
-    max-width: 440px;
+    max-width: 400px;
+    width: 400px;
     margin: 0 auto;
     border-radius: 10px;
     background-color: #f6f6f8;
