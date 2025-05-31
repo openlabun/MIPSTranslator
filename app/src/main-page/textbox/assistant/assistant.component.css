@@ -3,28 +3,50 @@ ul {
   padding: 1rem;
   margin: 0;
   width: fit-content;
-  font-weight: medium;
+  font-weight: 600; /* Similar a otros textos en tu tema */
   font-size: 1rem;
   font-family: "Nunito", sans-serif;
-  color: black;
-  background: rgba(241, 234, 222, 0.351);
-  border: 1px solid linear-gradient(to bottom, #7c2ae8d9, rgba(124, 42, 232, 0.2));
-  border-radius: 24px;
-  box-shadow: 1px 4px 10.2px 0px rgba(0, 0, 0, 0.411);
+  color: #3b3b3b; /* Color de texto consistente */
+  background: rgba(255, 255, 255, 0.95); /* Fondo como tus textareas */
+  border: 1px solid #d1c4e9; /* Borde similar al textbox */
+  border-radius: 10px; /* Radio consistente con tu tema */
+  box-shadow: 0 3px 10px rgba(138, 111, 201, 0.15); /* Sombra morada suave */
   max-height: 8rem;
   overflow-y: auto;
   z-index: 40;
+  transition: all 0.2s ease; /* Transición consistente */
 }
-  
+
 li {
-  padding: 0.25rem 1rem;
+  padding: 0.5rem 1rem; /* Mayor padding vertical */
+  margin: 0.25rem 0; /* Espacio entre elementos */
   cursor: pointer;
-  border-radius: 15px;
-  transition: background-color 0.3s ease-in-out;
-  transition: color 0.3s ease-in-out;
+  border-radius: 8px; /* Radio más sutil */
+  transition: all 0.2s ease; /* Transición más rápida como el tema */
 }
-  
+
 li:hover {
-  background-color: #7c2ae8d9;
-  color: rgb(255, 255, 255);
+  background: linear-gradient(135deg, #8a6fc9 0%, #6a4cb8 100%); /* Gradiente del tema */
+  color: white;
+  transform: translateX(2px); /* Pequeño movimiento */
+  box-shadow: 0 2px 5px rgba(106, 76, 184, 0.3); /* Sombra morada */
+}
+
+/* Scrollbar estilo morado para coincidir */
+ul::-webkit-scrollbar {
+  width: 8px;
+}
+
+ul::-webkit-scrollbar-track {
+  background: #f1eaf7;
+  border-radius: 10px;
+}
+
+ul::-webkit-scrollbar-thumb {
+  background: #8a6fc9;
+  border-radius: 10px;
+}
+
+ul::-webkit-scrollbar-thumb:hover {
+  background: #6a4cb8;
 }
