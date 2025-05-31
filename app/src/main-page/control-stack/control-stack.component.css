@@ -3,59 +3,53 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 20px;
+    gap: 0;
     height: calc(10 * 40px);
     overflow-y: auto;
     max-width: 440px;
     margin: 0 auto;
     border-radius: 10px;
+    background-color: #f6f6f8;
 }
 
 .control-stack {
-    width: 90%;
-    border-collapse: separate; /* Changed from collapse to separate */
-    border-spacing: 0; /* Add this to remove gaps between cells */
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: #ffffff;
     border-radius: 10px;
-    overflow: hidden; /* Crucial for rounded corners */
-    padding: 0; /* Changed from 10px to 0 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     text-align: center;
     font-family: "Nunito", sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     color: #3b3b3b;
-    height: max-content;
 }
 
 .control-stack th,
 .control-stack td {
-    padding: 10px;
-    text-align: left;
-    width: 20rem;
-    color: #3b3b3b;
+    padding: 12px 15px;
     text-align: center;
+    color: #3b3b3b;
     background-color: transparent;
-    position: relative; /* For hover effects */
 }
 
 .control-stack th {
-    background-color: #ffffff;
-    color: #7c2ae8d9;
-    font-weight: bold;
-    font-size: 20px;
-    text-align: center;
+    background-color: #8a6fc9; /* Same as title-stripe */
+    color: white;
     font-weight: 800;
+    font-size: 18px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .control-stack th:last-child,
 .control-stack td:last-child {
-    width: 40px;
+    width: 50px;
     padding: 0;
-    min-width: 40px;
-    max-width: 40px;
+    min-width: 50px;
+    max-width: 50px;
 }
 
-/* Rounded corners for the first row */
+/* Rounded corners */
 .control-stack tr:first-child th:first-child {
     border-top-left-radius: 10px;
 }
@@ -63,76 +57,60 @@
     border-top-right-radius: 10px;
 }
 
-/* Rounded corners for the last row */
-.control-stack tr:last-child td:first-child {
-    border-bottom-left-radius: 10px;
-}
-.control-stack tr:last-child td:last-child {
-    border-bottom-right-radius: 10px;
+.control-stack tr {
+    background-color: #ffffff;
 }
 
-.control-stack tr {
-    background-color: #fafafa;
-    transition: background-color 0.4s ease;
+.control-stack tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
 .control-stack tr:hover td {
-    background-color: #bba4e6;
-    transition: background-color 0.4s ease;
-    color: #fafafa;
-    transition: color 0.2s ease;
+    background-color: #e0d0ff;
 }
 
+/* Scrollbar styling */
 .control-stack-container::-webkit-scrollbar {
     width: 8px;
 }
 
-.control-stack-container::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 8px;
-}
-
 .control-stack-container::-webkit-scrollbar-thumb {
-    background-color: transparent; 
+    background-color: rgba(138, 111, 201, 0.4);
     border-radius: 8px;
-}
-
-.control-stack-container:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(125, 42, 232, 0.4); 
-}
-
-.control-stack-container::-webkit-scrollbar-thumb:active {
-    background-color: rgba(125, 42, 232, 0.7); 
 }
 
 .delete-btn {
     background: none;
     border: none;
-    color: #741ce7d6;
+    color: #8a6fc9;
     cursor: pointer;
     padding: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    font-size: 20px;
-    line-height: 20px;
-    width: 24px;
-    height: 24px;
+    font-size: 22px;
+    font-weight: bold;
+    width: 28px;
+    height: 28px;
     margin: auto;
 }
 
 .delete-btn:hover {
-    background-color: rgba(116, 28, 231, 0.1);
-    color: #ff4444;
+    color: #6a4cb8;
 }
 
-.control-stack tr:hover .delete-btn {
-    color: #ffffff;
-}
-
-.control-stack tr:hover .delete-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #ff4444;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .control-stack-container {
+        max-width: 100%;
+        height: auto;
+        max-height: 300px;
+    }
+    
+    .control-stack th,
+    .control-stack td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
 }

@@ -1,8 +1,7 @@
 .textbox {
-    width: 15rem;
+    width: 550px;
     height: 4rem;
     flex-shrink: 0;
-    
     border-color: #7d2ae8;
     
     border-radius: 15px; /* Redondeo más sutil que los textboxes pequeños */
