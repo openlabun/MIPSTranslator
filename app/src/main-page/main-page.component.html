@@ -2,31 +2,43 @@
     <p class="title">MIPS CONVERTER</p>
 </div>
 
-<section class="container">
+<section class="main-content">
+    <!-- Left side - Instruction Menu -->
     <div class="instruction-menu-container">
         <app-instruction-menu 
             (instructionSelected)="onInstructionMenuSelect($event)">
         </app-instruction-menu>
     </div>
 
-    <div class="input-container">
-        <div class="input-textbox">
-             <app-textbox
-                [inputText]="inputText"
-                (keyup.enter)="onTranslate()"
-                (inputChange)="onInput($event)"
-                (selectedLineText)="onTableValueChange($event)">
-            </app-textbox>
-        </div>
-        <div class = "container">
-            <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
-                <div class = "translate">  
+    <!-- Centered Content Section -->
+    <div class="centered-content">
+        <!-- Input and Controls -->
+        <div class="input-controls-container">
+            <div class="input-textbox">
+                <app-textbox
+                    [inputText]="inputText"
+                    (keyup.enter)="onTranslate()"
+                    (inputChange)="onInput($event)"
+                    (selectedLineText)="onTableValueChange($event)">
+                </app-textbox>
+            </div>
+            
+            <div class="file-buttons-group">
+                <app-ramdrop (valueFile)="onTextFile($event)"></app-ramdrop>
+                <div class="action-buttons">  
                     <app-translate-button (click)="onTranslate()"></app-translate-button>
                     <app-save-ram-button [hexInput]="parameter"></app-save-ram-button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Instruction Table -->
+        <div class="instruction-table-wrapper">
+            <app-instruction-table></app-instruction-table>
         </div>
     </div>
 
+    <!-- Right side - Control Stack -->
     <app-control-stack
         [translations]="translations"
         (instructionClick)="onInstructionClick($event)"
@@ -34,26 +46,21 @@
     </app-control-stack>
 </section>
 
-<section class="instruction-table">
-    <app-instruction-table></app-instruction-table>
-</section>
-
-
-
+<!-- Assembler Section (unchanged, stays at bottom) -->
 <div class="assembler-container">
-  <h3 class="assembler-title">MIPS Assembler Code</h3>
-  <div>
-    <textarea #mipsCodeInput
-              class="assembler-textarea" rows="15"
-              cols="50"
-              placeholder="loop:&#10;  addi $t0, $t0, 1&#10;  bne $t0, $s0, loop&#10;# Write or paste your code here..."></textarea>
-  </div>
-  <button (click)="loadMipsCode(mipsCodeInput.value)"
-          class="assembler-button" style="margin-top: 10px;">
-    Load and Process Code
-  </button>
-  <div *ngIf="parsingErrors.length > 0" class="assembler-errors">
-    <h4>Errores found:</h4>
-    {{ parsingErrors.join('\\n') }}
-  </div>
+    <h3 class="assembler-title">MIPS Assembler Code</h3>
+    <div>
+        <textarea #mipsCodeInput
+                class="assembler-textarea" rows="15"
+                cols="50"
+                placeholder="loop:&#10;  addi $t0, $t0, 1&#10;  bne $t0, $s0, loop&#10;# Write or paste your code here..."></textarea>
+    </div>
+    <button (click)="loadMipsCode(mipsCodeInput.value)"
+            class="assembler-button" style="margin-top: 10px;">
+        Load and Process Code
+    </button>
+    <div *ngIf="parsingErrors.length > 0" class="assembler-errors">
+        <h4>Errores found:</h4>
+        {{ parsingErrors.join('\\n') }}
+    </div>
 </div>
