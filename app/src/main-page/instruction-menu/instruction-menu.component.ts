@@ -24,17 +24,27 @@ export class InstructionMenuComponent {
 
   instructionCategories: { [key: string]: string[] } = {
     'R-Type': [
-      "add", "sub", "and", "or", "jalr", "jr", "slt", "mfhi", "mflo", 
-      "mthi", "mtlo", "teq", "tge", "tgeu", "tlt", "tltu", "tne", "addu", 
-      "div", "divu", "mult", "multu", "nor", "sll", "sllv", "sra", "srav", 
-      "srl", "srlv", "subu", "xor", "syscall", "break"
+      "add", "sub", "and", "or", "jalr", "jr", "slt", "mfhi", "mflo",
+      "mthi", "mtlo", "teq", "tge", "tgeu", "tlt", "tltu", "tne", "addu",
+      "div", "divu", "mult", "multu", "nor", "sll", "sllv", "sra", "srav",
+      "srl", "srlv", "subu", "xor", "syscall", "break", "abs", "not", "neg", "negu", "rol", "ror", "rem", "remu", "mul",
+      "mulo", "mulou", "seq", "sge", "sgeu", "sgt", "sgtu", "sle", "sleu",
+      "sne", "move", "rfe", "nop", "mfcz", "mtcz", "mfc1.d" // Although nop is a pseudoinstruction, its binary encoding corresponds to an R-Type instruction
     ],
+
     'I-Type': [
-      "addi", "addiu", "andi", "ori", "xori", "lw", "sw", "lb", "lbu", 
-      "lh", "lhu", "sb", "sh", "beq", "bne", "bgtz", "blez", "bltz", 
-      "bgez", "lui", "slti", "sltiu"
+      "addi", "addiu", "andi", "ori", "xori", "lw", "sw", "lb", "lbu",
+      "lh", "lhu", "sb", "sh", "beq", "bne", "bgtz", "blez", "bltz",
+      "bgez", "lui", "slti", "sltiu", "la", "ld", "lwez", "lwl", "lwr", "ulh", "ulhu", "ulw", "sd", "swez",
+      "swl", "swr", "ush", "usw", "li", "li.d", "li.s", "slli", "srli",
+      "srai", "beqz", "bge", "bgeu", "bgezal", "bgt", "bgtu", "ble", "bleu",
+      "blt", "bltu", "bltzal", "bnez", "bczt", "bczf", "auipc","lwcz", "swcz"
     ],
-    'J-Type': ['jal', 'j'],
+
+    'J-Type': [
+      "jal", "j", "b"
+    ]
+
   };
 
   // Método para filtrar las instrucciones según el texto ingresado
@@ -57,7 +67,7 @@ export class InstructionMenuComponent {
       formattedInstruction = `${instruction} $t1 $t2 $t3`;
     } else if (['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi', 'addiu'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 $t2 10`;
-    } else if (['slli', 'srli', 'sll',  'srai', 'teq', 'tge', 'tgeu'].includes(instruction)) {
+    } else if (['slli', 'srli', 'sll', 'srai', 'teq', 'tge', 'tgeu'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 $t2 2`;
     } else if (['div', 'divu', 'mult', 'multu'].includes(instruction)) {
       formattedInstruction = `${instruction} $t1 $t2`;
