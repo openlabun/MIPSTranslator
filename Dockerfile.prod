@@ -12,6 +12,8 @@ RUN npm ci
 # Copy the full source
 COPY app/ ./
 
+RUN npx ng cache clean
+
 # Build the Angular app (without SSR)
 RUN npm run build -- --configuration=production
 

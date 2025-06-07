@@ -1,10 +1,10 @@
 name: Deploy
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ main ]
+    branches: [main]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -15,31 +15,31 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      
-    - name: install dependencies
-      run: |
-            cd app
-            npm install
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Run test
-      run: |
-            cd app
-            npm run test:ci
-       
-    - name: Deploy using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
-        script: |
-          cd /home/proyecto/MIPSTranslator/
-          git pull origin main
-          git status
-          docker stop mipsconverter
-          docker rm mipsconverter
-          docker build -f Dockerfile.prod -t mipsconverter-image . || { echo "Docker build failed"; exit 1; }
-          docker run -d -it -p 5008:80 --restart unless-stopped --name mipsconverter mipsconverter-image  || { echo "Docker run failed"; exit 1; }
+      - name: install dependencies
+        run: |
+          cd app
+          npm install
+
+      - name: Run test
+        run: |
+          cd app
+          npm run test:ci
+
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/proyecto/MIPSTranslator/
+            git pull origin main
+            git status
+            docker build -f Dockerfile.prod -t mipsconverter-image . || { echo "Docker build failed"; exit 1; }
+            docker stop mipsconverter
+            docker rm mipsconverter
+            docker run -d -it -p 5008:80 --restart unless-stopped --name mipsconverter mipsconverter-image  || { echo "Docker run failed"; exit 1; }
