@@ -1,104 +1,184 @@
+.instruction-filter-input {
+  width: 268px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #3b3b3b;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
 
+.instruction-filter-input:focus {
+  outline: none;
+  border-color: #8a6fc9;
+  box-shadow: 0 0 0 3px rgba(138, 111, 201, 0.2);
+}
+
+.instruction-filter-input::placeholder {
+  color: #999;
+}
 
 .instruction-menu {
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 250px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  width: 300px;
   max-height: 500px;
   overflow-y: auto;
   font-family: "Nunito", sans-serif;
-  
-  /* Firefox - scrollbar inicialmente invisible */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+  transition: box-shadow 0.3s ease;
 }
 
-/* Mostrar scrollbar en Firefox cuando se interactúa */
-.instruction-menu:hover,
-.instruction-menu:focus-within,
-.instruction-menu:active {
-  scrollbar-color: rgba(125, 42, 232, 0.3) transparent;
+.instruction-menu:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Webkit browsers (Chrome, Edge, Safari) - scrollbar invisible por defecto */
+/* Scrollbar vertical */
 .instruction-menu::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 .instruction-menu::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 8px;
+  background: #f5f5f5;
+  border-radius: 10px;
 }
 
 .instruction-menu::-webkit-scrollbar-thumb {
-  background-color: transparent; /* Inicialmente transparente */
-  border-radius: 8px;
-}
-/* Mostrar scrollbar más pronunciado al hacer hover */
-.instruction-menu:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(125, 42, 232, 0.4); /* Más visible */
+  background-color: #d1c4e9;
+  border-radius: 10px;
+  border: 2px solid #f5f5f5;
 }
 
-/* Cuando se está scrolleando activamente */
-.instruction-menu::-webkit-scrollbar-thumb:active {
-  background-color: rgba(125, 42, 232, 0.7); /* Muy visible */
+.instruction-menu::-webkit-scrollbar-thumb:hover {
+  background-color: #b39ddb;
 }
 
 .menu-title {
-  color: #266478;
+  color: #3b3b3b;
   text-align: center;
-  margin-bottom: 15px;
-  font-weight: 600;
-  position: relative; /* Opcional: mantener el título visible al desplazarse */
-  top: 0;
-  background-color: #f5f5f5;
-  padding: 5px 0;
-  z-index: 1;
+  margin: 0 0 20px 0;
+  font-weight: 800;
+  font-size: 18px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
 }
 
+/* Category Styles */
 .instruction-category {
-  margin-bottom: 8px;
-  border-radius: 4px;
+  margin-bottom: 15px;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .category-summary {
-  background-color: #5d0081;
-  padding: 6px 10px;
+  background: linear-gradient(135deg, #8a6fc9 0%, #6a4cb8 100%);
+  color: white;
+  padding: 10px 15px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
   user-select: none;
+  position: relative;
+  transition: all 0.3s ease;
+  list-style: none;
 }
 
-.category-summary:hover {
-  background-color: #773e8e;
+.category-summary::-webkit-details-marker {
+  display: none;
+}
+
+.category-summary::after {
+  content: "▼";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.instruction-category[open] .category-summary::after {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .instructions-list {
+  background-color: #ffffff;
+  padding: 15px 10px 20px 10px;
   display: flex;
-  flex-direction: column;
-  padding: 5px 0;
-  max-height: 200px; /* Altura máxima para las listas de instrucciones */
-  overflow-y: auto; /* Barra de desplazamiento interna para listas largas */
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #d1c4e9 #f5f5f5;
 }
 
+/* Scrollbar horizontal */
+.instructions-list::-webkit-scrollbar {
+  height: 10px;
+}
 
+.instructions-list::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+  margin: 0 10px;
+}
 
+.instructions-list::-webkit-scrollbar-thumb {
+  background-color: #d1c4e9;
+  border-radius: 10px;
+  border: 2px solid #f5f5f5;
+}
+
+.instructions-list::-webkit-scrollbar-thumb:hover {
+  background-color: #b39ddb;
+}
 
 .instruction-button {
   background: none;
   border: none;
   text-align: left;
-  padding: 5px 15px;
+  padding: 8px 12px;
   cursor: pointer;
-  color: #333;
+  color: #3b3b3b;
   font-family: "Nunito", sans-serif;
-  transition: background-color 0.2s;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border-radius: 5px;
+  flex: 0 0 auto;
+  /* Eliminado el fondo gris y sombra */
 }
 
 .instruction-button:hover {
-  background-color: #e0e0e0;
-  color: #7d2ae8;
+  background-color: #f0e6ff;
+  color: #6a4cb8;
+  transform: translateX(3px);
+}
+
+.instruction-button:active {
+  background-color: #e0d0ff;
+}
+
+/* Animation for opening categories */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.instruction-category[open] .instructions-list {
+  animation: fadeIn 0.3s ease-out forwards;
 }

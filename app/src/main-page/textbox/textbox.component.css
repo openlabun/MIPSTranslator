@@ -1,22 +1,89 @@
-.textbox {
-    width: 15rem;
-    height: 4rem;
-    flex-shrink: 0;
-    
-    box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.96);
-    
-    border-radius: 15px; /* Redondeo más sutil que los textboxes pequeños */
-    border: 3px solid #7d2ae8;
-    background-color: rgba(1, 0, 0, 0); 
-    color: #266478;
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
-    font-family: "Nunito", sans-serif;
-}
-
+/* Contenedor principal */
 .input-assistant {
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
+    width: 100%;
+    padding: 1.5rem 0;
+    margin: 0 auto;
+    perspective: 1000px; /* Para efectos 3D */
+  }
+  
+  /* Caja de texto con animaciones mejoradas */
+  .textbox {
+    width: 550px;
+    height: 3.75rem;
+    border-radius: 12px;
+    border: 2px solid #d1c4e9;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #3b3b3b;
+    padding: 0 1.8rem;
+    font-size: 1.1rem;
+    font-family: "Nunito", sans-serif;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    box-shadow: 
+      0 4px 15px rgba(138, 111, 201, 0.1),
+      inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    text-align: center;
+    transform-style: preserve-3d;
+    will-change: transform, box-shadow;
+  }
+  
+  /* Animación al hover */
+  .textbox:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 
+      0 6px 20px rgba(138, 111, 201, 0.2),
+      inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  }
+  
+  /* Animación al enfocar */
+  .textbox:focus {
+    outline: none;
+    border-color: #8a6fc9;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 
+      0 0 0 4px rgba(138, 111, 201, 0.3),
+      0 8px 25px rgba(138, 111, 201, 0.25);
+    transform: translateY(-4px) scale(1.02);
+    animation: pulse 2s infinite alternate;
+  }
+  
+  /* Animación del placeholder */
+  .textbox::placeholder {
+    color: #b0a1d1;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  
+  .textbox:focus::placeholder {
+    opacity: 0.5;
+    transform: translateY(-5px);
+  }
+  
+  /* Efecto de onda al hacer clic */
+  @keyframes clickWave {
+    0% {
+      box-shadow: 0 0 0 0 rgba(138, 111, 201, 0.4);
+    }
+    100% {
+      box-shadow: 0 0 0 12px rgba(138, 111, 201, 0);
+    }
+  }
+  
+  .textbox:active {
+    animation: clickWave 0.4s ease-out;
+  }
+  
+  /* Pulsación sutil en focus */
+  @keyframes pulse {
+    0% {
+      box-shadow: 
+        0 0 0 4px rgba(138, 111, 201, 0.3),
+        0 8px 25px rgba(138, 111, 201, 0.25);
+    }
+    100% {
+      box-shadow: 
+        0 0 0 8px rgba(138, 111, 201, 0.1),
+        0 8px 25px rgba(138, 111, 201, 0.3);
+    }
+  }

@@ -1,73 +1,87 @@
+/* Contenedor principal */
 .save-to-ram-container {
     display: flex;
     justify-content: center;
     align-items: center;
-   
-}
-.file-input{
-    opacity: 0;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height:100%;
-    position: absolute;
-    z-index: 50;
-   }
-.drop-area {
-    border: 2px dashed #2a999d;
-    border-radius: 10px;
-    padding: 5px;
-    background-color: transparent;
-    text-align: center;
-    width: 120px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    position: relative;
-    margin-top: 5px;
-}
-
-.drop-area:hover {
-    background-color: #43296a42;
-    border-color: #7d2ae8;
-}
-
-
-.drop-text {
-    font-size: 16px;
-    color: #266478;
-    margin-bottom: 2px;
-    margin-top: 2px;
-    font-family: "Nunito", sans-serif;
-}
-.or-text {
-    font-size: 14px;
-    color: #266478;
     margin: 15px 0;
+  }
+  
+  /* Área de drop */
+  .drop-area {
+    border: 2px dashed #d1c4e9; /* Borde morado claro */
+    border-radius: 10px; /* Radio consistente */
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+    text-align: center;
+    width: 200px; /* Ancho más generoso */
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(138, 111, 201, 0.1);
+  }
+  
+  /* Estado hover */
+  .drop-area:hover {
+    background-color: rgba(138, 111, 201, 0.05);
+    border-color: #8a6fc9; /* Morado principal */
+    box-shadow: 0 4px 12px rgba(138, 111, 201, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  /* Estado activo (durante el drop) */
+  #drop-area.active {
+    background-color: rgba(138, 111, 201, 0.1);
+    border-color: #6a4cb8; /* Morado más oscuro */
+  }
+  
+  /* Texto descriptivo */
+  .drop-text {
+    font-size: 14px;
+    color: #3b3b3b;
+    margin: 10px 0;
     font-family: "Nunito", sans-serif;
-}
-.select-button {
-    padding: 4px 10px;
-    font-size: 16px;
-    color: #266478; 
-    background-color: transparent; 
-    border: 2px solid #2a999d; /* Borde del botón */
-    border-radius: 5px;
+    font-weight: 600;
+  }
+  
+  /* Nombre del archivo */
+  .file-name {
+    font-size: 13px;
+    color: #6a4cb8;
+    margin: 5px 0;
+    font-family: "Consolas", "Monaco", monospace;
+    word-break: break-all;
+  }
+  
+  /* Botón de selección */
+  .select-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #6a4cb8; /* Morado oscuro */
+    background-color: transparent;
+    border: 2px solid #8a6fc9; /* Borde morado */
+    border-radius: 6px;
     cursor: pointer;
-    transition: color 0.3s ease, border-color 0.3s ease; 
+    transition: all 0.2s ease;
     font-family: "Nunito", sans-serif;
-}
-.info-drop{
+    font-weight: 600;
+    margin-top: 5px;
+  }
+  
+  /* Hover del botón */
+  .select-button:hover {
+    background-color: rgba(138, 111, 201, 0.1);
+    color: #5a1fb5;
+    border-color: #6a4cb8;
+    transform: translateY(-1px);
+  }
+  
+  /* Input de archivo (oculto) */
+  .file-input {
+    opacity: 0;
     position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
     z-index: 50;
-    top: 5rem;
-    left: 4rem;
-}
-.select-button:hover {
-    background-color: #7c2ae85a;
-    border-color: #7d2ae8;
-}
-
-
-#drop-area.active {
-    background-color: #e0e7ff;
-    border-color: #0056b3;
-}
+  }

@@ -39,14 +39,14 @@
   }
   
   .checkbox:checked + .slider {
-    box-shadow: 1px 1px 5px 0 #2a9d8f inset;
+    box-shadow: 1px 1px 5px 0 #333 inset;
   }
   
   .checkbox:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-    background-color: #2a999d;
+    background-color: #3b3b3b;
     box-shadow: inset -1px 1px 2px 0px #a3fff4;
   }
   
@@ -65,7 +65,7 @@
   
   .right-label {
     right: -90px; /* Ajusta la posición a la derecha */
-    color: #2a9d8f; /* Cambia el color si lo deseas */
+    color: #3b3b3b; /* Cambia el color si lo deseas */
   }
   
   /* Rounded sliders */

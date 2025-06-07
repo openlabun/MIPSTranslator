@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import { TextboxComponent } from './textbox/textbox.component';
 import { TranslateButtonComponent } from './translate-button/translate-button.component';
 import { SwitchComponent } from './switch/switch.component';
@@ -32,7 +32,8 @@ interface Translation {
     SaveRamButtonComponent,
     InstructionTableComponent,
     InstructionMenuComponent,
-    ControlStackComponent
+    ControlStackComponent,
+    FormsModule,
   ],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css'],
@@ -192,10 +193,17 @@ export class MainPageComponent {
     }
   }
 
-  onInstructionMenuSelect(instruction: string): void {
-    this.inputManager.setValue(instruction);
-    this.inputText = instruction;
-    this.detectInstructionType(instruction);
+  onInstructionMenuSelect(event: {instruction: string, shouldTranslate: boolean}): void {
+    this.inputManager.setValue(event.instruction);
+    this.inputText = event.instruction;
+    this.detectInstructionType(event.instruction);
+    
+    // Force table update
+    this.tableManager.updateSelectedLineText(event.instruction);
+    
+    if (event.shouldTranslate) {
+      setTimeout(() => this.onTranslate(), 0);
+    }
   }
 
   onDeleteInstruction(translation: Translation): void {

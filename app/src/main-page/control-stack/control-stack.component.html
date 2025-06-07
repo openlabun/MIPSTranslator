@@ -1,20 +1,22 @@
 <section class="control-stack-container">
-    <table class="control-stack">
-        <thead>
-            <tr>
-                <th>MIPS</th>
-                <th>HEX</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let trans of translations">
-                <td (click)="onInstructionClick(trans.mips)">{{ trans.mips }}</td>
-                <td (click)="onInstructionClick(trans.mips)">{{ trans.hex }}</td>
-                <td>
-                    <button class="delete-btn" (click)="onDeleteInstruction(trans)">×</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-shadow-wrapper">
+        <table class="control-stack">
+            <thead>
+                <tr>
+                    <th>MIPS</th>
+                    <th>HEX</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody *ngIf="translations && translations.length > 0">
+                <tr *ngFor="let trans of translations">
+                    <td (click)="onInstructionClick(trans.mips)">{{ trans.mips }}</td>
+                    <td (click)="onInstructionClick(trans.mips)">{{ trans.hex }}</td>
+                    <td>
+                        <button class="delete-btn" (click)="onDeleteInstruction(trans)">×</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </section>

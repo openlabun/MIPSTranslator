@@ -1,13 +1,29 @@
 .output-textbox {
-    width: 15rem;
-    height: 10rem;
-    border-radius: 36px;
-    border: 5px #2a999d;
-    box-shadow: 1px 4px 10.2px 0px rgba(31, 160, 160, 0.96);
-    background-color: rgba(0, 0, 0, 0); 
-    color: #266478;
-    padding: 2rem;
-    font-size: 1.2rem;
+    width: 400px; /* Ancho más proporcional al tema */
+    min-height: 10rem;
+    border-radius: 10px; /* Radio consistente con tu tema */
+    border: 2px solid #d1c4e9; /* Borde similar al textbox principal */
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+    color: #3b3b3b;
+    padding: 1.5rem;
+    font-size: 1rem; /* Tamaño consistente con el tema */
     font-family: "Nunito", sans-serif;
     white-space: pre-wrap;
-}
+    box-shadow: 0 3px 10px rgba(148, 68, 252, 0.15); /* Sombra más sutil */
+    transition: all 0.2s ease; /* Transición simple */
+    margin: 0 auto; /* Centrado como el resto */
+    line-height: 1.5;
+  }
+  
+  /* Efecto hover minimalista */
+  .output-textbox:hover {
+    box-shadow: 0 5px 15px rgba(148, 68, 252, 0.2);
+    transform: translateY(-1px);
+  }
+  
+  /* Estilo para contenido de salida */
+  .output-textbox pre {
+    margin: 0;
+    font-family: "Consolas", "Monaco", monospace; /* Para código */
+    color: #3b3b3b;
+  }

@@ -1,115 +1,119 @@
 .control-stack-container {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 20px;
-    height: calc(10  * 40px);
-    overflow-y: auto;
-    max-width: 440px;
-    margin: 0 auto;  
+    width: 400px;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+    position: relative;
+}
+
+.table-shadow-wrapper {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(138, 111, 201, 0.2);
+    overflow: hidden;
 }
 
 .control-stack {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
-    border: 5px #7d2ae8;
-    box-shadow: 1px 4px 10.2px 0px rgba(94, 31, 160, 0.96);
-    text-align: center;
+    background: white;
     font-family: "Nunito", sans-serif;
-    font-size: 18px;
-    color: #266478;
-    height: max-content;
+    max-height: 400px;
+    display: block;
+    overflow-y: auto;
+    color: #3b3b3b; /* Color base añadido aquí */
 }
 
-.control-stack th,
-.control-stack td {
-    padding: 10px;
-    text-align: left;
-    width: 20rem;
-    color: #741ce7d6;
-    text-align: center;
+.control-stack thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #8a6fc9;
+    display: table;
+    width: 100%;
 }
 
 .control-stack th {
-    background-color: #ffffff;
-    color: #741ce7d6;
-    font-weight: bold;
-    font-size: 20px;
-    text-align: center;
+    color: white; /* Color blanco solo para headers */
+    font-weight: 800;
+    font-size: 18px;
+    padding: 12px 15px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.control-stack th:last-child,
-.control-stack td:last-child {
-    width: 40px;
-    padding: 0;
-    min-width: 40px;
-    max-width: 40px;
+.control-stack tbody {
+    display: block;
+    max-height: 350px;
+    overflow-y: auto;
+    color: inherit; /* Hereda el color de .control-stack */
 }
 
 .control-stack tr {
-    background-color: #f2f2f2;
-    transition: background-color 0.4s ease;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.control-stack td {
+    padding: 12px 15px;
+    text-align: center;
+    transition: background-color 0.2s ease;
+    color: #3b3b3b; /* Color explícito para las celdas */
+}
+
+.control-stack tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
 .control-stack tr:hover td {
-    background-color: #bba4e6;
-    color: #ffffff;
-    transition: background-color 0.4s ease;
-}
-
-
-.control-stack-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.control-stack-container::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 8px;
-}
-
-.control-stack-container::-webkit-scrollbar-thumb {
-  background-color: transparent; 
-  border-radius: 8px;
-}
-
-.control-stack-container:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(125, 42, 232, 0.4); 
-}
-
-
-.control-stack-container::-webkit-scrollbar-thumb:active {
-  background-color: rgba(125, 42, 232, 0.7); 
+    background-color: #f0e5ff;
+    color: #3b3b3b; /* Aseguramos que mantenga el color en hover */
 }
 
 .delete-btn {
-    background: none;
+    background: rgba(138, 111, 201, 0.1);
     border: none;
-    color: #741ce7d6;
+    color: #8a6fc9;
     cursor: pointer;
     padding: 0;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    font-size: 20px;
-    line-height: 20px;
-    width: 24px;
-    height: 24px;
-    margin: auto;
+    width: 28px;
+    height: 28px;
+    font-size: 22px;
+    font-weight: bold;
+    transition: all 0.2s ease;
 }
 
 .delete-btn:hover {
-    background-color: rgba(116, 28, 231, 0.1);
-    color: #ff4444;
+    background: #8a6fc9;
+    color: white;
+    transform: scale(1.1);
 }
 
-.control-stack tr:hover .delete-btn {
-    color: #ffffff;
+/* Scrollbar personalizado */
+.control-stack::-webkit-scrollbar {
+    width: 8px;
 }
 
-.control-stack tr:hover .delete-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #ff4444;
+.control-stack::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8a6fc9 0%, #6a4cb8 100%);
+    border-radius: 4px;
+}
+
+.control-stack::-webkit-scrollbar-track {
+    background: #f1eaf7;
+}
+
+@media (max-width: 768px) {
+    .control-stack-container {
+        width: 100%;
+    }
+    
+    .control-stack th, 
+    .control-stack td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
 }
