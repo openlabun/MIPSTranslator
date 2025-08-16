@@ -3,6 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RV32I_INSTRUCTIONS } from '../../Shared/Constants/rv32i-instructions';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import instructionsData from '../../data/mips-instructions.json';
+
+interface Instruction {
+  mnemonic: string;
+  type: string;
+  version: string;
+  description: string;
+  example: string;
+}
 
 
 @Component({
@@ -13,6 +22,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./instruction-menu.component.css']
 })
 export class InstructionMenuComponent {
+
+
   @Output() instructionSelected = new EventEmitter<{
     instruction: string;
     shouldTranslate: boolean;
@@ -20,82 +31,39 @@ export class InstructionMenuComponent {
   }>();
 
   objectKeys = Object.keys;
+
+  instructions: Instruction[] = instructionsData as Instruction[];
   filterText: string = '';
 
-  instructionCategories: { [key: string]: string[] } = {
-    'R-Type': [
-      "add", "sub", "and", "or", "jalr", "jr", "slt", "mfhi", "mflo",
-      "mthi", "mtlo", "teq", "tge", "tgeu", "tlt", "tltu", "tne", "addu",
-      "div", "divu", "mult", "multu", "nor", "sll", "sllv", "sra", "srav",
-      "srl", "srlv", "subu", "xor", "syscall", "break", "abs", "not", "neg", "negu", "rol", "ror", "rem", "remu", "mul",
-      "mulo", "mulou", "seq", "sge", "sgeu", "sgt", "sgtu", "sle", "sleu",
-      "sne", "move", "rfe", "nop", "mfcz", "mtcz", "mfc1.d" // Although nop is a pseudoinstruction, its binary encoding corresponds to an R-Type instruction
-    ],
-
-    'I-Type': [
-      "addi", "addiu", "andi", "ori", "xori", "lw", "sw", "lb", "lbu",
-      "lh", "lhu", "sb", "sh", "beq", "bne", "bgtz", "blez", "bltz",
-      "bgez", "lui", "slti", "sltiu", "la", "ld", "lwez", "lwl", "lwr", "ulh", "ulhu", "ulw", "sd", "swez",
-      "swl", "swr", "ush", "usw", "li", "li.d", "li.s", "slli", "srli",
-      "srai", "beqz", "bge", "bgeu", "bgezal", "bgt", "bgtu", "ble", "bleu",
-      "blt", "bltu", "bltzal", "bnez", "bczt", "bczf", "auipc","lwcz", "swcz"
-    ],
-
-    'J-Type': [
-      "jal", "j", "b"
-    ]
-
-  };
+  getCategories(): string[] {
+    return [...new Set(this.instructions.map(inst => inst.type))];
+  }
 
   // Método para filtrar las instrucciones según el texto ingresado
-  getFilteredInstructions(category: string): string[] {
-    const allInstructions = this.instructionCategories[category];
-    if (!this.filterText.trim()) return allInstructions;
+  getFilteredInstructions(category: string): Instruction[] {
+  const filteredByCategory = this.instructions.filter(inst => inst.type === category[0]); // "R", "I", "J"
+  
+  if (!this.filterText.trim()) return filteredByCategory;
 
-    const lowerFilter = this.filterText.toLowerCase();
-    return allInstructions.filter(inst => inst.toLowerCase().includes(lowerFilter));
-  }
+  const lowerFilter = this.filterText.toLowerCase();
+  return filteredByCategory.filter(inst =>
+    inst.mnemonic.toLowerCase().includes(lowerFilter) ||
+    inst.description.toLowerCase().includes(lowerFilter) ||
+    inst.version.toLowerCase().includes(lowerFilter)
+  );
+}
 
-  getDescription(inst: string): string {
-    return RV32I_INSTRUCTIONS[inst] || '';
-  }
+  getDescription(instMnemonic: string): string {
+  const inst = this.instructions.find(i => i.mnemonic === instMnemonic);
+  return inst ? inst.description : '';
+}
 
-  selectInstruction(instruction: string): void {
-    let formattedInstruction = '';
+ selectInstruction(inst: Instruction): void {
+  this.instructionSelected.emit({
+    instruction: inst.example,
+    shouldTranslate: true,
+    instructionType: inst.type
+  });
+}
 
-    if (['add', 'sub', 'and', 'or', 'xor', 'subu', 'sllv', 'srlv', 'srav', 'slt', 'sltu', 'addu', 'nor'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 $t3`;
-    } else if (['addi', 'slti', 'sltiu', 'xori', 'ori', 'andi', 'addiu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 10`;
-    } else if (['slli', 'srli', 'sll', 'srai', 'teq', 'tge', 'tgeu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 2`;
-    } else if (['div', 'divu', 'mult', 'multu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2`;
-    } else if (['tlt', 'tltu', 'tne', 'sra', 'srl'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 100`;
-    } else if (['lb', 'lh', 'lw', 'lbu', 'lhu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 0x0001 $t2`;
-    } else if (['sb', 'sh', 'sw'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 0x0001 $t2`;
-    } else if (['beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 $t2 8`;
-    } else if (['j', 'jal'].includes(instruction)) {
-      formattedInstruction = `${instruction} 16`;
-    } else if (['jalr', 'jr', 'mfhi', 'mflo', 'mthi', 'mtlo'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1`;
-    } else if (['lui', 'auipc', 'blez', 'bgtz'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 1024`;
-    } else if (['syscall', 'break'].includes(instruction)) {
-      formattedInstruction = instruction;
-    } else if (['bltz', 'bgez'].includes(instruction)) {
-      formattedInstruction = `${instruction} $t1 8`;
-    } else {
-      formattedInstruction = instruction;
-    }
-
-    this.instructionSelected.emit({
-      instruction: formattedInstruction,
-      shouldTranslate: true // Flag to trigger translation
-    });
-  }
 }

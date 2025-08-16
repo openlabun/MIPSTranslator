@@ -1,0 +1,352 @@
+[
+  {
+    "mnemonic": "add",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Adds two registers",
+    "example": "add $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "sub",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Subtracts two registers",
+    "example": "sub $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "and",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Bitwise AND of two registers",
+    "example": "and $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "or",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Bitwise OR of two registers",
+    "example": "or $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "jalr",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Jump and link register",
+    "example": "jalr $t1"
+  },
+  {
+    "mnemonic": "jr",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Jump register",
+    "example": "jr $t1"
+  },
+  {
+    "mnemonic": "slt",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Set less than",
+    "example": "slt $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "mfhi",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Move from HI register",
+    "example": "mfhi $t1"
+  },
+  {
+    "mnemonic": "mflo",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Move from LO register",
+    "example": "mflo $t1"
+  },
+  {
+    "mnemonic": "mthi",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Move to HI register",
+    "example": "mthi $t1"
+  },
+  {
+    "mnemonic": "mtlo",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Move to LO register",
+    "example": "mtlo $t1"
+  },
+  {
+    "mnemonic": "teq",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Trap if equal",
+    "example": "teq $t1 $t2 2"
+  },
+  {
+    "mnemonic": "tge",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Trap if greater or equal",
+    "example": "tge $t1 $t2 2"
+  },
+  {
+    "mnemonic": "tgeu",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Trap if greater or equal unsigned",
+    "example": "tgeu $t1 $t2 2"
+  },
+  {
+    "mnemonic": "tlt",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Trap if less than",
+    "example": "tlt $t1 $t2 100"
+  },
+  {
+    "mnemonic": "tltu",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Trap if less than unsigned",
+    "example": "tltu $t1 $t2 100"
+  },
+  {
+    "mnemonic": "tne",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Trap if not equal",
+    "example": "tne $t1 $t2 100"
+  },
+  {
+    "mnemonic": "addu",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Add unsigned",
+    "example": "addu $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "div",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Divide",
+    "example": "div $t1 $t2"
+  },
+  {
+    "mnemonic": "divu",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Divide unsigned",
+    "example": "divu $t1 $t2"
+  },
+  {
+    "mnemonic": "mult",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Multiply",
+    "example": "mult $t1 $t2"
+  },
+  {
+    "mnemonic": "multu",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Multiply unsigned",
+    "example": "multu $t1 $t2"
+  },
+  {
+    "mnemonic": "nor",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Bitwise NOR",
+    "example": "nor $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "sll",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Shift left logical",
+    "example": "sll $t1 $t2 2"
+  },
+  {
+    "mnemonic": "sra",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Shift right arithmetic",
+    "example": "sra $t1 $t2 100"
+  },
+  {
+    "mnemonic": "srl",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Shift right logical",
+    "example": "srl $t1 $t2 100"
+  },
+  {
+    "mnemonic": "xor",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Bitwise XOR",
+    "example": "xor $t1 $t2 $t3"
+  },
+  {
+    "mnemonic": "syscall",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Perform system call",
+    "example": "syscall"
+  },
+  {
+    "mnemonic": "break",
+    "type": "R",
+    "version": "MIPS I",
+    "description": "Cause breakpoint exception",
+    "example": "break"
+  },
+  {
+    "mnemonic": "addi",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Add immediate",
+    "example": "addi $t1 $t2 10"
+  },
+  {
+    "mnemonic": "addiu",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Add immediate unsigned",
+    "example": "addiu $t1 $t2 10"
+  },
+  {
+    "mnemonic": "andi",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Bitwise AND immediate",
+    "example": "andi $t1 $t2 10"
+  },
+  {
+    "mnemonic": "ori",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Bitwise OR immediate",
+    "example": "ori $t1 $t2 10"
+  },
+  {
+    "mnemonic": "xori",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Bitwise XOR immediate",
+    "example": "xori $t1 $t2 10"
+  },
+  {
+    "mnemonic": "lw",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Load word",
+    "example": "lw $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "sw",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Store word",
+    "example": "sw $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "lb",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Load byte",
+    "example": "lb $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "lbu",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Load byte unsigned",
+    "example": "lbu $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "lh",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Load halfword",
+    "example": "lh $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "lhu",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Load halfword unsigned",
+    "example": "lhu $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "sb",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Store byte",
+    "example": "sb $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "sh",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Store halfword",
+    "example": "sh $t1 0x0001 $t2"
+  },
+  {
+    "mnemonic": "beq",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Branch if equal",
+    "example": "beq $t1 $t2 8"
+  },
+  {
+    "mnemonic": "bne",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Branch if not equal",
+    "example": "bne $t1 $t2 8"
+  },
+  {
+    "mnemonic": "blt",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Branch if less than",
+    "example": "blt $t1 $t2 8"
+  },
+  {
+    "mnemonic": "bge",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Branch if greater or equal",
+    "example": "bge $t1 $t2 8"
+  },
+  {
+    "mnemonic": "bltu",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Branch if less than unsigned",
+    "example": "bltu $t1 $t2 8"
+  },
+  {
+    "mnemonic": "bgeu",
+    "type": "I",
+    "version": "MIPS I",
+    "description": "Branch if greater or equal unsigned",
+    "example": "bgeu $t1 $t2 8"
+  },
+  {
+    "mnemonic": "j",
+    "type": "J",
+    "version": "MIPS I",
+    "description": "Jump to address",
+    "example": "j 16"
+  },
+  {
+    "mnemonic": "jal",
+    "type": "J",
+    "version": "MIPS I",
+    "description": "Jump and link",
+    "example": "jal 16"
+  }
+]
