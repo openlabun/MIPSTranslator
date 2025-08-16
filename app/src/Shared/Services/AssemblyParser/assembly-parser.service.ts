@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { TranslatorService, instructionMap, registerMap } from '../Translator/translator.service';
+import { TranslatorService, registerMap } from '../Translator/translator.service';
 
 export interface ParseResult {
   instructions: string[];
