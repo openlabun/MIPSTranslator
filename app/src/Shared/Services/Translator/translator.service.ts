@@ -94,11 +94,14 @@ export class TranslatorService {
     let binaryInstruction = opcode;
 
     if (["add", "sub", "slt", "and", "or", "nor", "addu", "sllv", "srlv", "subu", "srav", "xor"].includes(parts[0])) {
+      
       const rd = this.convertRegisterToBinary(parts[1]);
       const rs = this.convertRegisterToBinary(parts[2]);
       const rt = this.convertRegisterToBinary(parts[3]);
       if (!rd || !rs || !rt) return `Missing ${!rd ? ' rd' : ''}${!rs ? ' rs' : ''}${!rt ? ' rt' : ''}`;
       binaryInstruction += rs + rt + rd + "00000" + this.getFunctCode(parts[0]);
+
+
     } else if (["div", "divu", "mult", "multu"].includes(parts[0])) {
       const rs = this.convertRegisterToBinary(parts[1]);
       const rt = this.convertRegisterToBinary(parts[2]);

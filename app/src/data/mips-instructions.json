@@ -121,6 +121,124 @@
     "template": "sll rd, rt, shamt"
   },
   {
+  "mnemonic": "sllv",
+  "type": "R",
+  "version": "MIPS I",
+  "opcode": "000000",
+  "funct": "000100",
+  "description": "Shift left logical variable",
+  "example": "sllv $t1 $t2 $t3",
+  "args": ["rd", "rs", "rt"],
+  "template": "sllv rd, rs, rt"
+},
+{
+  "mnemonic": "srlv",
+  "type": "R",
+  "version": "MIPS I",
+  "opcode": "000000",
+  "funct": "000110",
+  "description": "Shift right logical variable",
+  "example": "srlv $t1 $t2 $t3",
+  "args": ["rd", "rs", "rt"],
+  "template": "srlv rd, rs, rt"
+},
+{
+  "mnemonic": "srav",
+  "type": "R",
+  "version": "MIPS I",
+  "opcode": "000000",
+  "funct": "000111",
+  "description": "Shift right arithmetic variable",
+  "example": "srav $t1 $t2 $t3",
+  "args": ["rd", "rs", "rt"],
+  "template": "srav rd, rs, rt"
+},
+{
+  "mnemonic": "teq",
+  "type": "R",
+  "version": "MIPS II",
+  "opcode": "000000",
+  "funct": "110100",
+  "description": "Trap if equal",
+  "example": "teq $t0 $t1 10",
+  "args": ["rs", "rt", "code"],
+  "template": "teq rs, rt, code"
+},
+{
+  "mnemonic": "tgeu",
+  "type": "R",
+  "version": "MIPS II",
+  "opcode": "000000",
+  "funct": "110001",
+  "description": "Trap if greater or equal unsigned",
+  "example": "tgeu $t0 $t1 10",
+  "args": ["rs", "rt", "code"],
+  "template": "tgeu rs, rt, code"
+},
+{
+  "mnemonic": "tlt",
+  "type": "R",
+  "version": "MIPS II",
+  "opcode": "000000",
+  "funct": "110010",
+  "description": "Trap if less than",
+  "example": "tlt $t0 $t1 10",
+  "args": ["rs", "rt", "code"],
+  "template": "tlt rs, rt, code"
+},
+{
+  "mnemonic": "tltu",
+  "type": "R",
+  "version": "MIPS II",
+  "opcode": "000000",
+  "funct": "110011",
+  "description": "Trap if less than unsigned",
+  "example": "tltu $t0 $t1 10",
+  "args": ["rs", "rt", "code"],
+  "template": "tltu rs, rt, code"
+},
+{
+  "mnemonic": "tne",
+  "type": "R",
+  "version": "MIPS II",
+  "opcode": "000000",
+  "funct": "110110",
+  "description": "Trap if not equal",
+  "example": "tne $t0 $t1 10",
+  "args": ["rs", "rt", "code"],
+  "template": "tne rs, rt, code"
+},
+{
+  "mnemonic": "tge",
+  "type": "R",
+  "version": "MIPS II",
+  "opcode": "000000",
+  "funct": "110000",
+  "description": "Trap if greater or equal",
+  "example": "tge $t0 $t1 10",
+  "args": ["rs", "rt", "code"],
+  "template": "tge rs, rt, code"
+},
+{
+  "mnemonic": "bgtz",
+  "type": "I",
+  "version": "MIPS I",
+  "opcode": "000111",
+  "description": "Branch on greater than zero",
+  "example": "bgtz $t1 45",
+  "args": ["rs", "offset"],
+  "template": "bgtz rs, offset"
+},
+{
+  "mnemonic": "blez",
+  "type": "I",
+  "version": "MIPS I",
+  "opcode": "000110",
+  "description": "Branch on less than or equal to zero",
+  "example": "blez $t1 45",
+  "args": ["rs", "offset"],
+  "template": "blez rs, offset"
+},{
     "mnemonic": "srl",
     "type": "R",
     "version": "MIPS I",
