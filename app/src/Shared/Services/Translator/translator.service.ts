@@ -54,10 +54,6 @@ export class TranslatorService {
     return this.instructionMap[name]?.funct || 'unknown';
   }
 
-  convertOpCodeNameToCode(opcodeName: string): string {
-    return this.getOpcode(opcodeName);
-  }
-
   convertFunctToName(functBinary: string): string {
   const name = Object.keys(this.instructionMap).find(
     key => this.instructionMap[key].funct === functBinary
@@ -81,14 +77,16 @@ export class TranslatorService {
     return registerMap[registerBinary] ? `$${registerMap[registerBinary]}` : 'unknown';
   }
 
-  toLowerCaseString(text: string): string {
-    return text.toLowerCase();
-  }
-
   translateInstructionToHex(instruction: string): string {
-    instruction = this.toLowerCaseString(instruction.replace(/\$/g, ''));
+    instruction = instruction.replace(/\$/g, '').toLowerCase();
     const parts = instruction.split(' ');
     const opcode = this.getOpcode(parts[0]);
+
+    const mnemonic = parts[0];
+
+    this.instructionMap[parts[0]].type;
+
+
     if (opcode === 'unknown') return `Unknown Opcode for "${parts[0]}"`;
 
     let binaryInstruction = opcode;
