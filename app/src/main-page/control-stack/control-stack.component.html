@@ -9,11 +9,29 @@
                 </tr>
             </thead>
             <tbody *ngIf="translations && translations.length > 0">
-                <tr *ngFor="let trans of translations">
-                    <td (click)="onInstructionClick(trans.mips)">{{ trans.mips }}</td>
-                    <td (click)="onInstructionClick(trans.mips)">{{ trans.hex }}</td>
+                <tr *ngFor="let trans of translations; let i = index" class="instruction-row">
+                    <td (click)="onInstructionClick(i)">{{ trans.mips }}</td>
+                    <td (click)="onInstructionClick(i)">{{ trans.hex }}</td>
                     <td>
-                        <button class="delete-btn" (click)="onDeleteInstruction(trans)">×</button>
+                        <div class="controls-container">
+                            <button class="delete-btn" (click)="onDeleteInstruction(i)" title="Eliminar">×</button>
+                            <div class="reorder-controls">
+                                <button 
+                                    class="move-btn move-up"
+                                    (click)="moveUp(i)"
+                                    [disabled]="!canMoveUp(i)"
+                                    title="Mover arriba">
+                                    ▲
+                                </button>
+                                <button 
+                                    class="move-btn move-down"
+                                    (click)="moveDown(i)"
+                                    [disabled]="!canMoveDown(i)"
+                                    title="Mover abajo">
+                                    ▼
+                                </button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
