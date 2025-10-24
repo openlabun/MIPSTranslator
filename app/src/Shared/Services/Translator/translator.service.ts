@@ -1,70 +1,20 @@
 import { Injectable } from '@angular/core';
+import instructionsData from '../../../data/mips-instructions.json';
 
 export interface Instruction {
+  mnemonic: string;
+  type: 'R' | 'I' | 'J';
+  version: string;
   opcode: string;
   funct?: string;
+  description: string;
+  example?: string;
+  args: string[];
+  template?: string;
   rt?: string;
 }
 
-export const instructionMap: { [key: string]: Instruction } = {
-  "add": { opcode: "000000", funct: "100000" },
-  "sub": { opcode: "000000", funct: "100010" },
-  "and": { opcode: "000000", funct: "100100" },
-  "or": { opcode: "000000", funct: "100101" },
-  "jalr": { opcode: "000000", funct: "001001" },
-  "jr": { opcode: "000000", funct: "001000" },
-  "slt": { opcode: "000000", funct: "101010" },
-  "mfhi": { opcode: "000000", funct: "010000" },
-  "mflo": { opcode: "000000", funct: "010010" },
-  "mthi": { opcode: "000000", funct: "010001" },
-  "mtlo": { opcode: "000000", funct: "010011" },
-  "teq": { opcode: "000000", funct: "110100" },
-  "tge": { opcode: "000000", funct: "110000" },
-  "tgeu": { opcode: "000000", funct: "110001" },
-  "tlt": { opcode: "000000", funct: "110010" },
-  "tltu": { opcode: "000000", funct: "110011" },
-  "tne": { opcode: "000000", funct: "110110" },
-  "addu": { opcode: "000000", funct: "100001" },
-  "div": { opcode: "000000", funct: "011010" },
-  "divu": { opcode: "000000", funct: "011011" },
-  "mult": { opcode: "000000", funct: "011000" },
-  "multu": { opcode: "000000", funct: "011001" },
-  "nor": { opcode: "000000", funct: "100111" },
-  "sll": { opcode: "000000", funct: "000000" },
-  "sllv": { opcode: "000000", funct: "000100" },
-  "sra": { opcode: "000000", funct: "000011" },
-  "srav": { opcode: "000000", funct: "000111" },
-  "srl": { opcode: "000000", funct: "000010" },
-  "srlv": { opcode: "000000", funct: "000110" },
-  "subu": { opcode: "000000", funct: "100011" },
-  "xor": { opcode: "000000", funct: "100110" },
-  "syscall": { opcode: "000000", funct: "001100" },
-  "break":   { opcode: "000000", funct: "001101" },
-  "bltz": { opcode: "000001", rt: "00000" },
-  "bgez": { opcode: "000001", rt: "00001" },
-  "addi": { opcode: "001000" },
-  "addiu": { opcode: "001001" },
-  "andi": { opcode: "001100" },
-  "ori": { opcode: "001101" },
-  "xori": { opcode: "001110" },
-  "lw": { opcode: "100011" },
-  "sw": { opcode: "101011" },
-  "lb": { opcode: "100000" },
-  "lbu": { opcode: "100100" },
-  "lh": { opcode: "100001" },
-  "lhu": { opcode: "100101" },
-  "sb": { opcode: "101000" },
-  "sh": { opcode: "101001" },
-  "beq": { opcode: "000100" },
-  "bne": { opcode: "000101" },
-  "bgtz": { opcode: "000111" },
-  "blez": { opcode: "000110" },
-  "j": { opcode: "000010" },
-  "jal": { opcode: "000011" },
-  "lui":  { opcode: "001111" },
-  "slti": { opcode: "001010" },
-  "sltiu":{ opcode: "001011" }
-};
+
 
 export const registerMap: { [key: string]: string } = {
   "00000": "zero", "00001": "at", "00010": "v0", "00011": "v1",
@@ -82,33 +32,41 @@ export const registerMap: { [key: string]: string } = {
 })
 
 export class TranslatorService {
-  instructionMap = instructionMap;
+
   registerMap = registerMap;
-  getOpcode(name: string): string {
-    return instructionMap[name]?.opcode || 'unknown';
-  }
+  instructions: Instruction[] = instructionsData as Instruction[];
+
+
+  instructionMap: { [key: string]: Instruction } = {};
+
+  constructor() {
+  this.instructions.forEach(instr => {
+    this.instructionMap[instr.mnemonic] = instr; // guarda todo
+  });
+}
+
+
+ getOpcode(name: string): string {
+  return this.instructionMap[name]?.opcode || 'unknown';
+}
 
   getFunctCode(name: string): string {
-    return instructionMap[name]?.funct || 'unknown';
-  }
-
-  convertOpCodeNameToCode(opcodeName: string): string {
-    return this.getOpcode(opcodeName);
+    return this.instructionMap[name]?.funct || 'unknown';
   }
 
   convertFunctToName(functBinary: string): string {
-    const name = Object.keys(instructionMap).find(
-      key => instructionMap[key].funct === functBinary
-    );
-    return name || 'unknown';
-  }
+  const name = Object.keys(this.instructionMap).find(
+    key => this.instructionMap[key].funct === functBinary
+  );
+  return name || 'unknown';
+}
 
   convertOpcodeToName(opcodeBinary: string): string {
-    const name = Object.keys(instructionMap).find(
-      key => instructionMap[key].opcode === opcodeBinary
-    );
-    return name || 'unknown';
-  }
+  const name = Object.keys(this.instructionMap).find(
+    key => this.instructionMap[key].opcode === opcodeBinary
+  );
+  return name || 'unknown';
+}
 
   convertRegisterToBinary(registerName: string): string {
     const binary = Object.keys(registerMap).find(key => registerMap[key] === registerName);
@@ -119,24 +77,29 @@ export class TranslatorService {
     return registerMap[registerBinary] ? `$${registerMap[registerBinary]}` : 'unknown';
   }
 
-  toLowerCaseString(text: string): string {
-    return text.toLowerCase();
-  }
-
   translateInstructionToHex(instruction: string): string {
-    instruction = this.toLowerCaseString(instruction.replace(/\$/g, ''));
+    instruction = instruction.replace(/\$/g, '').toLowerCase();
     const parts = instruction.split(' ');
     const opcode = this.getOpcode(parts[0]);
+
+    const mnemonic = parts[0];
+
+    this.instructionMap[parts[0]].type;
+
+
     if (opcode === 'unknown') return `Unknown Opcode for "${parts[0]}"`;
 
     let binaryInstruction = opcode;
 
     if (["add", "sub", "slt", "and", "or", "nor", "addu", "sllv", "srlv", "subu", "srav", "xor"].includes(parts[0])) {
+      
       const rd = this.convertRegisterToBinary(parts[1]);
       const rs = this.convertRegisterToBinary(parts[2]);
       const rt = this.convertRegisterToBinary(parts[3]);
       if (!rd || !rs || !rt) return `Missing ${!rd ? ' rd' : ''}${!rs ? ' rs' : ''}${!rt ? ' rt' : ''}`;
       binaryInstruction += rs + rt + rd + "00000" + this.getFunctCode(parts[0]);
+
+
     } else if (["div", "divu", "mult", "multu"].includes(parts[0])) {
       const rs = this.convertRegisterToBinary(parts[1]);
       const rt = this.convertRegisterToBinary(parts[2]);
@@ -207,7 +170,7 @@ export class TranslatorService {
       const rs = this.convertRegisterToBinary(parts[1]);
       const offset = parseInt(parts[2]);
       if (!rs || isNaN(offset)) return "Invalid Syntax";
-      binaryInstruction += rs + instructionMap[parts[0]].rt + (offset >>> 0).toString(2).padStart(16, '0');
+      binaryInstruction += rs + this.instructionMap[parts[0]].rt + (offset >>> 0).toString(2).padStart(16, '0');
     } else if (["slti", "sltiu"].includes(parts[0])) {
       const rt = this.convertRegisterToBinary(parts[1]);
       const rs = this.convertRegisterToBinary(parts[2]);
@@ -394,7 +357,7 @@ export class TranslatorService {
       const instruction = instructions[i].trim();
       const parts = instruction.split(' ');
       const opcode = parts[0];
-      if (!instructionMap[opcode]) {
+      if (!this.instructionMap[opcode]) {
         return false;
       }
     }

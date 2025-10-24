@@ -6,53 +6,28 @@ interface Contributor {
   login: string;
   avatar_url: string;
   html_url: string;
-  // add other fields if needed
 }
 
 @Component({
   selector: 'app-contributors',
   standalone: true,
   imports: [CommonModule, HttpClientModule],
-  template: `
-    <div class="contributors-container" *ngIf="!errorMsg; else errorTpl">
-      <div class="contributor" *ngFor="let c of contributors" (click)="openProfile(c.html_url)">
-        <img [src]="c.avatar_url" [alt]="c.login" title="{{ c.login }}" />
-        <p>{{ c.login }}</p>
-      </div>
-    </div>
-    <ng-template #errorTpl>
-      <p style="color: red;">{{ errorMsg }}</p>
-    </ng-template>
-  `,
-  styles: [`
-    .contributors-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .contributor {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 80px;
-      cursor: pointer;
-    }
-    .contributor img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-bottom: 5px;
-    }
-  `]
+  templateUrl: './contributors.component.html',
+  styleUrls: ['./contributors.component.css']
 })
 export class ContributorsComponent implements OnInit {
   contributors: Contributor[] = [];
   errorMsg = '';
+  currentIndex = 0;
+  itemsPerPage = 6;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    this.loadContributors();
+  }
+
+  private loadContributors(): void {
     const url = 'https://api.github.com/repos/proyectosingenieriauninorte/MIPSTranslator/contributors';
     this.http.get<Contributor[]>(url).subscribe({
       next: (data) => {
@@ -63,6 +38,36 @@ export class ContributorsComponent implements OnInit {
         this.errorMsg = 'Could not load contributors';
       }
     });
+  }
+
+  get visibleContributors(): Contributor[] {
+    const start = this.currentIndex;
+    const end = start + this.itemsPerPage;
+    return this.contributors.slice(start, end);
+  }
+
+  get canGoPrev(): boolean {
+    return this.currentIndex > 0;
+  }
+
+  get canGoNext(): boolean {
+    return this.currentIndex + this.itemsPerPage < this.contributors.length;
+  }
+
+  slideNext(): void {
+    if (this.canGoNext) {
+      this.currentIndex++;
+    }
+  }
+
+  slidePrev(): void {
+    if (this.canGoPrev) {
+      this.currentIndex--;
+    }
+  }
+
+  trackByLogin(index: number, contributor: Contributor): string {
+    return contributor.login;
   }
 
   openProfile(url: string): void {

@@ -1,0 +1,119 @@
+.contributors-wrapper {
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.carousel-track {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 5px;
+    min-height: 120px;
+}
+
+.contributor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    cursor: pointer;
+    text-align: center;
+    font-family: "Nunito", sans-serif;
+    transition: all 0.2s ease;
+}
+
+.contributor:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.contributor img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+    object-fit: cover;
+}
+
+.contributor p {
+    font-size: 0.9rem;
+    font-weight: 500;
+    word-wrap: break-word;
+    white-space: normal;
+    margin: 0;
+    color: #2c2c2c;
+    line-height: 1.3;
+}
+
+.nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #d1c4e9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    flex-shrink: 0;
+}
+
+.nav-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    color: #b39ddb;
+}
+
+.nav-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #d32f2f;
+    text-align: center;
+    font-family: "Nunito", sans-serif;
+    margin: 10px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .nav-button {
+        width: 32px;
+        height: 32px;
+    }
+
+    .carousel-container {
+        gap: 5px;
+    }
+
+    .contributor {
+        width: 90px;
+        padding: 8px;
+    }
+
+    .contributor img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .contributor p {
+        font-size: 0.8rem;
+    }
+}

@@ -108,6 +108,7 @@
   transform: translateY(-50%) rotate(180deg);
 }
 
+/*
 .instructions-list {
   background-color: #ffffff;
   padding: 15px 10px 20px 10px;
@@ -119,11 +120,21 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: #d1c4e9 #f5f5f5;
+}*/
+
+.instructions-list {
+  background-color: #ffffff;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 instrucciones por fila */
+  gap: 8px;
+  overflow-y: auto;       /* Scroll vertical */
+  max-height: 150px;      /* límite opcional para que aparezca el scroll */
 }
 
 /* Scrollbar horizontal */
 .instructions-list::-webkit-scrollbar {
-  height: 10px;
+  height: 8px;
 }
 
 .instructions-list::-webkit-scrollbar-track {

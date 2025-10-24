@@ -15,18 +15,52 @@ interface Translation {
 })
 export class ControlStackComponent {
   @Input() translations: Translation[] = [];
-  @Output() instructionClick = new EventEmitter<string>();
-  @Output() deleteInstruction = new EventEmitter<Translation>();
+  @Output() instructionClick = new EventEmitter<number>();
+  @Output() deleteInstruction = new EventEmitter<number>();
+  @Output() reorderInstructions = new EventEmitter<Translation[]>();
 
-  onInstructionClick(instruction: string): void {
-    this.instructionClick.emit(instruction);
+  // mod: Ahora emite el índice exacto
+  onInstructionClick(index: number): void {
+    console.log(`Click en instrucción del stack, índice: ${index}`);
+    this.instructionClick.emit(index);
   }
 
-  onDeleteInstruction(translation: Translation): void {
-    const index = this.translations.indexOf(translation);
-    if (index !== -1) {
-      this.translations.splice(index, 1);
+  // mod: Ahora emite el índice exacto
+  onDeleteInstruction(index: number): void {
+    console.log(`Solicitud de eliminación, índice: ${index}`);
+    this.deleteInstruction.emit(index);
+  }
+
+  moveUp(index: number): void {
+    if (index > 0) {
+      // Intercambiamos el elemento con el anterior
+      const temp = this.translations[index];
+      this.translations[index] = this.translations[index - 1];
+      this.translations[index - 1] = temp;
+      
+      // Emitimos el nuevo orden
+      this.reorderInstructions.emit([...this.translations]);
     }
-    this.deleteInstruction.emit(translation);
+  }
+
+  moveDown(index: number): void {
+    if (index < this.translations.length - 1) {
+      // Intercambiamos el elemento con el siguiente
+      const temp = this.translations[index];
+      this.translations[index] = this.translations[index + 1];
+      this.translations[index + 1] = temp;
+      
+      // Emitimos el nuevo orden
+      this.reorderInstructions.emit([...this.translations]);
+    }
+  }
+
+  //comprueba si se puede hacer el movimiento.
+  canMoveUp(index: number): boolean {
+    return index > 0;
+  }
+
+  canMoveDown(index: number): boolean {
+    return index < this.translations.length - 1;
   }
 }
