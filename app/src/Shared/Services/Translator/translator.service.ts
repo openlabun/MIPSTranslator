@@ -496,9 +496,19 @@ export class TranslatorService {
     ) {
       const rs = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rt = this.convertRegisterToName(binaryInstruction.slice(11, 16));
-      const offset = this.binaryToHex(binaryInstruction.slice(16, 32));
-      if (!rt || !rs || !offset) return 'Invalid Syntax';
-      mipsInstruction += rt + ' ' + offset + ' ' + rs;
+      const offsetBinary = binaryInstruction.slice(16, 32);
+
+      // Convertir a signed integer (complemento a 2)
+      let offset = parseInt(offsetBinary, 2);
+      if (offset >= 32768) {
+        // Si el bit más significativo es 1
+        offset = offset - 65536; // Convertir a negativo
+      }
+
+      if (!rt || !rs) return 'Invalid Syntax';
+
+      // Retornar en formato estándar: lw $rt offset($rs)
+      mipsInstruction += `${rt} ${offset}(${rs})`;
     } else if (['addi', 'addiu', 'andi', 'ori', 'xori'].includes(opcodeMIPS)) {
       const rt = this.convertRegisterToName(binaryInstruction.slice(6, 11));
       const rs = this.convertRegisterToName(binaryInstruction.slice(11, 16));
