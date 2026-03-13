@@ -140,7 +140,7 @@
     "version": "MIPS I",
     "opcode": "000000",
     "funct": "101011",
-    "description": "Set on less than (unsigned comparison)",
+    "description": "Set on less than unsigned",
     "example": "sltu $t1 $t2 $t3",
     "args": [
       "rd",
@@ -174,10 +174,10 @@
     "example": "sllv $t1 $t2 $t3",
     "args": [
       "rd",
-      "rs",
-      "rt"
+      "rt",
+      "rs"
     ],
-    "template": "sllv rd rs rt"
+    "template": "sllv rd rt rs"
   },
   {
     "mnemonic": "srlv",
@@ -189,10 +189,10 @@
     "example": "srlv $t1 $t2 $t3",
     "args": [
       "rd",
-      "rs",
-      "rt"
+      "rt",
+      "rs"
     ],
-    "template": "srlv rd rs rt"
+    "template": "srlv rd rt rs"
   },
   {
     "mnemonic": "srav",
@@ -204,10 +204,10 @@
     "example": "srav $t1 $t2 $t3",
     "args": [
       "rd",
-      "rs",
-      "rt"
+      "rt",
+      "rs"
     ],
-    "template": "srav rd rs rt"
+    "template": "srav rd rt rs"
   },
   {
     "mnemonic": "teq",
@@ -583,6 +583,34 @@
     "template": "xori rt rs immediate"
   },
   {
+    "mnemonic": "slti",
+    "type": "I",
+    "version": "MIPS I",
+    "opcode": "001010",
+    "description": "Set on less than immediate",
+    "example": "slti $t1 $t2 100",
+    "args": [
+      "rt",
+      "rs",
+      "immediate"
+    ],
+    "template": "slti rt rs immediate"
+  },
+  {
+    "mnemonic": "sltiu",
+    "type": "I",
+    "version": "MIPS I",
+    "opcode": "001011",
+    "description": "Set on less than immediate unsigned",
+    "example": "sltiu $t1 $t2 100",
+    "args": [
+      "rt",
+      "rs",
+      "immediate"
+    ],
+    "template": "sltiu rt rs immediate"
+  },
+  {
     "mnemonic": "lui",
     "type": "I",
     "version": "MIPS I",
@@ -705,7 +733,7 @@
     "version": "MIPS I",
     "opcode": "000100",
     "description": "Branch if equal",
-    "example": "beq $t1 $t2 8",
+    "example": "beq $t1 $t2 label",
     "args": [
       "rs",
       "rt",
@@ -719,7 +747,7 @@
     "version": "MIPS I",
     "opcode": "000101",
     "description": "Branch if not equal",
-    "example": "bne $t1 $t2 8",
+    "example": "bne $t1 $t2 label",
     "args": [
       "rs",
       "rt",
@@ -732,8 +760,9 @@
     "type": "I",
     "version": "MIPS I",
     "opcode": "000001",
+    "rt": "00000",
     "description": "Branch if less than zero",
-    "example": "bltz $t1 8",
+    "example": "bltz $t1 label",
     "args": [
       "rs",
       "offset"
@@ -745,8 +774,9 @@
     "type": "I",
     "version": "MIPS I",
     "opcode": "000001",
+    "rt": "00001",
     "description": "Branch if greater or equal to zero",
-    "example": "bgez $t1 8",
+    "example": "bgez $t1 label",
     "args": [
       "rs",
       "offset"
@@ -754,30 +784,28 @@
     "template": "bgez rs offset"
   },
   {
-    "mnemonic": "bltu",
+    "mnemonic": "nal",
     "type": "I",
     "version": "MIPS I",
     "opcode": "000001",
-    "description": "Branch if less than zero unsigned",
-    "example": "bltu $t1 8",
-    "args": [
-      "rs",
-      "offset"
-    ],
-    "template": "bltu rs offset"
+    "rt": "00000",
+    "description": "No-op and link",
+    "example": "nal",
+    "args": [],
+    "template": "nal"
   },
   {
-    "mnemonic": "bgeu",
+    "mnemonic": "bal",
     "type": "I",
     "version": "MIPS I",
     "opcode": "000001",
-    "description": "Branch if greater or equal unsigned",
-    "example": "bgeu $t1 8",
+    "rt": "00001",
+    "description": "Branch and link",
+    "example": "bal label",
     "args": [
-      "rs",
       "offset"
     ],
-    "template": "bgeu rs offset"
+    "template": "bal offset"
   },
   {
     "mnemonic": "j",

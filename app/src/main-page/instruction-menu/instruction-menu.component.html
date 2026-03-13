@@ -1,5 +1,15 @@
 <div class="instruction-menu">
-  <h3 class="menu-title">RISC-V RV32I</h3>
+  <!-- Header con selector de versión -->
+  <div class="menu-header">
+    <h3 class="menu-title">MIPS Instructions</h3>
+    <select 
+      [value]="currentVersion" 
+      (change)="setVersion($any($event.target).value)"
+      class="version-select">
+      <option value="legacy">Legacy</option>
+      <option value="r6">R6</option>
+    </select>
+  </div>
 
   <!-- Filtro de búsqueda -->
   <input 
