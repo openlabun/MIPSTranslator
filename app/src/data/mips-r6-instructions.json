@@ -1,0 +1,1037 @@
+[
+    {
+        "mnemonic": "add",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100000",
+        "description": "Add (with overflow)",
+        "example": "add $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "add rd rs rt"
+    },
+    {
+        "mnemonic": "addu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100001",
+        "description": "Add unsigned (no overflow)",
+        "example": "addu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "addu rd rs rt"
+    },
+    {
+        "mnemonic": "sub",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100010",
+        "description": "Subtract",
+        "example": "sub $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "sub rd rs rt"
+    },
+    {
+        "mnemonic": "subu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100011",
+        "description": "Subtract unsigned",
+        "example": "subu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "subu rd rs rt"
+    },
+    {
+        "mnemonic": "and",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100100",
+        "description": "Bitwise AND",
+        "example": "and $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "and rd rs rt"
+    },
+    {
+        "mnemonic": "or",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100101",
+        "description": "Bitwise OR",
+        "example": "or $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "or rd rs rt"
+    },
+    {
+        "mnemonic": "xor",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100110",
+        "description": "Bitwise XOR",
+        "example": "xor $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "xor rd rs rt"
+    },
+    {
+        "mnemonic": "nor",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "100111",
+        "description": "Bitwise NOR",
+        "example": "nor $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "nor rd rs rt"
+    },
+    {
+        "mnemonic": "slt",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "101010",
+        "description": "Set on less than (signed)",
+        "example": "slt $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "slt rd rs rt"
+    },
+    {
+        "mnemonic": "sltu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "101011",
+        "description": "Set on less than unsigned",
+        "example": "sltu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "sltu rd rs rt"
+    },
+    {
+        "mnemonic": "sll",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000000",
+        "description": "Shift left logical",
+        "example": "sll $t1 $t2 2",
+        "args": [
+            "rd",
+            "rt",
+            "shamt"
+        ],
+        "template": "sll rd rt shamt"
+    },
+    {
+        "mnemonic": "srl",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000010",
+        "description": "Shift right logical",
+        "example": "srl $t1 $t2 2",
+        "args": [
+            "rd",
+            "rt",
+            "shamt"
+        ],
+        "template": "srl rd rt shamt"
+    },
+    {
+        "mnemonic": "sra",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000011",
+        "description": "Shift right arithmetic",
+        "example": "sra $t1 $t2 2",
+        "args": [
+            "rd",
+            "rt",
+            "shamt"
+        ],
+        "template": "sra rd rt shamt"
+    },
+    {
+        "mnemonic": "sllv",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000100",
+        "description": "Shift left logical variable",
+        "example": "sllv $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rt",
+            "rs"
+        ],
+        "template": "sllv rd rt rs"
+    },
+    {
+        "mnemonic": "srlv",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000110",
+        "description": "Shift right logical variable",
+        "example": "srlv $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rt",
+            "rs"
+        ],
+        "template": "srlv rd rt rs"
+    },
+    {
+        "mnemonic": "srav",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000111",
+        "description": "Shift right arithmetic variable",
+        "example": "srav $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rt",
+            "rs"
+        ],
+        "template": "srav rd rt rs"
+    },
+    {
+        "mnemonic": "jalr",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "001001",
+        "description": "Jump and link register (JR removed, use jalr $zero $rs)",
+        "example": "jalr $ra $t1",
+        "args": [
+            "rd",
+            "rs"
+        ],
+        "template": "jalr rd rs"
+    },
+    {
+        "mnemonic": "syscall",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "001100",
+        "description": "System call",
+        "example": "syscall",
+        "args": [],
+        "template": "syscall"
+    },
+    {
+        "mnemonic": "break",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "001101",
+        "description": "Breakpoint",
+        "example": "break",
+        "args": [],
+        "template": "break"
+    },
+    {
+        "mnemonic": "mul",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011000",
+        "shamt": "00010",
+        "description": "Multiply (low 32 bits)",
+        "example": "mul $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "mul rd rs rt"
+    },
+    {
+        "mnemonic": "muh",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011000",
+        "shamt": "00011",
+        "description": "Multiply (high 32 bits signed)",
+        "example": "muh $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "muh rd rs rt"
+    },
+    {
+        "mnemonic": "mulu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011001",
+        "shamt": "00010",
+        "description": "Multiply unsigned (low 32 bits)",
+        "example": "mulu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "mulu rd rs rt"
+    },
+    {
+        "mnemonic": "muhu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011001",
+        "shamt": "00011",
+        "description": "Multiply unsigned (high 32 bits)",
+        "example": "muhu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "muhu rd rs rt"
+    },
+    {
+        "mnemonic": "div",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011010",
+        "shamt": "00010",
+        "description": "Divide (quotient only)",
+        "example": "div $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "div rd rs rt"
+    },
+    {
+        "mnemonic": "mod",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011010",
+        "shamt": "00011",
+        "description": "Modulo (remainder)",
+        "example": "mod $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "mod rd rs rt"
+    },
+    {
+        "mnemonic": "divu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011011",
+        "shamt": "00010",
+        "description": "Divide unsigned (quotient)",
+        "example": "divu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "divu rd rs rt"
+    },
+    {
+        "mnemonic": "modu",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "011011",
+        "shamt": "00011",
+        "description": "Modulo unsigned (remainder)",
+        "example": "modu $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "modu rd rs rt"
+    },
+    {
+        "mnemonic": "seleqz",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "110101",
+        "description": "Select on equal to zero",
+        "example": "seleqz $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "seleqz rd rs rt"
+    },
+    {
+        "mnemonic": "selnez",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "110111",
+        "description": "Select on not equal to zero",
+        "example": "selnez $t1 $t2 $t3",
+        "args": [
+            "rd",
+            "rs",
+            "rt"
+        ],
+        "template": "selnez rd rs rt"
+    },
+    {
+        "mnemonic": "lsa",
+        "type": "R",
+        "version": "MIPS R6",
+        "opcode": "000000",
+        "funct": "000101",
+        "description": "Load scaled address",
+        "example": "lsa $t1 $t2 $t3 2",
+        "args": [
+            "rd",
+            "rs",
+            "rt",
+            "sa"
+        ],
+        "template": "lsa rd rs rt sa"
+    },
+    {
+        "mnemonic": "addiu",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001001",
+        "description": "Add immediate unsigned",
+        "example": "addiu $t1 $t2 100",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "addiu rt rs immediate"
+    },
+    {
+        "mnemonic": "slti",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001010",
+        "description": "Set on less than immediate",
+        "example": "slti $t1 $t2 100",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "slti rt rs immediate"
+    },
+    {
+        "mnemonic": "sltiu",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001011",
+        "description": "Set on less than immediate unsigned",
+        "example": "sltiu $t1 $t2 100",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "sltiu rt rs immediate"
+    },
+    {
+        "mnemonic": "andi",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001100",
+        "description": "AND immediate",
+        "example": "andi $t1 $t2 0xFF",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "andi rt rs immediate"
+    },
+    {
+        "mnemonic": "ori",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001101",
+        "description": "OR immediate",
+        "example": "ori $t1 $t2 0xFF",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "ori rt rs immediate"
+    },
+    {
+        "mnemonic": "xori",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001110",
+        "description": "XOR immediate",
+        "example": "xori $t1 $t2 0xFF",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "xori rt rs immediate"
+    },
+    {
+        "mnemonic": "aui",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001111",
+        "description": "Add upper immediate",
+        "example": "aui $t1 $t2 0x1000",
+        "args": [
+            "rt",
+            "rs",
+            "immediate"
+        ],
+        "template": "aui rt rs immediate"
+    },
+    {
+        "mnemonic": "lui",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001111",
+        "description": "Load upper immediate",
+        "example": "lui $t1 0x1000",
+        "args": [
+            "rt",
+            "immediate"
+        ],
+        "template": "lui rt immediate"
+    },
+    {
+        "mnemonic": "lb",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "100000",
+        "description": "Load byte",
+        "example": "lb $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "lb rt offset(rs)"
+    },
+    {
+        "mnemonic": "lh",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "100001",
+        "description": "Load halfword",
+        "example": "lh $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "lh rt offset(rs)"
+    },
+    {
+        "mnemonic": "lw",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "100011",
+        "description": "Load word",
+        "example": "lw $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "lw rt offset(rs)"
+    },
+    {
+        "mnemonic": "lbu",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "100100",
+        "description": "Load byte unsigned",
+        "example": "lbu $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "lbu rt offset(rs)"
+    },
+    {
+        "mnemonic": "lhu",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "100101",
+        "description": "Load halfword unsigned",
+        "example": "lhu $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "lhu rt offset(rs)"
+    },
+    {
+        "mnemonic": "sb",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "101000",
+        "description": "Store byte",
+        "example": "sb $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "sb rt offset(rs)"
+    },
+    {
+        "mnemonic": "sh",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "101001",
+        "description": "Store halfword",
+        "example": "sh $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "sh rt offset(rs)"
+    },
+    {
+        "mnemonic": "sw",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "101011",
+        "description": "Store word",
+        "example": "sw $t1 0($t2)",
+        "args": [
+            "rt",
+            "offset(rs)"
+        ],
+        "template": "sw rt offset(rs)"
+    },
+    {
+        "mnemonic": "beq",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000100",
+        "description": "Branch on equal",
+        "example": "beq $t1 $t2 label",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "beq rs rt offset"
+    },
+    {
+        "mnemonic": "bne",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000101",
+        "description": "Branch on not equal",
+        "example": "bne $t1 $t2 label",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bne rs rt offset"
+    },
+    {
+        "mnemonic": "blez",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000110",
+        "description": "Branch on less than or equal to zero",
+        "example": "blez $t1 label",
+        "args": [
+            "rs",
+            "offset"
+        ],
+        "template": "blez rs offset"
+    },
+    {
+        "mnemonic": "bgtz",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000111",
+        "description": "Branch on greater than zero",
+        "example": "bgtz $t1 label",
+        "args": [
+            "rs",
+            "offset"
+        ],
+        "template": "bgtz rs offset"
+    },
+    {
+        "mnemonic": "bltz",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000001",
+        "rt": "00000",
+        "description": "Branch on less than zero",
+        "example": "bltz $t1 label",
+        "args": [
+            "rs",
+            "offset"
+        ],
+        "template": "bltz rs offset"
+    },
+    {
+        "mnemonic": "bgez",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000001",
+        "rt": "00001",
+        "description": "Branch on greater than or equal to zero",
+        "example": "bgez $t1 label",
+        "args": [
+            "rs",
+            "offset"
+        ],
+        "template": "bgez rs offset"
+    },
+    {
+        "mnemonic": "bal",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000001",
+        "rt": "00001",
+        "description": "Branch and link (bgez $zero, offset)",
+        "example": "bal label",
+        "args": [
+            "offset"
+        ],
+        "template": "bal offset"
+    },
+    {
+        "mnemonic": "nal",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000001",
+        "rt": "00000",
+        "description": "No-op and link (bltz $zero, offset)",
+        "example": "nal",
+        "args": [],
+        "template": "nal"
+    },
+    {
+        "mnemonic": "j",
+        "type": "J",
+        "version": "MIPS R6",
+        "opcode": "000010",
+        "description": "Jump (deprecated in R6, use BC)",
+        "example": "j target",
+        "args": [
+            "target"
+        ],
+        "template": "j target"
+    },
+    {
+        "mnemonic": "jal",
+        "type": "J",
+        "version": "MIPS R6",
+        "opcode": "000011",
+        "description": "Jump and link (deprecated in R6, use BALC)",
+        "example": "jal target",
+        "args": [
+            "target"
+        ],
+        "template": "jal target"
+    },
+    {
+        "mnemonic": "bc",
+        "type": "J",
+        "version": "MIPS R6",
+        "opcode": "110010",
+        "description": "Branch compact (unconditional, 26-bit offset, no delay slot)",
+        "example": "bc offset",
+        "args": [
+            "offset"
+        ],
+        "template": "bc offset"
+    },
+    {
+        "mnemonic": "balc",
+        "type": "J",
+        "version": "MIPS R6",
+        "opcode": "111010",
+        "description": "Branch and link compact (26-bit offset, no delay slot)",
+        "example": "balc offset",
+        "args": [
+            "offset"
+        ],
+        "template": "balc offset"
+    },
+    {
+        "mnemonic": "beqzc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "110110",
+        "description": "Branch if equal to zero compact (21-bit offset, no delay slot)",
+        "example": "beqzc $t1 offset",
+        "args": [
+            "rs",
+            "offset"
+        ],
+        "template": "beqzc rs offset"
+    },
+    {
+        "mnemonic": "bnezc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "111110",
+        "description": "Branch if not equal to zero compact (21-bit offset, no delay slot)",
+        "example": "bnezc $t1 offset",
+        "args": [
+            "rs",
+            "offset"
+        ],
+        "template": "bnezc rs offset"
+    },
+    {
+        "mnemonic": "bltzc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "010111",
+        "description": "Branch if less than zero compact (no delay slot)",
+        "example": "bltzc $t1 offset",
+        "args": [
+            "rt",
+            "offset"
+        ],
+        "template": "bltzc rt offset"
+    },
+    {
+        "mnemonic": "bgezc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "010110",
+        "description": "Branch if greater or equal zero compact (no delay slot)",
+        "example": "bgezc $t1 offset",
+        "args": [
+            "rt",
+            "offset"
+        ],
+        "template": "bgezc rt offset"
+    },
+    {
+        "mnemonic": "bgtzc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "010111",
+        "description": "Branch if greater than zero compact (no delay slot)",
+        "example": "bgtzc $t1 offset",
+        "args": [
+            "rt",
+            "offset"
+        ],
+        "template": "bgtzc rt offset"
+    },
+    {
+        "mnemonic": "blezc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "010110",
+        "description": "Branch if less or equal zero compact (no delay slot)",
+        "example": "blezc $t1 offset",
+        "args": [
+            "rt",
+            "offset"
+        ],
+        "template": "blezc rt offset"
+    },
+    {
+        "mnemonic": "beqc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001000",
+        "description": "Branch if equal compact (no delay slot)",
+        "example": "beqc $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "beqc rs rt offset"
+    },
+    {
+        "mnemonic": "bnec",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "011000",
+        "description": "Branch if not equal compact (no delay slot)",
+        "example": "bnec $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bnec rs rt offset"
+    },
+    {
+        "mnemonic": "bltc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "010111",
+        "description": "Branch if less than compact (signed, no delay slot)",
+        "example": "bltc $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bltc rs rt offset"
+    },
+    {
+        "mnemonic": "bgec",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "010110",
+        "description": "Branch if greater or equal compact (signed, no delay slot)",
+        "example": "bgec $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bgec rs rt offset"
+    },
+    {
+        "mnemonic": "bltuc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000111",
+        "description": "Branch if less than compact unsigned (no delay slot)",
+        "example": "bltuc $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bltuc rs rt offset"
+    },
+    {
+        "mnemonic": "bgeuc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "000110",
+        "description": "Branch if greater or equal compact unsigned (no delay slot)",
+        "example": "bgeuc $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bgeuc rs rt offset"
+    },
+    {
+        "mnemonic": "jic",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "110110",
+        "description": "Jump indexed compact (PC = rs + offset, no delay slot)",
+        "example": "jic $t1 offset",
+        "args": [
+            "rt",
+            "offset"
+        ],
+        "template": "jic rt offset"
+    },
+    {
+        "mnemonic": "jialc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "111110",
+        "description": "Jump indexed and link compact (no delay slot)",
+        "example": "jialc $t1 offset",
+        "args": [
+            "rt",
+            "offset"
+        ],
+        "template": "jialc rt offset"
+    },
+    {
+        "mnemonic": "bovc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "001000",
+        "description": "Branch on overflow compact (replaces ADDI)",
+        "example": "bovc $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bovc rs rt offset"
+    },
+    {
+        "mnemonic": "bnvc",
+        "type": "I",
+        "version": "MIPS R6",
+        "opcode": "011000",
+        "description": "Branch on no overflow compact",
+        "example": "bnvc $t1 $t2 offset",
+        "args": [
+            "rs",
+            "rt",
+            "offset"
+        ],
+        "template": "bnvc rs rt offset"
+    }
+]
