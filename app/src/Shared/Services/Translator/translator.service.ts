@@ -180,19 +180,38 @@ export class TranslatorService {
     } else if (
       ['lw', 'sw', 'lb', 'lbu', 'lh', 'lhu', 'sb', 'sh'].includes(mnemonic)
     ) {
-      if (parts.length < 4) return `Insufficient arguments for ${mnemonic}`;
+      if (parts.length < 3) return `Insufficient arguments for ${mnemonic}`;
 
       const rt = this.convertRegisterToBinary(parts[1]);
-      const offset = parts[2].replace(/[()]/g, ''); // Limpia paréntesis si los hay
-      const rs = this.convertRegisterToBinary(parts[3].replace(/[(),]/g, ''));
-      const immediate = parseInt(offset);
+
+      // Parsear el formato: offset($rs) o offset ($rs)
+      let offset: number;
+      let rs: string;
+
+      // Caso 1: formato estándar "0($t2)" en parts[2]
+      if (parts[2].includes('(') && parts[2].includes(')')) {
+        const match = parts[2].match(/^(-?\d+|0x[0-9a-fA-F]+)\(([^)]+)\)$/);
+        if (!match) return `Invalid memory address format: ${parts[2]}`;
+
+        offset = parseInt(match[1]);
+        rs = this.convertRegisterToBinary(match[2]);
+
+        // Caso 2: formato alternativo "0 ($t2)" o "0x0008 $t0" (separado)
+      } else if (parts.length >= 4) {
+        offset = parseInt(parts[2]);
+        // Eliminar paréntesis si existen
+        rs = this.convertRegisterToBinary(parts[3].replace(/[()]/g, ''));
+      } else {
+        return `Invalid syntax for ${mnemonic}`;
+      }
 
       if (!rt || rt === 'unknown') return `Invalid register rt: ${parts[1]}`;
-      if (!rs || rs === 'unknown') return `Invalid register rs in ${parts[3]}`;
-      if (isNaN(immediate)) return `Invalid offset: ${offset}`;
+      if (!rs || rs === 'unknown') return `Invalid register rs`;
+      if (isNaN(offset)) return `Invalid offset`;
 
+      // Formato I-Type: opcode + rs + rt + immediate
       binaryInstruction +=
-        rs + rt + (immediate >>> 0).toString(2).padStart(16, '0');
+        rs + rt + (offset >>> 0).toString(2).padStart(16, '0');
     } else if (['addi', 'addiu', 'andi', 'ori', 'xori'].includes(mnemonic)) {
       if (parts.length < 4) return `Insufficient arguments for ${mnemonic}`;
 
@@ -552,10 +571,17 @@ export class TranslatorService {
   }
 
   translateMIPStoHex(textInput: string): string {
-    const instructions: string[] = textInput.trim().split('\n');
+    const instructions: string[] = textInput
+      .trim()
+      .split('\n')
+      .filter((line) => line.trim() !== ''); // Filtra líneas vacías
+
     const translatedInstructions: string[] = instructions.map((instruction) => {
-      return this.translateInstructionToHex(instruction.trim());
+      const trimmedInstruction = instruction.trim();
+      if (!trimmedInstruction) return 'Empty instruction';
+      return this.translateInstructionToHex(trimmedInstruction);
     });
+
     const formattedInstructions: string = translatedInstructions.join('\n');
     return formattedInstructions;
   }
