@@ -40,36 +40,6 @@ docker run -it --rm -v "C:\desarrollo\proyectosUninorte\MIPSTranslator\app:/usr/
 docker build -t mipstranslatordev .   
 docker run --rm -it -p 5008:4200 -v "$(pwd)/app:/project" mipstranslatordev
 
-
-MIPS example:
-```assembly
-addi t0 t0 0x01
-addi t4 t4 0x02
-add t0 t0 t0
-add t0 t0 t0
-add t1 t0 t0
-add t2 t1 t1
-add t3 t2 t2
-```
-Translates to:
-```assembly
-21080001
-218C0002
-01084020
-01084020
-01084820
-01295020
-014A5820
-```
-Expected result:
-```assembly
-t0 = 4
-t1 = 8
-t2 = 10 (hex)
-t3 = 20 (hex)
-t4 = 2
-```
-
 To test (inside the app folder):
 npm install 
 npm run ng serve
