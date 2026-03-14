@@ -58,14 +58,48 @@
   background-color: #b39ddb;
 }
 
-.menu-title {
-  color: #3b3b3b;
-  text-align: center;
-  margin: 0 0 20px 0;
-  font-weight: 800;
-  font-size: 18px;
+/* Header con selector de versión */
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
   padding-bottom: 8px;
   border-bottom: 2px solid #f0f0f0;
+}
+
+.menu-title {
+  color: #3b3b3b;
+  margin: 0;
+  font-weight: 800;
+  font-size: 18px;
+  flex: 1;
+}
+
+/* Selector de versión */
+.version-select {
+  padding: 6px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-family: "Nunito", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #3b3b3b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.version-select:hover {
+  border-color: #8a6fc9;
+  background-color: #f9f7fc;
+}
+
+.version-select:focus {
+  outline: none;
+  border-color: #8a6fc9;
+  box-shadow: 0 0 0 3px rgba(138, 111, 201, 0.2);
 }
 
 /* Category Styles */
@@ -108,28 +142,14 @@
   transform: translateY(-50%) rotate(180deg);
 }
 
-/*
-.instructions-list {
-  background-color: #ffffff;
-  padding: 15px 10px 20px 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  overflow-x: auto;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: #d1c4e9 #f5f5f5;
-}*/
-
 .instructions-list {
   background-color: #ffffff;
   padding: 10px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 instrucciones por fila */
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  overflow-y: auto;       /* Scroll vertical */
-  max-height: 150px;      /* límite opcional para que aparezca el scroll */
+  overflow-y: auto;
+  max-height: 150px;
 }
 
 /* Scrollbar horizontal */
@@ -165,7 +185,6 @@
   transition: all 0.2s ease;
   border-radius: 5px;
   flex: 0 0 auto;
-  /* Eliminado el fondo gris y sombra */
 }
 
 .instruction-button:hover {

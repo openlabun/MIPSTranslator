@@ -7,7 +7,7 @@ import { TranslatorService } from '../../Shared/Services/Translator/translator.s
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './ramdrop.component.html',
-  styleUrls: ['./ramdrop.component.css']
+  styleUrls: ['./ramdrop.component.css'],
 })
 export class RamdropComponent {
   file: File | null = null;
@@ -29,7 +29,7 @@ export class RamdropComponent {
     const inputEvent = event.target as HTMLInputElement;
     if (inputEvent.files && inputEvent.files.length > 0) {
       this.file = inputEvent.files[0];
-      console.log(this.file);
+      console.log('📄 Archivo seleccionado:', this.file.name);
       this.valueFile.emit(this.processFiles(this.file));
     }
   }
@@ -41,30 +41,28 @@ export class RamdropComponent {
       reader.onload = (event) => {
         const fileContent = event.target?.result as string;
 
-        const lines = fileContent.trim().split('\n');
+        console.log('✅ Archivo leído');
+        console.log('Contenido completo:\n', fileContent);
 
-        if (lines.length < 2) {
-          console.error("Invalid file format. Expected at least two lines.");
-          reject("Invalid file format. Expected at least two lines.");
-          return;
-        }
+        // ✅ USAR translateHextoMIPS que limpia automáticamente
+        const originalInstructions =
+          this.translator.cleanInstructionText(fileContent);
+        const translatedInstructions = this.translator.translateHextoMIPS(
+          fileContent,
+          true,
+        );
 
-        const instructionsArray = lines[1].trim().split(/\s+/);
+        console.log(
+          '📋 Instrucciones originales (limpias):\n',
+          originalInstructions,
+        );
+        console.log('🔄 Instrucciones traducidas:\n', translatedInstructions);
 
-        let translatedInstructions = '';
-        let originalInstructions = '';
-
-        instructionsArray.forEach(instruction => {
-          const translated = this.translator.translateInstructionToMIPS(instruction.trim());
-          translatedInstructions += `${translated}\n`;
-          originalInstructions += `${instruction.trim()}\n`;
-        });
-
-        console.log([originalInstructions, translatedInstructions]);
         resolve([originalInstructions, translatedInstructions]);
       };
 
       reader.onerror = (error) => {
+        console.error('❌ Error al leer archivo:', error);
         reject(error);
       };
 
