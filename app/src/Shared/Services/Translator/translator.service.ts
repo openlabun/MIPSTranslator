@@ -60,6 +60,8 @@ export class TranslatorService {
   // Versión actual (por defecto R6)
   private currentVersion: MipsVersion = 'r6';
 
+  public debugMode: boolean = true; // ← Agregar esto
+
   registerMap = registerMap;
 
   // Instrucciones para cada versión
@@ -990,36 +992,229 @@ export class TranslatorService {
     return binary;
   }
 
-  translateHextoMIPS(textInput: string): string {
-    const instructions: string[] = textInput
-      .trim()
-      .split('\n')
-      .filter((line) => line.trim() !== '');
+  /**
+   * Limpia y normaliza instrucciones soportando múltiples formatos
+   */
+  cleanInstructionText(text: string, debug: boolean = false): string {
+    if (debug) console.log('=== INICIO cleanInstructionText ===');
+    if (debug) console.log('Input original:\n', text);
 
-    const translatedInstructions: string[] = instructions.map((instruction) => {
-      const trimmed = instruction.trim();
-      if (!trimmed) return 'Empty instruction';
-      return this.translateInstructionToMIPS(trimmed);
+    const lines = text.split('\n');
+    const instructions: string[] = [];
+
+    if (debug) console.log(`\nTotal de líneas: ${lines.length}`);
+
+    lines.forEach((originalLine, index) => {
+      if (debug) console.log(`\n--- Línea ${index + 1} ---`);
+      if (debug) console.log(`Original: "${originalLine}"`);
+
+      let line = originalLine;
+
+      // Remover comentarios (todo después de #, //, o ;)
+      line = line
+        .replace(/[#;].*$/, '')
+        .replace(/\/\/.*$/, '')
+        .trim();
+
+      if (debug) console.log(`Sin comentarios: "${line}"`);
+
+      // Ignorar líneas vacías y headers
+      if (!line) {
+        if (debug) console.log('→ Ignorada (vacía)');
+        return;
+      }
+      if (line.toLowerCase().startsWith('v2.0')) {
+        if (debug) console.log('→ Ignorada (header v2.0)');
+        return;
+      }
+      if (line.toLowerCase().startsWith('v3.0')) {
+        if (debug) console.log('→ Ignorada (header v3.0)');
+        return;
+      }
+
+      // Dividir por espacios (soporta múltiples instrucciones por línea)
+      const parts = line.split(/\s+/).filter((p) => p.trim() !== '');
+
+      if (debug) console.log(`Partes encontradas (${parts.length}):`, parts);
+
+      parts.forEach((part, partIndex) => {
+        const trimmed = part.trim();
+
+        if (debug) console.log(`  Parte ${partIndex + 1}: "${trimmed}"`);
+
+        // Filtrar tokens no válidos
+        if (trimmed.length === 0) {
+          if (debug) console.log('    → Ignorada (vacía)');
+          return;
+        }
+
+        // Verificar si es hex válido (8 caracteres) o mnemónico MIPS
+        const isHex = /^(0x)?[0-9A-Fa-f]{8}$/i.test(trimmed);
+        const isMnemonic = /^[a-z]+$/i.test(trimmed);
+        const isRegister = trimmed.startsWith('$');
+
+        if (debug) {
+          console.log(`    isHex: ${isHex}`);
+          console.log(`    isMnemonic: ${isMnemonic}`);
+          console.log(`    isRegister: ${isRegister}`);
+        }
+
+        if (isHex || isMnemonic || isRegister) {
+          instructions.push(trimmed);
+          if (debug) console.log(`    ✓ Agregada: "${trimmed}"`);
+        } else {
+          if (debug) console.log(`    ✗ Rechazada: "${trimmed}"`);
+        }
+      });
     });
 
-    const formattedInstructions: string = translatedInstructions.join('\n');
-    return formattedInstructions;
+    const result = instructions.join('\n');
+
+    if (debug) {
+      console.log('\n=== RESULTADO ===');
+      console.log(`Total instrucciones extraídas: ${instructions.length}`);
+      console.log('Instrucciones:\n', result);
+      console.log('=== FIN cleanInstructionText ===\n');
+    }
+
+    return result;
   }
 
-  translateMIPStoHex(textInput: string): string {
-    const instructions: string[] = textInput
+  translateHextoMIPS(textInput: string, debug: boolean = false): string {
+    if (debug) console.log('╔═══════════════════════════════════════╗');
+    if (debug) console.log('║   INICIO translateHextoMIPS           ║');
+    if (debug) console.log('╚═══════════════════════════════════════╝');
+
+    // Limpiar comentarios primero
+    const cleanedInput = this.cleanInstructionText(textInput, debug);
+
+    if (debug) console.log('\n--- Después de limpiar ---');
+    if (debug) console.log('Cleaned input:\n', cleanedInput);
+
+    if (!cleanedInput.trim()) {
+      if (debug) console.log('⚠ No hay instrucciones válidas');
+      return 'No valid instructions found';
+    }
+
+    const instructions: string[] = cleanedInput
       .trim()
       .split('\n')
       .filter((line) => line.trim() !== '');
 
-    const translatedInstructions: string[] = instructions.map((instruction) => {
-      const trimmed = instruction.trim();
-      if (!trimmed) return 'Empty instruction';
-      return this.translateInstructionToHex(trimmed);
-    });
+    if (debug)
+      console.log(`\n--- Procesando ${instructions.length} instrucciones ---`);
 
-    const formattedInstructions: string = translatedInstructions.join('\n');
-    return formattedInstructions;
+    const translatedInstructions: string[] = instructions
+      .map((instruction, index) => {
+        const trimmed = instruction.trim();
+
+        if (debug)
+          console.log(
+            `\n[${index + 1}/${instructions.length}] Procesando: "${trimmed}"`,
+          );
+
+        if (!trimmed) {
+          if (debug) console.log('  → Vacía, ignorada');
+          return '';
+        }
+
+        const result = this.translateInstructionToMIPS(trimmed);
+
+        if (debug) {
+          if (result.startsWith('Unknown') || result.includes('Invalid')) {
+            console.log(`  ✗ Error: ${result}`);
+          } else {
+            console.log(`  ✓ Resultado: ${result}`);
+          }
+        }
+
+        return result;
+      })
+      .filter((result) => result !== '');
+
+    const finalResult = translatedInstructions.join('\n');
+
+    if (debug) {
+      console.log('\n╔═══════════════════════════════════════╗');
+      console.log('║   RESULTADO FINAL                     ║');
+      console.log('╚═══════════════════════════════════════╝');
+      console.log(`Total procesadas: ${instructions.length}`);
+      console.log(`Total traducidas: ${translatedInstructions.length}`);
+      console.log('\nSalida final:\n', finalResult);
+      console.log('\n╔═══════════════════════════════════════╗');
+      console.log('║   FIN translateHextoMIPS              ║');
+      console.log('╚═══════════════════════════════════════╝\n');
+    }
+
+    return finalResult;
+  }
+
+  translateMIPStoHex(textInput: string, debug: boolean = false): string {
+    if (debug) console.log('╔═══════════════════════════════════════╗');
+    if (debug) console.log('║   INICIO translateMIPStoHex           ║');
+    if (debug) console.log('╚═══════════════════════════════════════╝');
+
+    const cleanedInput = this.cleanInstructionText(textInput, debug);
+
+    if (debug) console.log('\n--- Después de limpiar ---');
+    if (debug) console.log('Cleaned input:\n', cleanedInput);
+
+    if (!cleanedInput.trim()) {
+      if (debug) console.log('⚠ No hay instrucciones válidas');
+      return 'No valid instructions found';
+    }
+
+    const instructions: string[] = cleanedInput
+      .trim()
+      .split('\n')
+      .filter((line) => line.trim() !== '');
+
+    if (debug)
+      console.log(`\n--- Procesando ${instructions.length} instrucciones ---`);
+
+    const translatedInstructions: string[] = instructions
+      .map((instruction, index) => {
+        const trimmed = instruction.trim();
+
+        if (debug)
+          console.log(
+            `\n[${index + 1}/${instructions.length}] Procesando: "${trimmed}"`,
+          );
+
+        if (!trimmed) {
+          if (debug) console.log('  → Vacía, ignorada');
+          return '';
+        }
+
+        const result = this.translateInstructionToHex(trimmed);
+
+        if (debug) {
+          if (result.startsWith('Unknown') || result.includes('Invalid')) {
+            console.log(`  ✗ Error: ${result}`);
+          } else {
+            console.log(`  ✓ Resultado: ${result}`);
+          }
+        }
+
+        return result;
+      })
+      .filter((result) => result !== '');
+
+    const finalResult = translatedInstructions.join('\n');
+
+    if (debug) {
+      console.log('\n╔═══════════════════════════════════════╗');
+      console.log('║   RESULTADO FINAL                     ║');
+      console.log('╚═══════════════════════════════════════╝');
+      console.log(`Total procesadas: ${instructions.length}`);
+      console.log(`Total traducidas: ${translatedInstructions.length}`);
+      console.log('\nSalida final:\n', finalResult);
+      console.log('\n╔═══════════════════════════════════════╗');
+      console.log('║   FIN translateMIPStoHex              ║');
+      console.log('╚═══════════════════════════════════════╝\n');
+    }
+
+    return finalResult;
   }
 
   isValidHex(text: string): boolean {
