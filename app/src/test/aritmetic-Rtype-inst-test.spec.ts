@@ -42,6 +42,17 @@ describe('TranslatorService aritmetic I-type instruction tests', () => {
     });
   });
 
+  describe('Translate complete MIPS lines', () => {
+    beforeEach(() => {
+      service.setVersion('r6');
+    });
+
+    it('keeps R-type operands together when translating user input', () => {
+      const result = service.translateMIPStoHex('addu $t1 $t2 $t3');
+      expect(result).toEqual('014B4821');
+    });
+  });
+
   describe('Translate hex to I-type instructions (LEGACY)', () => {
     beforeEach(() => {
       service.setVersion('legacy');

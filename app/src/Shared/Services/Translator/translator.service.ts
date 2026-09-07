@@ -1032,40 +1032,11 @@ export class TranslatorService {
         return;
       }
 
-      // Dividir por espacios (soporta múltiples instrucciones por línea)
-      const parts = line.split(/\s+/).filter((p) => p.trim() !== '');
-
-      if (debug) console.log(`Partes encontradas (${parts.length}):`, parts);
-
-      parts.forEach((part, partIndex) => {
-        const trimmed = part.trim();
-
-        if (debug) console.log(`  Parte ${partIndex + 1}: "${trimmed}"`);
-
-        // Filtrar tokens no válidos
-        if (trimmed.length === 0) {
-          if (debug) console.log('    → Ignorada (vacía)');
-          return;
-        }
-
-        // Verificar si es hex válido (8 caracteres) o mnemónico MIPS
-        const isHex = /^(0x)?[0-9A-Fa-f]{8}$/i.test(trimmed);
-        const isMnemonic = /^[a-z]+$/i.test(trimmed);
-        const isRegister = trimmed.startsWith('$');
-
-        if (debug) {
-          console.log(`    isHex: ${isHex}`);
-          console.log(`    isMnemonic: ${isMnemonic}`);
-          console.log(`    isRegister: ${isRegister}`);
-        }
-
-        if (isHex || isMnemonic || isRegister) {
-          instructions.push(trimmed);
-          if (debug) console.log(`    ✓ Agregada: "${trimmed}"`);
-        } else {
-          if (debug) console.log(`    ✗ Rechazada: "${trimmed}"`);
-        }
-      });
+      // A line is one MIPS instruction. Splitting it on whitespace turns its
+      // operands into separate instructions (for example, `addu $t1 $t2 $t3`).
+      // Keep the complete line so the instruction translator can parse operands.
+      instructions.push(line);
+      if (debug) console.log(`✓ Instrucción agregada: "${line}"`);
     });
 
     const result = instructions.join('\n');
